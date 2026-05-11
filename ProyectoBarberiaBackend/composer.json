@@ -1,0 +1,9 @@
+{
+    "name": "barberia/backend",
+    "autoload": {
+        "psr-4": {
+            "Barberia\\Backend\\": "src/"
+        }
+    },
+    "require": {}
+}

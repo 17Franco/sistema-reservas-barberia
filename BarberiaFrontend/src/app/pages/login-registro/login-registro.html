@@ -1,0 +1,12 @@
+<p>login-registro works!</p>
+<button (click)="cambiarModo('Login')" >login</button>
+<button (click)="cambiarModo('Registro')" >Registro</button>
+
+@if (modo === 'Login'){
+    <app-login></app-login>
+}
+@if (modo === 'Registro'){
+    <app-registro></app-registro>
+}
+
+<button routerLink="/home" >ir a Home</button>
