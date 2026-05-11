@@ -7,7 +7,19 @@ Estructura del proyecto:
     sistema-reservas-barberia/
     ├── BarberiaFrontend/
     └── ProyectoBarberiaBackend/
-    
+
+## Lugar donde clonar
+
+Clonar o descargar el proyecto en:
+
+- Windows (XAMPP):
+
+        C:\xampp\htdocs\
+  
+- Linux (Apache):
+
+        /var/www/html/
+
 ## Backend PHP
 
 Entrar a la carpeta del backend:   
