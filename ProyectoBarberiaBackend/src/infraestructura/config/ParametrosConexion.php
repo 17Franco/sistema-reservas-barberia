@@ -2,7 +2,7 @@
     
 //defino constantes a ser utilizadas.
     define('SERVIDOR','localhost');
-    define('USUARIO','admin');
-    define('CONTRASEÑA','admin');
+    define('USUARIO','franco');
+    define('CONTRASEÑA','1234');
     define('BASEDATOS','barberia');
 ?>

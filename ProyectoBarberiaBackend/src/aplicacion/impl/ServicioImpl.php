@@ -3,7 +3,7 @@ namespace Barberia\Backend\aplicacion\impl;
 
 use Barberia\Backend\dominio\Usuario; //esto es como include nesesita el namespace en la clase 
 
-use Barberia\Backend\aplicacion\servicios;
+use Barberia\Backend\aplicacion\Servicios;
 use Barberia\Backend\dominio\repositorio\Repositorio;
 use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
 use Exception;

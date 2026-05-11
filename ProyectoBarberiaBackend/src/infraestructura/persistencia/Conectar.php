@@ -5,7 +5,7 @@
     use mysqli;
     use mysqli_sql_exception;
 
-    require_once __DIR__ . '/../../infraestructura/config/parametrosConexion.php';
+    require_once __DIR__ . '/../../infraestructura/config/ParametrosConexion.php';
 
     class Conectar{
         private string $host = SERVIDOR;
