@@ -40,7 +40,7 @@
             UsuarioController::login($service);
         }else if($method === 'POST' && str_contains($route, '/logout')){
             UsuarioController::logout();
-        } if($method === 'GET' && str_contains($route, '/probando')){
+        }else if($method === 'GET' && str_contains($route, '/probando')){
             UsuarioController::testSesion();
         }
 
