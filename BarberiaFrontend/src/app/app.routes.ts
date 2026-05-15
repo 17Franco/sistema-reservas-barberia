@@ -7,17 +7,9 @@ import { authGuard } from './guards/auth-guard';
 //cada pagina debe tener una ruta
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
+    path: '', component: Home, canActivate: [authGuard], children:[]},
   {
-    path: 'auth',
-    component: LoginRegistro
+    path: 'auth',component: LoginRegistro
   },
-  {
-    path: 'home',
-    component: Home,
-    canActivate: [authGuard]
-  }
+  
 ];

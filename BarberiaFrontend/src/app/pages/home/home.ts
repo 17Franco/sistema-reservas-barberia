@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import {  OnInit } from '@angular/core';
+import { NavBar } from "../../components/nav-bar/nav-bar";
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [RouterOutlet, NavBar],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
