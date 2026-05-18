@@ -1,18 +1,41 @@
-<div class="container">
+<!--contenedor flex que me centra horizontal y vertical el contenido-->
+<div class="d-flex justify-content-center vh-100 align-items-center" >
+    <!-- contenedor marcado como fila y ocupa todo el medio del navegador -->
+    <div class="row w-100 justify-content-center"> 
+        <!--contenedor que me centra mi card-->
+        <div class="col-12 d-flex justify-content-center">
+            <!--card donde contengo la img botones de cambio entre Login registro y los formularios-->
+            <div class=" card login-card p-4 border-primary gap-3 " [ngClass]="modo=== 'Registro' ? 'animacionR' : 'animacionL'" >
+                <div class="logo">
+                    @if (modo === 'Login'){
+                        
+                        <img src="logos/login-logo.png" class="logo-auth " alt="logo">
+                        
+                    }
+                    @if (modo === 'Registro'){
 
-    <div class="d-flex justify-content-center align-items-center">
-        <div>
-            <button (click)="cambiarModo('Login')" >login</button>
-            <button (click)="cambiarModo('Registro')" >Registro</button>
-
-            @if (modo === 'Login'){
-                <app-login></app-login>
-            }
-            @if (modo === 'Registro'){
-                <app-registro></app-registro>
-            }
-
-            <button routerLink="/" >ir a Home</button>
+                        <img src="logos/login-Registro2.png" class="logo-auth" alt="logo"> 
+                    }
+                </div>
+                <div class="row ">
+                    <div class="col-6">
+                        <button class="w-100 btnLR " (click)="cambiarModo('Login')" [ngClass]="modo=== 'Login' ? 'text-primary' : 'text-secondary'">Login</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="w-100 btnLR" (click)="cambiarModo('Registro')" [ngClass]="modo === 'Registro' ? 'text-primary' : 'text-secondary'" >Registro</button>
+                    </div>
+                </div>
+                <div class=" ">
+                    @if (modo === 'Login'){
+                        <app-login></app-login>
+                    }
+                    @if (modo === 'Registro'){
+                        
+                        <app-registro></app-registro>
+                    }
+                </div>
+            </div>
+           
         </div>
     </div>
 </div>
