@@ -1,27 +1,27 @@
-<form class="row">
+<form class="row" [formGroup]="formRegistro" (ngSubmit)="registro()">
     @if(step===1){
         <div class="col-6 mb-3 ">
             <label for="exampleInputEmail1" class="form-label">Ci</label>
-            <input type="number" class="form-control" name="cedula" id="cedula" >  
+            <input type="number" class="form-control" formControlName="ci" id="cedula" >  
         </div>
         <div class="col-6 mb-3 ">
             <label for="exampleInputEmail1" class="form-label">Nombre</label>
-            <input type="text" class="form-control" name="Nombre" id="name" >  
+            <input type="text" class="form-control" formControlName="nombre" id="name" >  
         </div>
         <div class="col-6 mb-3">
             <label for="exampleInputPassword1" class="form-label">Apellido</label>
-            <input type="text" class="form-control" name="apellido" id="apellido">
+            <input type="text" class="form-control" formControlName="apellido" id="apellido">
         </div>
         <div class="col-6 mb-3">
             <label for="exampleInputPassword1" class="form-label">Fecha Nacimiento</label>
-            <input type="date" class="form-control" name="fechaNac" id="fechaNac">
+            <input type="date" class="form-control" formControlName="fechaNac" id="fechaNac">
         </div>
         
     }
     @if(step===2){
         <div class="col-12 mb-3">
             <label for="exampleInputPassword1" class="form-label">Numero Celular</label>
-            <input type="numbre" class="form-control" name="celular" id="celular">
+            <input type="numbre" class="form-control" formControlName="cel" id="celular">
         </div>
          <div class="col-12  mb-3">
             <label for="exampleInputPassword1" class="form-label">Seleccione Foto Perfil (Opcional)</label>
@@ -32,15 +32,15 @@
     @if(step === 3){
         <div class=" mb-3">
             <label for="exampleInputPassword1" class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" id="email">
+            <input type="email" class="form-control" formControlName="email" id="email">
         </div>
         <div class="col-6 mb-3">
             <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" name="password" id="pass">
+            <input type="password" class="form-control" formControlName="pass" id="pass">
         </div>
         <div class="col-6 mb-3">
             <label for="exampleInputPassword1" class="form-label">Repetir Contraseña</label>
-            <input type="password" class="form-control" id="RepetirPass">
+            <input type="password" class="form-control" id="RepetirPass" formControlName="repetirPass">
         </div>
     }
     <div class="col-6 mb-3">

@@ -20,7 +20,7 @@ use mysqli;
         }
 
         
-        public function guardar(Usuario $u): bool{
+        public function guardarCliente(Usuario $u): bool{
 
                 $sql = "INSERT INTO usuarios(ci,nombre,apellido,fechaNac,contraseña,email,foto,celular,tipoUsuario) VALUES (?,?,?,?,?,?,?,?,?)";
 
@@ -34,7 +34,7 @@ use mysqli;
                 $email = $u->getEmail();
                 $foto = "vacio";
                 $cel = $u->getCel();
-                $tipo = $u->getTipo()->value;
+                $tipo = 1;//como es guardar cliente simepre mando tipo 1
 
                 $stmt->bind_param("ssssssssi", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo);
 
@@ -85,7 +85,8 @@ use mysqli;
                     $fecha = new DateTime($data['fechaNac']);
 
                     //Creo usuario con todos sus datos 
-                    $result = new Usuario($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['contraseña'],$data['email'],$data['celular'],TipoUsuario::from($data['tipoUsuario']));
+                    $result = new Usuario($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['contraseña'],$data['email'],$data['celular']);
+                    $result->setTipo(TipoUsuario::from($data['tipoUsuario']));
                 }
             }
             

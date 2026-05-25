@@ -4,11 +4,11 @@
     //tambien cada class nesesita el namespace
 
 
-    //CORS
-    //header("Access-Control-Allow-Origin: http://localhost:4200");
-    //header("Access-Control-Allow-Credentials: true");
-    //header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-    //header("Access-Control-Allow-Headers: Content-Type");
+    
+    header("Access-Control-Allow-Origin: http://localhost:4200");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type");
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -35,14 +35,17 @@
             http_response_code(200);
             exit;
         }else if ($method === 'POST' && str_contains($route, '/usuarios')) { 
-            UsuarioController::registrarUsuario($service);
+            UsuarioController::registrarUsuarioCliente($service);//hacer otro para empleado
         }else if($method === 'POST' && str_contains($route, '/login')){
             UsuarioController::login($service);
         }else if($method === 'POST' && str_contains($route, '/logout')){
             UsuarioController::logout();
         }else if($method === 'GET' && str_contains($route, '/probando')){
-            UsuarioController::testSesion();
+           // UsuarioController::testSesion();
+        }else if($method === 'GET' && str_contains($route, '/me')){
+            UsuarioController::getSession();
         }
+        
 
     } catch (Throwable $e) {
         //usa codigo de exepcion si tiene sino manda 500

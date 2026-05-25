@@ -26,7 +26,7 @@ use Exception;
                throw  new Exception("Usuario ya Existe",409); 
             }
             //llamo al repo
-            return $this->repo->guardar($usu); 
+            return $this->repo->guardarCliente($usu); 
         }
     
         public function verificoCredenciales(string $ci,string $pass): ?Usuario{
