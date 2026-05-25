@@ -1,8 +1,37 @@
-<nav class="navbar navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand">Navbar</a>
-    <form class="d-flex">
-      
-    </form>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid ">
+    <div class="">
+      <a class="navbar-brand">
+        @if(modo === "Home"){
+          <img src="logos/LogoReserva.png" class="logoHome" alt="">
+        }
+        @if(modo === "MiProfile"){
+          <img src="logos/LogoMiPerfil2.png" class="logoHome" alt="">
+        } 
+      </a>
+    </div>
+
+    <div class="gap-5 d-flex">
+      <a class="link" (click)="cambiarModo('Home')" routerLink="/" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
+      <a class="link" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
+    </div> 
+
+    <div>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            
+            <a class="nav-link dropdown-toggle text-primary" role="button" (click)="viewdropdawn()" >
+              UsurioRegistrado
+            </a>
+            <ul class="dropdown-menu dropdown-menu-light"  [ngClass]="dropdown=== true ? 'show' : ''" >
+              <li><a class="dropdown-item" (click)="logOut()" role="button" >CerrarSesion</a></li>
+              
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  
   </div>
 </nav>

@@ -1,2 +1,54 @@
-@import "../node_modules/bootstrap/scss/bootstrap";
+@use "../node_modules/bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+.logo{
+    height: 210px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logoHome{
+    width: 210px;
+    height: auto;
+}
+.link{
+    text-decoration: none;
+    border-bottom: 2px solid;
+    padding-bottom: 3px;
 
+    color: black;
+}
+.logo-auth {
+  width: 220px;
+  height: 170px;
+  object-fit: contain;
+}
+.login-card{
+    width:100%;
+    max-width:400px;
+}
+
+.btnLR{
+    border: none;
+    background-color: white;
+    border-bottom: 2px solid;
+}
+
+.animacionR{
+    animation-name: myAnimationR;
+    animation-duration: 2s;
+}
+
+@keyframes myAnimationR {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.animacionL{
+    animation-name: myAnimationL;
+    animation-duration: 2s;
+}
+
+@keyframes myAnimationL {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}

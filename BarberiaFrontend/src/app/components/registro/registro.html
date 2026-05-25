@@ -1,1 +1,59 @@
-<p>registro works!</p>
+<form class="row" [formGroup]="formRegistro" (ngSubmit)="registro()">
+    @if(step===1){
+        <div class="col-6 mb-3 ">
+            <label for="exampleInputEmail1" class="form-label">Ci</label>
+            <input type="number" class="form-control" formControlName="ci" id="cedula" >  
+        </div>
+        <div class="col-6 mb-3 ">
+            <label for="exampleInputEmail1" class="form-label">Nombre</label>
+            <input type="text" class="form-control" formControlName="nombre" id="name" >  
+        </div>
+        <div class="col-6 mb-3">
+            <label for="exampleInputPassword1" class="form-label">Apellido</label>
+            <input type="text" class="form-control" formControlName="apellido" id="apellido">
+        </div>
+        <div class="col-6 mb-3">
+            <label for="exampleInputPassword1" class="form-label">Fecha Nacimiento</label>
+            <input type="date" class="form-control" formControlName="fechaNac" id="fechaNac">
+        </div>
+        
+    }
+    @if(step===2){
+        <div class="col-12 mb-3">
+            <label for="exampleInputPassword1" class="form-label">Numero Celular</label>
+            <input type="numbre" class="form-control" formControlName="cel" id="celular">
+        </div>
+         <div class="col-12  mb-3">
+            <label for="exampleInputPassword1" class="form-label">Seleccione Foto Perfil (Opcional)</label>
+            <input type="file" class="form-control" name="celular" id="celular">
+        </div>
+      
+    }
+    @if(step === 3){
+        <div class=" mb-3">
+            <label for="exampleInputPassword1" class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="email" id="email">
+        </div>
+        <div class="col-6 mb-3">
+            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" formControlName="pass" id="pass">
+        </div>
+        <div class="col-6 mb-3">
+            <label for="exampleInputPassword1" class="form-label">Repetir Contraseña</label>
+            <input type="password" class="form-control" id="RepetirPass" formControlName="repetirPass">
+        </div>
+    }
+    <div class="col-6 mb-3">
+        <button type="button" class="btn border-primary text-primary w-100" (click)="antStep()" [disabled]="step <= 1"><i class="bi bi-arrow-left"></i> Atras</button>
+    </div>
+
+
+    <div class="col-6 mb-3">
+        <button type="button" class="btn btn-primary w-100" (click)="sigStep()" [disabled]="step >=3">Siguente <i class="bi bi-arrow-right"></i></button>
+    </div>
+    
+    <div>
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </div>
+</form>
+

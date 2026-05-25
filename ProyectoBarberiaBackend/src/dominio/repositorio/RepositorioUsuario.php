@@ -4,7 +4,7 @@
     use Barberia\Backend\dominio\Usuario;
 
     interface RepositorioUsuario {
-        public function guardar(Usuario $u): bool;
+        public function guardarCliente(Usuario $u): bool;
 
         public function existe(string $ci): bool;
 

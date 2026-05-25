@@ -16,9 +16,8 @@ use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;//permite enten
 class UsuarioController {
     //url para hacer peticiones  http://localhost:8080/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php/NombreRecurso
 
-    public static function registrarUsuario(Servicios $servicio): void{
-       $serializer = new Serializer([new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]
-        );
+    public static function registrarUsuarioCliente(Servicios $servicio): void{
+       $serializer = new Serializer([new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
             // leer body JSON
             $json = file_get_contents('php://input');
 
@@ -28,7 +27,7 @@ class UsuarioController {
 
             //aca try porque quiero intentar y capturar un error expecifico
             try {
-            //utilizo Symfony para pasar json al obeto que nesesito
+            //utilizo Symfony para pasar json al objeto que nesesito
             $usuario = $serializer->deserialize(
                 $json,
                 Usuario::class,
@@ -111,7 +110,9 @@ class UsuarioController {
         ]);
     }
 
-    public static function testSesion(): void {
+    
+
+    public static function getSession(): void {
 
         session_start();
 

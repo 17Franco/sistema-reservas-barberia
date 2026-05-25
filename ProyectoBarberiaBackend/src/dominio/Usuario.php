@@ -15,7 +15,7 @@
         private string $cel;
         private TipoUsuario $tipo;
     
-        public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,TipoUsuario $tipo) {
+        public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel) {
             $this->ci = $ci;
             $this->nombre = $nombre;
             $this->apellido = $apellido;
@@ -23,7 +23,7 @@
             $this->pass = $pass;
             $this->email = $email;
             $this->cel = $cel;
-            $this->tipo = $tipo;
+            
         }
 
         public function getCi(): string { return $this->ci; }
