@@ -32,7 +32,7 @@ use mysqli;
                 $fechaNac = $u->getFechaNac()->format('Y-m-d');
                 $pass = $u->getPass();
                 $email = $u->getEmail();
-                $foto = "vacio";
+                $foto = $u->getFoto();
                 $cel = $u->getCel();
                 $tipo = 1;//como es guardar cliente simepre mando tipo 1
 

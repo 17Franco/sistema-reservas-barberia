@@ -22,9 +22,9 @@
           <li class="nav-item dropdown">
             
             <a class="nav-link dropdown-toggle text-primary" role="button" (click)="viewdropdawn()" >
-              UsurioRegistrado
+              <span>{{authService.usuario.nombre}}</span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-light"  [ngClass]="dropdown=== true ? 'show' : ''" >
+            <ul class="dropdown-menu dropdown-menu-end end-0"  [ngClass]="dropdown=== true ? 'show' : ''" >
               <li><a class="dropdown-item" (click)="logOut()" role="button" >CerrarSesion</a></li>
               
             </ul>

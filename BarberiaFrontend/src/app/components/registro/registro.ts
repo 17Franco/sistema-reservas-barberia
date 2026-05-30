@@ -60,6 +60,9 @@ export class Registro {
       [Validators.required]
     
     ),
+    foto: new FormControl(null,
+       
+    ),
     repetirPass: new FormControl('',
       
       [Validators.required]
@@ -69,6 +72,7 @@ export class Registro {
 
   registro(){
     let datos =this.formRegistro.value;
+    console.log(datos);
       //debo verificar campos quie no sean vacios u otros que sea in o string o email validos
       
   }

@@ -14,6 +14,11 @@ export const authGuard: CanActivateFn = () => {
 
     if (respuesta.logueado) {
       console.log(respuesta);
+      authService.guardarUsuario(
+        respuesta.usuario,
+        respuesta.nombre,
+        respuesta.tipo
+      );
       return true;
     }
 

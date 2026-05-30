@@ -11,11 +11,11 @@
         private DateTime $fechaNac;
         private string $pass;
         private string $email;
-        private ?string $foto;
+        private ?string $foto=null;
         private string $cel;
         private TipoUsuario $tipo;
     
-        public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel) {
+        public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,) {
             $this->ci = $ci;
             $this->nombre = $nombre;
             $this->apellido = $apellido;

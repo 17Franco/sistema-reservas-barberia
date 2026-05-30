@@ -10,7 +10,7 @@
     interface Servicios {
 
         //metodos USUARIO
-        public function agregarUsuario(Usuario $usu): bool;
+        public function agregarUsuario(Usuario $usu,?array $foto = null): bool;
        
         //verifico credenciales para el login
         public function verificoCredenciales(string $ci,string $pass): ?Usuario;

@@ -19,12 +19,9 @@ class UsuarioController {
     public static function registrarUsuarioCliente(Servicios $servicio): void{
        $serializer = new Serializer([new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
             // leer body JSON
-            $json = file_get_contents('php://input');
-
-            // convertir JSON → array
-            // $data = json_decode($json, true);
-
-
+            $json = json_encode($_POST);
+            $foto = null;
+            
             //aca try porque quiero intentar y capturar un error expecifico
             try {
             //utilizo Symfony para pasar json al objeto que nesesito
@@ -34,25 +31,18 @@ class UsuarioController {
                 'json'
             );
 
+            if(isset($_FILES["foto"])){
+                $foto = $_FILES["foto"];
+            }
+
             } catch (MissingConstructorArgumentsException $e) {
                 //si lanza error lo agarro y lanzo exepcion 
                 throw new Exception("faltan campos", 400);
             }
 
-            // validar que venga toda la info del usuario requerida
-            // if (!isset($data['ci']) || !isset($data['nombre']) || !isset($data['apellido']) || !isset($data['fechaNac']) || !isset($data['pass']) || !isset($data['email']) || !isset($data['cel']) || !isset($data['tipo'])) {
-
-               // throw new Exception("Faltan campos", 400);
-
-            // }
-            //la fecha del json la transformo en DateTime
-            //$fecha = new DateTime($data['fechaNac']);
-
-            // crear dominio
-            //$usuario = new Usuario($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['pass'],$data['email'],$data['cel'],TipoUsuario::from($data['tipo']));
 
             // llamo a registrarUsuario de mi service 
-            $ok = $servicio->agregarUsuario($usuario);
+            $ok = $servicio->agregarUsuario($usuario,$foto);
 
             //asigno codigo de respuesta http
             http_response_code(201);

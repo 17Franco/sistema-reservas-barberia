@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 export class Auth {
 
   private http = inject(HttpClient);
+  usuario:any=null;
+  
 
   private apiUrl='http://localhost:8080/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
 
@@ -41,4 +43,11 @@ export class Auth {
     );
   }
 
+ guardarUsuario(usuario:string, nombre:string, tipo:number){
+  this.usuario = {
+    usuario: usuario,
+    nombre: nombre,
+    tipo: tipo
+  };
+}
 }
