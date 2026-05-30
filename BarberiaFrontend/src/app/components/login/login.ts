@@ -2,13 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 import {FormGroup,FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -17,7 +16,7 @@ export class Login {
   authService = inject(Auth); // injecto el servicio
   router = inject(Router);
   cd = inject(ChangeDetectorRef);
-  mensajeError:string='';
+  mensajeError: string = '';
 
   formLogin = new FormGroup({
     ci: new FormControl('',
@@ -33,7 +32,7 @@ export class Login {
     )
   });
 
-    login(){
+  login(){
       this.mensajeError='';
 
       if(this.formLogin.invalid){
@@ -51,10 +50,9 @@ export class Login {
           }
         },
         error:(err)=>{
-
-          console.log(err);
-
+          //console.log(err);
           if(err.status === 401){
+            
             this.mensajeError="Usuario o Contraseña incorrectos";
             this.cd.detectChanges();
             //console.log(this.mensajeError)
@@ -86,6 +84,12 @@ export class Login {
 
 
       return '';
+   }
+
+    campoInvalido(nombre:string){
+      const campo = this.formLogin.get(nombre);
+
+      return campo?.invalid && campo?.touched;
     }
 }
 
