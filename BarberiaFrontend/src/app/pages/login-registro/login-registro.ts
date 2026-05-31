@@ -16,4 +16,8 @@ export class LoginRegistro {
   cambiarModo(modo: string){
     this.modo = modo;
   }
+
+  cambiarALogin(){
+    this.modo="Login"
+  }
 }

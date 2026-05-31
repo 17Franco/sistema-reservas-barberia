@@ -1,5 +1,6 @@
 import { Injectable,  inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RegistroUsuario } from '../interfaces/registro-usuario';
 
 @Injectable({
   providedIn: 'root',
@@ -43,11 +44,16 @@ export class Auth {
     );
   }
 
- guardarUsuario(usuario:string, nombre:string, tipo:number){
-  this.usuario = {
-    usuario: usuario,
-    nombre: nombre,
-    tipo: tipo
-  };
-}
+  guardarUsuario(usuario:string, nombre:string, tipo:number){
+    this.usuario = {
+      usuario: usuario,
+      nombre: nombre,
+      tipo: tipo
+    };
+  }
+
+  registrarUsuario(datos:FormData){
+    console.log("llego");
+    return this.http.post(`${this.apiUrl}/usuarios`, datos);
+  }
 }
