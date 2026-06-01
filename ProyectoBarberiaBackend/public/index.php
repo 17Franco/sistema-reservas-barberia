@@ -14,6 +14,7 @@
 
     use Barberia\Backend\infraestructura\Fabrica;
     use Barberia\Backend\interface\api\controllers\UsuarioController;
+    use Barberia\Backend\interface\api\controllers\ServicioController;
 
     header('Content-Type: application/json');
 
@@ -40,6 +41,12 @@
             UsuarioController::login($service);
         }else if($method === 'POST' && str_contains($route, '/logout')){
             UsuarioController::logout();
+        }else if($method === 'GET' && str_starts_with($route, '/servicios/')){
+            $parts = explode('/', trim($route, '/'));
+            $id = intval($parts[1] ?? 0);
+            ServicioController::buscarServicio($id);
+        }else if($method === 'GET' && str_contains($route, '/servicios')){
+            ServicioController::listarServicios();
         }else if($method === 'GET' && str_contains($route, '/probando')){
            // UsuarioController::testSesion();
         }else if($method === 'GET' && str_contains($route, '/me')){

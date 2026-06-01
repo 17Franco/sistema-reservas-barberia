@@ -114,3 +114,39 @@
   line-height: 1.6;
   color: #555;
 }
+
+.service-meta {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-weight: 700;
+  color: #2e2bff;
+}
+
+.loading,
+.error,
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.loading {
+  background: #eef2ff;
+  color: #2e2bff;
+}
+
+.error {
+  background: #ffe9e9;
+  color: #b71c1c;
+}
+
+.empty-state {
+  background: #f7f7fb;
+  color: #555;
+}

@@ -9,7 +9,7 @@
         <p>Reserva tu turno, conoce nuestros servicios y mantente impecable con los mejores barberos de la ciudad.</p>
         <div class="hero-actions">
           <a routerLink="/MiPerfil" class="btn btn-primary">Mi perfil</a>
-          <a routerLink="/" class="btn btn-secondary">Ver servicios</a>
+          <a routerLink="/servicios" class="btn btn-secondary">Ver servicios</a>
         </div>
       </div>
 
@@ -25,21 +25,21 @@
       </div>
     </section>
 
-    <section class="services">
+    <section class="services" id="servicios">
       <h2>Servicios destacados</h2>
       <div class="services-grid">
-        <article class="service-item">
-          <h3>Corte clásico</h3>
-          <p>Look tradicional y elegante con acabado profesional.</p>
+        <div *ngIf="cargando" class="loading">Cargando servicios destacados...</div>
+        <div *ngIf="error" class="error">{{ error }}</div>
+        <article *ngFor="let servicio of serviciosDestacados" class="service-item">
+          <h3>{{ servicio.nombre }}</h3>
+          <p>{{ servicio.descripcion }}</p>
+          <div class="service-meta">
+            <span class="price">${{ servicio.precio }}</span>
+          </div>
         </article>
-        <article class="service-item">
-          <h3>Corte moderno</h3>
-          <p>Degradados y estilo actual para el mejor resultado.</p>
-        </article>
-        <article class="service-item">
-          <h3>Afeitado premium</h3>
-          <p>Experiencia completa con toalla caliente y cuidado facial.</p>
-        </article>
+        <div *ngIf="!cargando && serviciosDestacados.length === 0" class="empty-state">
+          No hay servicios destacados disponibles.
+        </div>
       </div>
     </section>
   </main>
