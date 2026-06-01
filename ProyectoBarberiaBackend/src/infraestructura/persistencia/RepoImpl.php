@@ -6,6 +6,7 @@ use Barberia\Backend\dominio\repositorio\Repositorio;
 use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
 use Barberia\Backend\dominio\TipoUsuario;
 use Barberia\Backend\dominio\Usuario;
+use Barberia\Backend\dominio\Cliente;
 use DateTime;
 use LDAP\Result;
 use mysqli;
@@ -20,11 +21,13 @@ use mysqli;
         }
 
         
-        public function guardarCliente(Usuario $u): bool{
+        public function guardarCliente(Cliente $u): bool{
 
                 $sql = "INSERT INTO usuarios(ci,nombre,apellido,fechaNac,contraseña,email,foto,celular,tipoUsuario) VALUES (?,?,?,?,?,?,?,?,?)";
+                $sql2 = "INSERT INTO cliente(ci) VALUES (?)";
 
                 $stmt = $this->conn->prepare($sql);
+                $stmt2 = $this->conn->prepare($sql2);
 
                 $ci = $u->getCi();
                 $nombre = $u->getNombre();
@@ -37,8 +40,10 @@ use mysqli;
                 $tipo = "CLIENTE";
 
                 $stmt->bind_param("sssssssss", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo);
+                $stmt2->bind_param("s", $ci);
 
-                return $stmt->execute();
+
+                return $stmt->execute() && $stmt2->execute();
             
            // return true;
         }
