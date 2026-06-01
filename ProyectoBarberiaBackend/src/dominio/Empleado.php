@@ -12,7 +12,7 @@ class Empleado extends Usuario {
 
     public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,TipoUsuario $tipo,string $horaIni,string $horaFin,EstadoEmpleado $estado) {
 
-        parent::__construct($ci,$nombre,$apellido,$fechaNac,$pass,$email,$cel,$tipo);
+        parent::__construct($ci,$nombre,$apellido,$fechaNac,$pass,$email,$cel);
         $this->horaIni = $horaIni;
         $this->horaFin = $horaFin;
         $this->estado = $estado;

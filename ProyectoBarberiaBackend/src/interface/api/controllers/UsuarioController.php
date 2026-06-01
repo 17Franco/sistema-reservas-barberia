@@ -73,7 +73,7 @@ class UsuarioController {
             session_start(); 
             $_SESSION['usuario_id'] = $ci;
             $_SESSION['nombre'] = $usuario->getNombre();
-            $_SESSION['tipoUser'] = $usuario->getTipo(); 
+            $_SESSION['tipoUser'] = $usuario->getTipo()->value; 
         }
 
         http_response_code(200);
@@ -82,7 +82,7 @@ class UsuarioController {
         echo json_encode([
             "success" => $usuario !== null,
             "nombre" => $usuario->getNombre(),
-            "tipo" => $usuario->getTipo()
+            "tipo" => $usuario->getTipo()->value
         ]);   
 
     }
