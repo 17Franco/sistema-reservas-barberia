@@ -53,10 +53,12 @@
 
         //devuelvo json con el mensaje del error 
         //pueden ser los que nosotros le pongamos cuando lanzamos exepciones
-        echo json_encode([
-            "success" => false,
-            "error" => $e->getMessage()
-        ]);
+    echo json_encode([
+        "success" => false,
+        "error" => $e->getMessage(),
+        "file" => $e->getFile(),
+        "line" => $e->getLine()
+    ]);
 
         exit;
     }

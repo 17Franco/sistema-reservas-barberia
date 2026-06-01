@@ -1,5 +1,48 @@
 <div class="container-fluid">
-    <app-nav-bar></app-nav-bar><!--fijo en todas las pagina menos en login y registro-->
-    <!--aca es donde todo componente o pagina se va a mostrar en el router outlet -->
-    <router-outlet></router-outlet>
+  <app-nav-bar></app-nav-bar>
+
+  <main class="home-page">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Barbería Premium</span>
+        <h1>Tu estilo perfecto comienza aquí</h1>
+        <p>Reserva tu turno, conoce nuestros servicios y mantente impecable con los mejores barberos de la ciudad.</p>
+        <div class="hero-actions">
+          <a routerLink="/MiPerfil" class="btn btn-primary">Mi perfil</a>
+          <a routerLink="/" class="btn btn-secondary">Ver servicios</a>
+        </div>
+      </div>
+
+      <div class="hero-cards">
+        <article class="hero-card">
+          <h2>Reserva rápido</h2>
+          <p>Selecciona tu servicio, fecha y hora en pocos pasos.</p>
+        </article>
+        <article class="hero-card">
+          <h2>Estilo profesional</h2>
+          <p>Cortes, afeitados y diseños con barberos expertos.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="services">
+      <h2>Servicios destacados</h2>
+      <div class="services-grid">
+        <article class="service-item">
+          <h3>Corte clásico</h3>
+          <p>Look tradicional y elegante con acabado profesional.</p>
+        </article>
+        <article class="service-item">
+          <h3>Corte moderno</h3>
+          <p>Degradados y estilo actual para el mejor resultado.</p>
+        </article>
+        <article class="service-item">
+          <h3>Afeitado premium</h3>
+          <p>Experiencia completa con toalla caliente y cuidado facial.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <router-outlet></router-outlet>
 </div>

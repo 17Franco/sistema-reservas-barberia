@@ -11,7 +11,7 @@ export class Auth {
   usuario:any=null;
   
 
-  private apiUrl='http://localhost:8080/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  private apiUrl='http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
 
   me(){
     return this.http.get(

@@ -109,7 +109,7 @@ export class Registro {
             //si todo salio bien muestro 
             Swal.fire({
               title: 'Cliente Registrado',
-              text: 'Cuenta creada correctamente correctamente',
+              text: 'Cuenta creada correctamente',
               icon: 'success'
             }).then( (result) =>{
               if(result.isConfirmed){
