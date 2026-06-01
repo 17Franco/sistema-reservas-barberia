@@ -34,9 +34,9 @@ use mysqli;
                 $email = $u->getEmail();
                 $foto = $u->getFoto();
                 $cel = $u->getCel();
-                $tipo = 1;//como es guardar cliente simepre mando tipo 1
+                $tipo = "CLIENTE";
 
-                $stmt->bind_param("ssssssssi", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo);
+                $stmt->bind_param("sssssssss", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo);
 
                 return $stmt->execute();
             
