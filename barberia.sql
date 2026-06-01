@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-06-2026 a las 21:09:31
+-- Tiempo de generación: 02-06-2026 a las 01:52:22
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -28,16 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `cliente` (
-  `ci` varchar(11) NOT NULL,
-  `idHistorial` int(11) NOT NULL
+  `id_Usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `cliente`
---
-
-INSERT INTO `cliente` (`ci`, `idHistorial`) VALUES
-('53507223', 0);
 
 -- --------------------------------------------------------
 
@@ -46,10 +38,10 @@ INSERT INTO `cliente` (`ci`, `idHistorial`) VALUES
 --
 
 CREATE TABLE `empleado` (
-  `ci` varchar(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `horaInicio` time NOT NULL,
   `horaFin` time NOT NULL,
-  `estado` varchar(10) NOT NULL,
+  `estado` enum('ACTIVO','INACTIVO') NOT NULL,
   `especialidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -60,20 +52,8 @@ CREATE TABLE `empleado` (
 --
 
 CREATE TABLE `empleado_servicios` (
-  `idEmpleado` varchar(11) NOT NULL,
+  `idEmpleado` int(11) NOT NULL,
   `idServicio` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `mf`
---
-
-CREATE TABLE `mf` (
-  `idUsuario` varchar(11) NOT NULL,
-  `codigo` int(11) NOT NULL,
-  `fechaExpiracion` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -83,11 +63,13 @@ CREATE TABLE `mf` (
 --
 
 CREATE TABLE `reservas` (
+  `idReserva` int(11) NOT NULL,
+  `idCliente` int(11) NOT NULL,
+  `idEmpleado` int(11) NOT NULL,
   `idServicio` int(11) NOT NULL,
-  `idEmpleado` varchar(11) NOT NULL,
-  `idUsuario` varchar(11) NOT NULL,
   `fecha` date NOT NULL,
-  `hora` time NOT NULL
+  `horaInicio` time NOT NULL,
+  `estado` enum('PENDIENTE','CONFIRMADA','CANCELADA') NOT NULL DEFAULT 'PENDIENTE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -98,9 +80,9 @@ CREATE TABLE `reservas` (
 
 CREATE TABLE `servicios` (
   `idServicio` int(11) NOT NULL,
-  `nombre` int(25) NOT NULL,
-  `descripcion` varchar(50) NOT NULL,
-  `img` blob NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `descripcion` varchar(255) DEFAULT NULL,
+  `duracion` int(11) NOT NULL,
   `precio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -111,23 +93,29 @@ CREATE TABLE `servicios` (
 --
 
 CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL,
   `ci` varchar(11) NOT NULL,
-  `nombre` varchar(20) NOT NULL,
-  `apellido` varchar(20) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `apellido` varchar(50) NOT NULL,
   `fechaNac` date NOT NULL,
-  `contraseña` varchar(20) NOT NULL,
-  `email` varchar(30) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `foto` varchar(50) DEFAULT NULL,
   `celular` varchar(11) NOT NULL,
-  `tipoUsuario` varchar(11) NOT NULL
+  `tipoUsuario` enum('CLIENTE','ADMIN','EMPLEADO','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `usuarios`
+-- Estructura de tabla para la tabla `verificacion_usuario`
 --
 
-INSERT INTO `usuarios` (`ci`, `nombre`, `apellido`, `fechaNac`, `contraseña`, `email`, `foto`, `celular`, `tipoUsuario`) VALUES
-('53507223', 'Franco', 'Echaide', '2026-06-01', '1234', 'franco@gmail.com', '/uploads/53507223/fotoPerfil.png', '099123456', 'CLIENTE');
+CREATE TABLE `verificacion_usuario` (
+  `idUsuario` int(11) NOT NULL,
+  `codigo` int(11) NOT NULL,
+  `fechaExpiracion` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tablas volcadas
@@ -137,35 +125,29 @@ INSERT INTO `usuarios` (`ci`, `nombre`, `apellido`, `fechaNac`, `contraseña`, `
 -- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`ci`);
+  ADD PRIMARY KEY (`id_Usuario`);
 
 --
 -- Indices de la tabla `empleado`
 --
 ALTER TABLE `empleado`
-  ADD PRIMARY KEY (`ci`),
-  ADD KEY `fk_especialidad_servicio` (`especialidad`);
+  ADD PRIMARY KEY (`id_usuario`);
 
 --
 -- Indices de la tabla `empleado_servicios`
 --
 ALTER TABLE `empleado_servicios`
-  ADD KEY `fk_empleadoS_empleado` (`idEmpleado`),
-  ADD KEY `fk_servicioS_servicio` (`idServicio`);
-
---
--- Indices de la tabla `mf`
---
-ALTER TABLE `mf`
-  ADD KEY `fk_mf_usuario` (`idUsuario`);
+  ADD PRIMARY KEY (`idEmpleado`,`idServicio`),
+  ADD KEY `idServicio` (`idServicio`);
 
 --
 -- Indices de la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  ADD PRIMARY KEY (`idUsuario`,`fecha`,`hora`),
-  ADD KEY `fk_reserva_empleado` (`idEmpleado`),
-  ADD KEY `fk_reserva_servicio` (`idServicio`);
+  ADD PRIMARY KEY (`idReserva`),
+  ADD UNIQUE KEY `idEmpleado` (`idEmpleado`,`fecha`,`horaInicio`),
+  ADD KEY `idCliente` (`idCliente`),
+  ADD KEY `idServicio` (`idServicio`);
 
 --
 -- Indices de la tabla `servicios`
@@ -177,7 +159,37 @@ ALTER TABLE `servicios`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`ci`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`) USING BTREE,
+  ADD UNIQUE KEY `ci` (`ci`);
+
+--
+-- Indices de la tabla `verificacion_usuario`
+--
+ALTER TABLE `verificacion_usuario`
+  ADD KEY `idUsuario` (`idUsuario`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `reservas`
+--
+ALTER TABLE `reservas`
+  MODIFY `idReserva` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  MODIFY `idServicio` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -187,35 +199,34 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  ADD CONSTRAINT `fk_cliente_usuario` FOREIGN KEY (`ci`) REFERENCES `usuarios` (`ci`);
+  ADD CONSTRAINT `fk_usuario` FOREIGN KEY (`id_Usuario`) REFERENCES `usuarios` (`id`);
 
 --
 -- Filtros para la tabla `empleado`
 --
 ALTER TABLE `empleado`
-  ADD CONSTRAINT `fk_empleado_usuario` FOREIGN KEY (`ci`) REFERENCES `usuarios` (`ci`),
-  ADD CONSTRAINT `fk_especialidad_servicio` FOREIGN KEY (`especialidad`) REFERENCES `servicios` (`idServicio`);
+  ADD CONSTRAINT `empleado_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
 
 --
 -- Filtros para la tabla `empleado_servicios`
 --
 ALTER TABLE `empleado_servicios`
-  ADD CONSTRAINT `fk_empleadoS_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`ci`),
-  ADD CONSTRAINT `fk_servicioS_servicio` FOREIGN KEY (`idServicio`) REFERENCES `servicios` (`idServicio`);
-
---
--- Filtros para la tabla `mf`
---
-ALTER TABLE `mf`
-  ADD CONSTRAINT `fk_mf_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`ci`);
+  ADD CONSTRAINT `empleado_servicios_ibfk_1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`id_usuario`),
+  ADD CONSTRAINT `empleado_servicios_ibfk_2` FOREIGN KEY (`idServicio`) REFERENCES `servicios` (`idServicio`);
 
 --
 -- Filtros para la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  ADD CONSTRAINT `fk_reserva_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`ci`),
-  ADD CONSTRAINT `fk_reserva_servicio` FOREIGN KEY (`idServicio`) REFERENCES `servicios` (`idServicio`),
-  ADD CONSTRAINT `fk_reserva_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`ci`);
+  ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`id_Usuario`),
+  ADD CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`id_usuario`),
+  ADD CONSTRAINT `reservas_ibfk_3` FOREIGN KEY (`idServicio`) REFERENCES `servicios` (`idServicio`);
+
+--
+-- Filtros para la tabla `verificacion_usuario`
+--
+ALTER TABLE `verificacion_usuario`
+  ADD CONSTRAINT `verificacion_usuario_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

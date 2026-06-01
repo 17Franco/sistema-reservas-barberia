@@ -4,7 +4,7 @@
     use DateTime;
 
    class Usuario {
-
+        private int $id;
         private string $ci;
         private string $nombre;
         private string $apellido;
@@ -26,7 +26,8 @@
             
         }
 
-        public function getCi(): string { return $this->ci; }
+        public function getId(): int { return $this->id; }
+         public function getCi(): string { return $this->ci; }
         public function getNombre(): string { return $this->nombre; }
         public function getApellido(): string { return $this->apellido; }
         public function getFechaNac(): DateTime { return $this->fechaNac; }
@@ -36,6 +37,7 @@
         public function getCel(): string { return $this->cel; }
         public function getTipo(): TipoUsuario { return $this->tipo; }
 
+        public function setId(int $id): void { $this->id = $id; }
         public function setCi(string $ci): void { $this->ci = $ci; }
         public function setNombre(string $nombre): void { $this->nombre = $nombre; }
         public function setApellido(string $apellido): void { $this->apellido = $apellido; }
