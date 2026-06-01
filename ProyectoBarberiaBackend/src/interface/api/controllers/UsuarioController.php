@@ -62,19 +62,23 @@ class UsuarioController {
         $data = json_decode($json, true);
 
         // validar que venga toda la info del usuario requerida
-        if (!isset($data['ci']) || !isset($data['contraseña'])) {
+        if (!isset($data['email']) || !isset($data['contraseña'])) {
 
             throw new Exception("Faltan campos", 400);
 
         }
-        $ci = $data["ci"];
+        $email = $data["email"];
         $pass = $data["contraseña"];
-        $usuario = $servicio->verificoCredenciales($ci,$pass);
+        $usuario = $servicio->verificoCredenciales($email,$pass);
         if($usuario !== null){
             session_start(); 
-            $_SESSION['usuario_id'] = $ci;
+            $_SESSION['usuario_id'] = $usuario->getId();
+            $_SESSION['usuario_email'] = $email;
             $_SESSION['nombre'] = $usuario->getNombre();
-            $_SESSION['tipoUser'] = $usuario->getTipo()->value; 
+            $_SESSION['apellido'] = $usuario->getApellido();
+            $_SESSION['tipoUser'] = $usuario->getTipo()->value;
+            $_SESSION['foto'] = $usuario->getFoto();
+            
         }
 
         http_response_code(200);
@@ -82,8 +86,11 @@ class UsuarioController {
         // responder JSON
         echo json_encode([
             "success" => $usuario !== null,
+            "id" => $usuario->getId(),
             "nombre" => $usuario->getNombre(),
-            "tipo" => $usuario->getTipo()->value
+            "tipo" => $usuario->getTipo()->value,
+            "fotoPerfil" => $usuario->getFoto(),
+            
         ]);   
 
     }
@@ -111,8 +118,10 @@ class UsuarioController {
 
         echo json_encode([
             "logueado" => true,
-            "usuario" => $_SESSION['usuario_id'],
+            "usuario_id" => $_SESSION['usuario_id'],
             "nombre" => $_SESSION['nombre'],
+            "apellido" => $_SESSION['apellido'],
+            "foto" => $_SESSION['foto'],
             "tipo" => $_SESSION['tipoUser'],
         ]);
 

@@ -23,11 +23,10 @@ use mysqli;
         
         public function guardarCliente(Cliente $u): bool{
 
-                $sql = "INSERT INTO usuarios(ci,nombre,apellido,fechaNac,contraseña,email,foto,celular,tipoUsuario) VALUES (?,?,?,?,?,?,?,?,?)";
-                $sql2 = "INSERT INTO cliente(ci) VALUES (?)";
-
+                $sql = "INSERT INTO usuarios(ci,nombre,apellido,fechaNac,password_hash,email,foto,celular,tipoUsuario) VALUES (?,?,?,?,?,?,?,?,?)"; 
+                
                 $stmt = $this->conn->prepare($sql);
-                $stmt2 = $this->conn->prepare($sql2);
+                
 
                 $ci = $u->getCi();
                 $nombre = $u->getNombre();
@@ -40,14 +39,24 @@ use mysqli;
                 $tipo = "CLIENTE";
 
                 $stmt->bind_param("sssssssss", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo);
-                $stmt2->bind_param("s", $ci);
+
+                if($stmt->execute()){
+                    $id = $this->conn->insert_id; //obtiene ultimo id de la ultima consulta echa
+                    $sql2 = "INSERT INTO cliente (id_Usuario) VALUES (?)";
+                    $stmt2 = $this->conn->prepare($sql2);
+                    $stmt2->bind_param("i", $id);
+
+                    return $stmt2->execute();
+                }
+                
 
 
-                return $stmt->execute() && $stmt2->execute();
+                return false;
             
            // return true;
         }
 
+        //comprueba ci
         public function existe(string $ci): bool{
             $sql = "SELECT * FROM usuarios WHERE ci = ?";
 
@@ -62,18 +71,32 @@ use mysqli;
             return $result->num_rows > 0;
 
         }
-       
-        public function verificar(string $ci, string $pass): ?Usuario{
+        //comprueba correo
+       public function emailUsado(string $email): bool{
+            $sql = "SELECT * FROM usuarios WHERE email = ?";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bind_param("s", $email);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+
+        }
+        public function verificar(string $email, string $pass): ?Cliente{
             $result = null;
-            if($this->existe($ci)){
+            if($this->emailUsado($email)){
                 //creo la consulta
-                $sql = "SELECT * FROM usuarios WHERE ci = ? and contraseña = ? ";
+                $sql = "SELECT * FROM usuarios WHERE email = ? and password_hash = ? "; //esos datos estan en tabla usuarios
                 
                 //la preparo
                 $stmt = $this->conn->prepare($sql);
                 
                 //inserta las variables/datos en la cosnulta 
-                $stmt->bind_param("ss",$ci,$pass);
+                $stmt->bind_param("ss",$email,$pass);
 
                 //ejecutamos
                 $stmt->execute();
@@ -90,8 +113,10 @@ use mysqli;
                     $fecha = new DateTime($data['fechaNac']);
 
                     //Creo usuario con todos sus datos 
-                    $result = new Usuario($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['contraseña'],$data['email'],$data['celular']);
+                    $result = new Cliente($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['password_hash'],$data['email'],$data['celular']);
                     $result->setTipo(TipoUsuario::from($data['tipoUsuario']));
+                    $result->setId($data['id']);
+                    $result->setFoto($data['foto']);
                 }
             }
             
@@ -102,7 +127,7 @@ use mysqli;
 
         public function eliminar(string $id): bool{return false;}
 
-        public function buscarPorId(string $id): ?Usuario{return null;}
+        public function buscarPorId(string $id): ?Cliente{return null;}
 
         public function listar(): array{return [];}
 
