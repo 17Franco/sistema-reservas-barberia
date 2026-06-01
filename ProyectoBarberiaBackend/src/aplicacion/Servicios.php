@@ -5,12 +5,13 @@
 
 
     use Barberia\Backend\dominio\Usuario;
+    use Barberia\Backend\dominio\Cliente;
 
 
     interface Servicios {
 
         //metodos USUARIO
-        public function agregarUsuario(Usuario $usu,?array $foto = null): bool;
+        public function agregarUsuario(Cliente $usu,?array $foto = null): bool;
        
         //verifico credenciales para el login
         public function verificoCredenciales(string $ci,string $pass): ?Usuario;

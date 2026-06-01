@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-06-2026 a las 20:17:01
+-- Tiempo de generación: 01-06-2026 a las 21:09:31
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -28,9 +28,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `cliente` (
-  `idUsuario` varchar(11) NOT NULL,
+  `ci` varchar(11) NOT NULL,
   `idHistorial` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`ci`, `idHistorial`) VALUES
+('53507223', 0);
 
 -- --------------------------------------------------------
 
@@ -116,6 +123,13 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`ci`, `nombre`, `apellido`, `fechaNac`, `contraseña`, `email`, `foto`, `celular`, `tipoUsuario`) VALUES
+('53507223', 'Franco', 'Echaide', '2026-06-01', '1234', 'franco@gmail.com', '/uploads/53507223/fotoPerfil.png', '099123456', 'CLIENTE');
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -123,7 +137,7 @@ CREATE TABLE `usuarios` (
 -- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  ADD KEY `fk_cliente_usuario` (`idUsuario`);
+  ADD PRIMARY KEY (`ci`);
 
 --
 -- Indices de la tabla `empleado`
@@ -173,7 +187,7 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  ADD CONSTRAINT `fk_cliente_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`ci`);
+  ADD CONSTRAINT `fk_cliente_usuario` FOREIGN KEY (`ci`) REFERENCES `usuarios` (`ci`);
 
 --
 -- Filtros para la tabla `empleado`

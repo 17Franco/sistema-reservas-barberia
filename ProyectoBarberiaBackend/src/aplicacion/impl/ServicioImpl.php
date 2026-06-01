@@ -2,7 +2,7 @@
 namespace Barberia\Backend\aplicacion\impl;
 
 use Barberia\Backend\dominio\Usuario; //esto es como include nesesita el namespace en la clase 
-
+use Barberia\Backend\dominio\Cliente;
 use Barberia\Backend\aplicacion\Servicios;
 use Barberia\Backend\dominio\repositorio\Repositorio;
 use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
@@ -21,7 +21,7 @@ use Exception;
         }
         
        
-        public function agregarUsuario(Usuario $usu,?array $foto = null): bool{
+        public function agregarUsuario(Cliente $usu,?array $foto = null): bool{
 
             if($this->repo->existe($usu->getCi())){
                 //lanzo exepcion es agarrada por el catch del index

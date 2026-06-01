@@ -9,7 +9,7 @@ class Cliente extends Usuario {
     
    
 
-    public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,TipoUsuario $tipo,string $horaIni,string $horaFin,EstadoEmpleado $estado) {
+    public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel) {
 
         parent::__construct($ci,$nombre,$apellido,$fechaNac,$pass,$email,$cel);
         

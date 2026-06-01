@@ -1,10 +1,11 @@
 <?php
     namespace Barberia\Backend\dominio\repositorio;
 
+    use Barberia\Backend\dominio\Cliente;
     use Barberia\Backend\dominio\Usuario;
 
     interface RepositorioUsuario {
-        public function guardarCliente(Usuario $u): bool;
+        public function guardarCliente(Cliente $u): bool;
 
         public function existe(string $ci): bool;
 

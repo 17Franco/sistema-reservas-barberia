@@ -1,6 +1,7 @@
 <?php
 namespace Barberia\Backend\interface\api\controllers;
 use Barberia\Backend\aplicacion\Servicios;
+use Barberia\Backend\dominio\Cliente;
 use Barberia\Backend\dominio\TipoUsuario;
 use Barberia\Backend\dominio\Usuario;
 use DateTime;
@@ -27,7 +28,7 @@ class UsuarioController {
             //utilizo Symfony para pasar json al objeto que nesesito
             $usuario = $serializer->deserialize(
                 $json,
-                Usuario::class,
+                Cliente::class,
                 'json'
             );
 
