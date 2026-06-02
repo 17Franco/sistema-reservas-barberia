@@ -6,10 +6,10 @@
             <span class="input-group-text">
                 <i class="bi bi-person"></i>
             </span>
-            <input type="email" class="form-control " formControlName="ci" id="emailOrCi" [class.is-invalid]="campoInvalido('ci') "> 
-            @if(obtenerErrorCi()){
+            <input type="email" class="form-control " formControlName="email" id="emailOrCi" [class.is-invalid]="campoInvalido('email') "> 
+            @if(obtenerError()){
                 <div class="invalid-feedback">
-                    {{obtenerErrorCi()}}
+                    {{obtenerError()}}
                 </div>
             }
         </div>
