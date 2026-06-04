@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-06-2026 a las 01:52:22
+-- Tiempo de generación: 04-06-2026 a las 23:00:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -31,6 +31,14 @@ CREATE TABLE `cliente` (
   `id_Usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`id_Usuario`) VALUES
+(7),
+(8);
+
 -- --------------------------------------------------------
 
 --
@@ -39,8 +47,6 @@ CREATE TABLE `cliente` (
 
 CREATE TABLE `empleado` (
   `id_usuario` int(11) NOT NULL,
-  `horaInicio` time NOT NULL,
-  `horaFin` time NOT NULL,
   `estado` enum('ACTIVO','INACTIVO') NOT NULL,
   `especialidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -54,6 +60,21 @@ CREATE TABLE `empleado` (
 CREATE TABLE `empleado_servicios` (
   `idEmpleado` int(11) NOT NULL,
   `idServicio` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `horario_empleado`
+--
+
+CREATE TABLE `horario_empleado` (
+  `idHorario` int(11) NOT NULL,
+  `idEmpleado` int(11) NOT NULL,
+  `horaIni` time NOT NULL,
+  `horaFin` time NOT NULL,
+  `horaDescanzoIni` time NOT NULL,
+  `horaDescanzoFin` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -105,6 +126,14 @@ CREATE TABLE `usuarios` (
   `tipoUsuario` enum('CLIENTE','ADMIN','EMPLEADO','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_hash`, `email`, `foto`, `celular`, `tipoUsuario`) VALUES
+(7, '53507223', 'Franco', 'Echaide', '2026-06-02', '1234', 'franc2o@gmail.com', '/uploads/53507223/fotoPerfil.png', '099123456', 'CLIENTE'),
+(8, '53507227', 'Franco', 'Echaide', '2026-06-02', '123', 'echaidefranco@gmail.com', NULL, '098267299', 'CLIENTE');
+
 -- --------------------------------------------------------
 
 --
@@ -141,6 +170,13 @@ ALTER TABLE `empleado_servicios`
   ADD KEY `idServicio` (`idServicio`);
 
 --
+-- Indices de la tabla `horario_empleado`
+--
+ALTER TABLE `horario_empleado`
+  ADD PRIMARY KEY (`idHorario`),
+  ADD KEY `fk_horario_empleado` (`idEmpleado`);
+
+--
 -- Indices de la tabla `reservas`
 --
 ALTER TABLE `reservas`
@@ -174,6 +210,12 @@ ALTER TABLE `verificacion_usuario`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `horario_empleado`
+--
+ALTER TABLE `horario_empleado`
+  MODIFY `idHorario` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
@@ -189,7 +231,7 @@ ALTER TABLE `servicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
@@ -213,6 +255,12 @@ ALTER TABLE `empleado`
 ALTER TABLE `empleado_servicios`
   ADD CONSTRAINT `empleado_servicios_ibfk_1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`id_usuario`),
   ADD CONSTRAINT `empleado_servicios_ibfk_2` FOREIGN KEY (`idServicio`) REFERENCES `servicios` (`idServicio`);
+
+--
+-- Filtros para la tabla `horario_empleado`
+--
+ALTER TABLE `horario_empleado`
+  ADD CONSTRAINT `fk_horario_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`id_usuario`);
 
 --
 -- Filtros para la tabla `reservas`
