@@ -15,17 +15,27 @@
   margin-bottom: 0.75rem;
 }
 
+/* GRID SE QUEDA IGUAL */
 .services-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+/*SOLO MEJORA VISUAL*/
 .service-item {
   padding: 1.5rem;
   border-radius: 1rem;
   background: #fff;
   border: 1px solid #e8e8f2;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* hover suave estilo app moderna */
+.service-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
 .service-item h3 {
@@ -45,6 +55,7 @@
   color: #2e2bff;
 }
 
+/* estados */
 .loading,
 .error,
 .empty-state {

@@ -65,4 +65,12 @@ export class Auth {
     console.log("llego");
     return this.http.post(`${this.apiUrl}/usuarios`, datos);
   }
+
+  crearServicio(datos: any) {
+  return this.http.post(
+    `${this.apiUrl}/servicios`,
+    datos,
+    { withCredentials: true }
+  );
+  }
 }
