@@ -19,9 +19,9 @@ export class Login {
   mensajeError: string = '';
 
   formLogin = new FormGroup({
-    ci: new FormControl('',
+    email: new FormControl('',
       [Validators.required,
-        validarCiOEmail 
+        validarEmail 
       ],
       
     ),
@@ -40,7 +40,7 @@ export class Login {
       }
 
       let datos =this.formLogin.value;
-      //console.log(datos);
+      console.log(datos);
       
       this.authService.login(datos).subscribe({
         next:(res:any) => {
@@ -66,9 +66,9 @@ export class Login {
       });
     }
 
-   obtenerErrorCi(){
+   obtenerError(){
 
-      let control = this.formLogin.get('ci');
+      let control = this.formLogin.get('email');
 
       if(!control?.touched){
         return '';
@@ -79,7 +79,7 @@ export class Login {
       }
 
       if(control.errors?.['usuarioInvalido']){
-        return 'Ingrese un email válido o una CI válida';
+        return 'Ingrese un email válido';
       }
 
 
@@ -89,11 +89,11 @@ export class Login {
     campoInvalido(nombre:string){
       const campo = this.formLogin.get(nombre);
 
-      return campo?.invalid && campo?.touched;
+     return (campo?.invalid && (campo?.touched ||  campo?.dirty)) ;
     }
 }
 
-function validarCiOEmail(control:any){
+function validarEmail(control:any){
   let valor = control.value;
   const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const ciRegex = /^\d{7,8}$/;
@@ -103,7 +103,7 @@ function validarCiOEmail(control:any){
   }
 
   //si no hay problema devuelvo null
-  if(emailValido.test(valor) || ciRegex.test(valor)){
+  if(emailValido.test(valor)){
     return null;
   }
 

@@ -14,7 +14,7 @@
         public function agregarUsuario(Cliente $usu,?array $foto = null): bool;
        
         //verifico credenciales para el login
-        public function verificoCredenciales(string $ci,string $pass): ?Usuario;
+        public function verificoCredenciales(string $ci,string $pass): ?Cliente;
 
     
 

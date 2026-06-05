@@ -9,7 +9,9 @@
 
         public function existe(string $ci): bool;
 
-        public function verificar(string $ci, string $pass): ?Usuario;
+        public function emailUsado(string $email): bool;
+
+        public function verificar(string $ci, string $pass): ?Cliente;
         
         public function actualizar(Usuario $usuario): bool;
 

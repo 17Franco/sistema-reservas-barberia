@@ -23,7 +23,7 @@ use Exception;
        
         public function agregarUsuario(Cliente $usu,?array $foto = null): bool{
 
-            if($this->repo->existe($usu->getCi())){
+            if($this->repo->existe($usu->getCi()) || $this->repo->emailUsado($usu->getEmail())){
                 //lanzo exepcion es agarrada por el catch del index
                throw  new Exception("Usuario ya Existe",409); 
             }
@@ -63,7 +63,7 @@ use Exception;
             return $rutaAdevolver;
         }
     
-        public function verificoCredenciales(string $ci,string $pass): ?Usuario{
+        public function verificoCredenciales(string $ci,string $pass): ?Cliente{
             $usuario = $this->repo->verificar($ci,$pass);
             if($usuario === null){
                 throw new Exception("Usuario o contraseña incorrecta",401);
