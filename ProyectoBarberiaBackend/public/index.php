@@ -3,8 +3,6 @@
     //unica ves que se pone esto luego se usa el use y la ruta al paquete 
     //tambien cada class nesesita el namespace
 
-
-    
     header("Access-Control-Allow-Origin: http://localhost:4200");
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -15,13 +13,13 @@
     use Barberia\Backend\infraestructura\Fabrica;
     use Barberia\Backend\interface\api\controllers\UsuarioController;
     use Barberia\Backend\interface\api\controllers\ServicioController;
+    use Barberia\Backend\interface\api\controllers\EmpleadoController;
 
     header('Content-Type: application/json');
 
-   
-
     try {
         $service = Fabrica::crearServicio(); //creo servicio utilizando la fabrica se las voy a mandar a los controlladores 
+        $empleadoService = Fabrica::crearEmpleadoServicio(); //servicio empleados
 
         $method = $_SERVER['REQUEST_METHOD']; //obtengo metodo POST GET UPDATE ETC
 
@@ -35,24 +33,41 @@
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { //este es para CORS 
             http_response_code(200);
             exit;
-        }else if ($method === 'POST' && str_contains($route, '/usuarios')) { 
+        }
+        else if ($method === 'POST' && str_contains($route, '/usuarios')) { 
             UsuarioController::registrarUsuarioCliente($service);//hacer otro para empleado
-        }else if($method === 'POST' && str_contains($route, '/login')){
+
+        }
+        else if($method === 'POST' && str_contains($route, '/login')){
             UsuarioController::login($service);
-        }else if($method === 'POST' && str_contains($route, '/logout')){
+
+        }
+        else if($method === 'POST' && str_contains($route, '/logout')){
             UsuarioController::logout();
-        }else if($method === 'GET' && str_starts_with($route, '/servicios/')){
+
+        }
+        else if($method === 'GET' && str_contains($route, '/servicios/')){
+
             $parts = explode('/', trim($route, '/'));
             $id = intval($parts[1] ?? 0);
+
             ServicioController::buscarServicio($id);
-        }else if($method === 'GET' && str_contains($route, '/servicios')){
+
+        }
+        else if($method === 'GET' && str_contains($route, '/servicios')){
             ServicioController::listarServicios();
-        }else if($method === 'GET' && str_contains($route, '/probando')){
-           // UsuarioController::testSesion();
-        }else if($method === 'GET' && str_contains($route, '/me')){
+        }
+        else if($method === 'GET' && str_contains($route, '/me')){
             UsuarioController::getSession();
         }
-        
+
+        // EMPLEADOS
+        else if($method === 'GET' && str_contains($route, '/empleados')){
+            EmpleadoController::listar($empleadoService);
+        }
+        else if($method === 'PUT' && str_contains($route, '/empleados')){
+            EmpleadoController::actualizar($empleadoService);
+        }
 
     } catch (Throwable $e) {
         //usa codigo de exepcion si tiene sino manda 500
@@ -60,14 +75,13 @@
 
         //devuelvo json con el mensaje del error 
         //pueden ser los que nosotros le pongamos cuando lanzamos exepciones
-    echo json_encode([
-        "success" => false,
-        "error" => $e->getMessage(),
-        "file" => $e->getFile(),
-        "line" => $e->getLine()
-    ]);
+        echo json_encode([
+            "success" => false,
+            "error" => $e->getMessage(),
+            "file" => $e->getFile(),
+            "line" => $e->getLine()
+        ]);
 
         exit;
     }
-
 ?>
