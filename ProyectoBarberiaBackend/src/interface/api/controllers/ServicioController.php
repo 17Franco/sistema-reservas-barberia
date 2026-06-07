@@ -72,6 +72,7 @@
                 echo json_encode([
                     'success' => false,
                     'error' => 'Servicio no encontrado',
+                    'id' => $idServicio,
                 ]);
                 return;
             }

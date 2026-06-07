@@ -5,7 +5,7 @@ namespace Barberia\Backend\aplicacion\impl;
 use Barberia\Backend\aplicacion\EmpleadoServicios;
 use Barberia\Backend\dominio\repositorio\RepositorioEmpleado;
 use Barberia\Backend\dominio\Empleado;
-
+/*
 class EmpleadoServiciosImpl implements EmpleadoServicios {
 
     private RepositorioEmpleado $repo;
@@ -22,3 +22,4 @@ class EmpleadoServiciosImpl implements EmpleadoServicios {
         return $this->repo->actualizar($e);
     }
 }
+    */
