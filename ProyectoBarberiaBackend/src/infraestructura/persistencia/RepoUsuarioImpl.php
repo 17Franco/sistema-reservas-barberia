@@ -7,12 +7,14 @@ use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
 use Barberia\Backend\dominio\TipoUsuario;
 use Barberia\Backend\dominio\Usuario;
 use Barberia\Backend\dominio\Cliente;
+use Barberia\Backend\dominio\Empleado;
+use Barberia\Backend\dominio\EstadoEmpleado;
 use DateTime;
 use LDAP\Result;
 use mysqli;
 
 
-    class RepoImpl implements RepositorioUsuario{
+    class RepoUsuarioImpl implements RepositorioUsuario{
         
         private mysqli $conn;
 
@@ -121,6 +123,59 @@ use mysqli;
             }
             
             return $result; 
+        }
+
+            public function listarEmpleado(): array {
+
+            $sql = "SELECT u.*, e.horaInicio, e.horaFin, e.estado, e.especialidad
+                    FROM usuarios u
+                    INNER JOIN empleado e ON u.ci = e.ci";
+
+            $result = $this->conn->query($sql);
+
+            $lista = [];
+
+            while ($row = $result->fetch_assoc()) {
+
+                $lista[] = new Empleado(
+                    $row['ci'],
+                    $row['nombre'],
+                    $row['apellido'],
+                    new DateTime($row['fechaNac']),
+                    $row['contraseña'],
+                    $row['email'],
+                    $row['celular'],
+                    TipoUsuario::from($row['tipoUsuario']),
+                    $row['horaInicio'],
+                    $row['horaFin'],
+                    EstadoEmpleado::from($row['estado'])
+                );
+            }
+
+            return $lista;
+        }
+
+        public function actualizarEmpleado(Empleado $e): bool {
+
+            $sql = "UPDATE empleado 
+                    SET horaInicio=?, horaFin=?, estado=?, especialidad=? 
+                    WHERE ci=?";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $hi = $e->getHoraIni();
+            $hf = $e->getHoraFin();
+            $estado = $e->getEstado()->value;
+            $esp = 1;
+            $ci = $e->getCi();
+
+            $stmt->bind_param("sssis", $hi, $hf, $estado, $esp, $ci);
+
+            return $stmt->execute();
+        }
+
+        public function buscarPorCiEmpleado(string $ci): ?Empleado {
+            return null;
         }
 
         public function actualizar(Usuario $usuario): bool{return false;}

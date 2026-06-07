@@ -11,15 +11,17 @@
     require_once __DIR__ . '/../vendor/autoload.php';
 
     use Barberia\Backend\infraestructura\Fabrica;
+    use Barberia\Backend\interface\api\controllers\AvailabilityController;
     use Barberia\Backend\interface\api\controllers\UsuarioController;
     use Barberia\Backend\interface\api\controllers\ServicioController;
     use Barberia\Backend\interface\api\controllers\EmpleadoController;
 
+    date_default_timezone_set('America/Montevideo');
     header('Content-Type: application/json');
 
     try {
         $service = Fabrica::crearServicio(); //creo servicio utilizando la fabrica se las voy a mandar a los controlladores 
-        $empleadoService = Fabrica::crearEmpleadoServicio(); //servicio empleados
+        //$empleadoService = Fabrica::crearEmpleadoServicio(); //servicio empleados
 
         $method = $_SERVER['REQUEST_METHOD']; //obtengo metodo POST GET UPDATE ETC
 
@@ -46,27 +48,28 @@
             UsuarioController::logout();
 
         }
+        else if($method === 'GET' && str_contains($route, '/me')){
+            UsuarioController::getSession();
+        }
+        // EMPLEADOS
+        else if($method === 'GET' && str_contains($route, '/empleados')){
+            UsuarioController::listarEmpleados($service);
+        }
+        else if($method === 'PUT' && str_contains($route, '/empleados')){
+            UsuarioController::actualizarEmpleado($service);
+        }
         else if($method === 'GET' && str_contains($route, '/servicios/')){
 
             $parts = explode('/', trim($route, '/'));
-            $id = intval($parts[1] ?? 0);
+            $id = intval($parts[0] ?? 0);
 
             ServicioController::buscarServicio($id);
-
         }
         else if($method === 'GET' && str_contains($route, '/servicios')){
             ServicioController::listarServicios();
         }
-        else if($method === 'GET' && str_contains($route, '/me')){
-            UsuarioController::getSession();
-        }
-
-        // EMPLEADOS
-        else if($method === 'GET' && str_contains($route, '/empleados')){
-            EmpleadoController::listar($empleadoService);
-        }
-        else if($method === 'PUT' && str_contains($route, '/empleados')){
-            EmpleadoController::actualizar($empleadoService);
+        else if($method === 'GET' && str_contains($route, '/disponibilidad')){
+            AvailabilityController::days($service);
         }
 
     } catch (Throwable $e) {

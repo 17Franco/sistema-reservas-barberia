@@ -11,7 +11,7 @@ use DateTime;
 
 class EmpleadoController {
 
-    public static function listar(): void {
+   /* public static function listar(): void {
 
         $servicio = Fabrica::crearServicioEmpleado();
 
@@ -50,4 +50,7 @@ class EmpleadoController {
             "success" => $ok
         ]);
     }
+        */
 }
+
+?>

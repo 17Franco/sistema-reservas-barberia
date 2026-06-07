@@ -1,7 +1,10 @@
 <?php
 namespace Barberia\Backend\interface\api\controllers;
-use Barberia\Backend\aplicacion\Servicios;
+
+use Barberia\Backend\aplicacion\ServiciosUsuarios;
 use Barberia\Backend\dominio\Cliente;
+use Barberia\Backend\dominio\Empleado;
+use Barberia\Backend\dominio\EstadoEmpleado;
 use Barberia\Backend\dominio\TipoUsuario;
 use Barberia\Backend\dominio\Usuario;
 use DateTime;
@@ -17,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;//permite enten
 class UsuarioController {
     //url para hacer peticiones  http://localhost:8080/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php/NombreRecurso
 
-    public static function registrarUsuarioCliente(Servicios $servicio): void{
+    public static function registrarUsuarioCliente(ServiciosUsuarios $servicio): void{
        $serializer = new Serializer([new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
             // leer body JSON
             $json = json_encode($_POST);
@@ -55,7 +58,7 @@ class UsuarioController {
             
     }
 
-    public static function login(Servicios $servicio){
+    public static function login(ServiciosUsuarios $servicio){
          // leer body JSON
         $json = file_get_contents('php://input');
         // convertir JSON → array
@@ -131,6 +134,46 @@ class UsuarioController {
                 "logueado" => false
             ]);
         }
+    }
+
+    public static function listarEmpleados(ServiciosUsuarios $servicio): void {
+
+        //$servicio = Fabrica::crearServicioEmpleado();
+
+        $data = $servicio->listarEmpleados();
+
+        echo json_encode([
+            "success" => true,
+            "empleados" => $data
+        ]);
+    }
+
+    public static function actualizarEmpleado(ServiciosUsuarios $servicio): void {
+
+        //$servicio = Fabrica::crearServicioEmpleado();
+
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        $empleado = new Empleado(
+            $data["ci"],
+            $data["nombre"],
+            $data["apellido"],
+            new DateTime($data["fechaNac"]),
+            $data["contraseña"],
+            $data["email"],
+            $data["celular"],
+            TipoUsuario::from($data["tipo"]),
+            $data["horaInicio"],
+            $data["horaFin"],
+            EstadoEmpleado::from($data["estado"])
+        );
+
+        $ok = $servicio->actualizarEmpleado($empleado);
+
+        echo json_encode([
+            "success" => $ok
+        ]);
     }
 }
 ?>

@@ -6,9 +6,9 @@
 
     use Barberia\Backend\dominio\Usuario;
     use Barberia\Backend\dominio\Cliente;
+    use Barberia\Backend\dominio\Empleado;
 
-
-    interface Servicios {
+    interface ServiciosUsuarios {
 
         //metodos USUARIO
         public function agregarUsuario(Cliente $usu,?array $foto = null): bool;
@@ -16,7 +16,12 @@
         //verifico credenciales para el login
         public function verificoCredenciales(string $ci,string $pass): ?Cliente;
 
-    
+        //diasDiponibles devuelve una lista de fecha en las que todavia entran reservas
+        public function disponibilidad(): array;
 
+        public function listarEmpleados(): array;
+
+        public function actualizarEmpleado(Empleado $e): bool;
+        
     }
 ?>
