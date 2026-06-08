@@ -9,8 +9,7 @@
         private int $precio;
         private string $disponible;
 
-        public function __construct(int $idServicio,string $nombre,string $descripcion,int $duracion,int $precio) {
-            $this->idServicio = $idServicio;
+        public function __construct(string $nombre,string $descripcion,int $duracion,int $precio) {
             $this->nombre = $nombre;
             $this->descripcion = $descripcion;
             $this ->duracion = $duracion;

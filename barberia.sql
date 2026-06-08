@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-06-2026 a las 18:59:14
+-- Tiempo de generación: 08-06-2026 a las 22:12:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -36,7 +36,8 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id_Usuario`) VALUES
-(13);
+(13),
+(14);
 
 -- --------------------------------------------------------
 
@@ -189,7 +190,8 @@ INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_
 (3, '50123456', 'Juan', 'Pérez', '1988-01-30', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'juan@barberia.com', 'uploads/PerfilPorDefecto.png', '097111222', 'EMPLEADO'),
 (4, '39876543', 'Diego', 'Fernández', '1993-11-15', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'diego@barberia.com', 'uploads/PerfilPorDefecto.png', '096333444', 'EMPLEADO'),
 (5, '48521364', 'Ana', 'Martínez', '1997-03-05', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'ana@barberia.com', 'uploads/PerfilPorDefecto.png', '095555666', 'EMPLEADO'),
-(13, '53507224', 'Franco', 'Echaide', '2026-06-08', '1234', 'franc3o@gmail.com', NULL, '099123456', 'CLIENTE');
+(13, '53507224', 'Franco', 'Echaide', '2026-06-08', '1234', 'franc3o@gmail.com', NULL, '099123456', 'CLIENTE'),
+(14, '12121212', 'Franco Echaide', 'Echaide', '2026-06-08', '123', 'germanechaid2e@gmail.com', NULL, '098267299', 'CLIENTE');
 
 -- --------------------------------------------------------
 
@@ -239,7 +241,7 @@ ALTER TABLE `horario_empleado`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`idReserva`),
-  ADD UNIQUE KEY `idEmpleado` (`idEmpleado`,`fecha`,`horaInicio`),
+  ADD UNIQUE KEY `idEmpleado` (`idEmpleado`,`fecha`,`horaInicio`,`horaFin`) USING BTREE,
   ADD KEY `idCliente` (`idCliente`),
   ADD KEY `idServicio` (`idServicio`);
 
@@ -289,7 +291,7 @@ ALTER TABLE `servicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas

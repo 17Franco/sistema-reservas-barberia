@@ -25,12 +25,32 @@ use mysqli;
         }
 
         public function listarServicios(): array{
+            $sql ="SELECT * FROM servicios s ";
+            
+            $result = $this->conn->query($sql);
             $servicios =[];
+            while ($row = $result->fetch_assoc()) {
+                $servicio = new ServicioBarberia($row['nombre'],$row['descripcion'],(int)$row['duracion'],(int)$row['precio']);
+                $servicio->setIdServicio((int)$row['idServicio']);
+                $servicios[]=$servicio;
+            }
+            
             return $servicios;
         }
 
-        public function empleadosPorServicio(ServicioBarberia $servicio):array{
+        public function empleadosPorServicio(int $idServicio):array{
+            $sql ="SELECT idEmpleado FROM empleado_servicios es where es.idServicio= ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i",$idServicio);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
             $empleados =[];
+            while ($rowEmpleado  = $result->fetch_assoc()) {
+                $empleados[]=$rowEmpleado;
+            }
+            
             return $empleados;
         }
 
