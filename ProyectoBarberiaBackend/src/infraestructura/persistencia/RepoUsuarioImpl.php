@@ -9,6 +9,7 @@ use Barberia\Backend\dominio\Usuario;
 use Barberia\Backend\dominio\Cliente;
 use Barberia\Backend\dominio\Empleado;
 use Barberia\Backend\dominio\EstadoEmpleado;
+use Barberia\Backend\dominio\Horario_Empleado;
 use DateTime;
 use LDAP\Result;
 use mysqli;
@@ -125,39 +126,62 @@ use mysqli;
             return $result; 
         }
 
-            public function listarEmpleado(): array {
+        public function listarEmpleado(): array {
+        //primero su info
+        $sql = "SELECT u.*, e.*, s.nombre as especialidadName FROM usuarios u INNER JOIN empleado e ON u.id = e.id_usuario INNER JOIN servicios s ON s.idServicio= e.especialidad";
 
-            $sql = "SELECT u.*, e.horaInicio, e.horaFin, e.estado, e.especialidad
-                    FROM usuarios u
-                    INNER JOIN empleado e ON u.ci = e.ci";
+        $result = $this->conn->query($sql);
 
-            $result = $this->conn->query($sql);
+        $lista = [];
 
-            $lista = [];
+        while ($row = $result->fetch_assoc()) {
+            $empleado = new Empleado(
+                $row['ci'],
+                $row['nombre'],
+                $row['apellido'],
+                new DateTime($row['fechaNac']),
+                $row['password_hash'],//no mandar
+                $row['email'],
+                $row['celular'],
+                EstadoEmpleado::from($row['estado'])
+            );
+            $empleado->setId($row['id']);
+            $empleado->setFoto($row['foto']);
+            $empleado->setTipo(TipoUsuario::from($row['tipoUsuario']));
+            $empleado->setEspecialidad($row['especialidadName']);
 
-            while ($row = $result->fetch_assoc()) {
+            //nesesito el horario
+            $sqlH = "SELECT idEmpleado,horaIni,horaFin,horaDescanzoIni,horaDescanzoFin FROM empleado u INNER JOIN horario_empleado e ON u.id_usuario = e.idEmpleado where u.id_usuario= ?";
+            $stmt = $this->conn->prepare($sqlH);
 
-                $lista[] = new Empleado(
-                    $row['ci'],
-                    $row['nombre'],
-                    $row['apellido'],
-                    new DateTime($row['fechaNac']),
-                    $row['contraseña'],
-                    $row['email'],
-                    $row['celular'],
-                    TipoUsuario::from($row['tipoUsuario']),
-                    $row['horaInicio'],
-                    $row['horaFin'],
-                    EstadoEmpleado::from($row['estado'])
-                );
+            $id=$empleado->getId();
+            //inserta las variables/datos en la cosnulta 
+            $stmt->bind_param("i",$id);
+
+            $stmt->execute();
+
+            $result2 = $stmt->get_result();
+
+            //$horarioLista =[];
+            
+            while ($rowHorario  = $result2->fetch_assoc()) {
+                $horario = new Horario_Empleado($rowHorario['horaIni'],$rowHorario['horaFin'],);
+                $horario->setHoraIniDescanso($rowHorario['horaDescanzoIni']);
+                $horario->setHoraFinDescanso($rowHorario['horaDescanzoFin']);
+
+                $empleado->agregarHorario($horario);
             }
-
-            return $lista;
+            
+            
+            $lista[] = $empleado;
         }
+
+        return $lista;
+    }
 
         public function actualizarEmpleado(Empleado $e): bool {
 
-            $sql = "UPDATE empleado 
+          /*  $sql = "UPDATE empleado 
                     SET horaInicio=?, horaFin=?, estado=?, especialidad=? 
                     WHERE ci=?";
 
@@ -171,7 +195,8 @@ use mysqli;
 
             $stmt->bind_param("sssis", $hi, $hf, $estado, $esp, $ci);
 
-            return $stmt->execute();
+            return $stmt->execute();*/
+            return false;
         }
 
         public function buscarPorCiEmpleado(string $ci): ?Empleado {

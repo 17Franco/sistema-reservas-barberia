@@ -102,7 +102,7 @@ use Exception;
         }
 
         public function listarEmpleados(): array {
-        return $this->repo->listar();
+        return $this->repo->listarEmpleado();
     }
 
         public function actualizarEmpleado(Empleado $e): bool {
