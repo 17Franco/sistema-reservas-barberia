@@ -10,6 +10,7 @@ use Barberia\Backend\dominio\Cliente;
 use Barberia\Backend\dominio\Empleado;
 use Barberia\Backend\dominio\EstadoEmpleado;
 use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
+use Barberia\Backend\dominio\ServicioBarberia;
 use DateTime;
 use LDAP\Result;
 use mysqli;
@@ -23,8 +24,15 @@ use mysqli;
             $this->conn = $conn;
         }
 
-        
-      
+        public function listarServicios(): array{
+            $servicios =[];
+            return $servicios;
+        }
+
+        public function empleadosPorServicio(ServicioBarberia $servicio):array{
+            $empleados =[];
+            return $empleados;
+        }
 
     }
 ?>
