@@ -11,28 +11,28 @@
                     1,
                     'Corte clásico',
                     'Corte tradicional con acabado preciso y estilo cuidado.',
-                    '/assets/img/corte-clasico.jpg',
+                    30,
                     1200
                 ),
                 new ServicioBarberia(
                     2,
                     'Degradado moderno',
                     'Degradado con máquina y tijera para un look actual.',
-                    '/assets/img/degradado.jpg',
+                    20,
                     1500
                 ),
                 new ServicioBarberia(
                     3,
                     'Afeitado premium',
                     'Afeitado con toalla caliente, crema y acabado profesional.',
-                    '/assets/img/afeitado.jpg',
+                    25,
                     900
                 ),
                 new ServicioBarberia(
                     4,
                     'Barba y perfilado',
                     'Perfilado de barba con diseño y mantenimiento de líneas.',
-                    '/assets/img/barba.jpg',
+                    45,
                     800
                 ),
             ];
@@ -44,7 +44,7 @@
                     'idServicio' => $servicio->getIdServicio(),
                     'nombre' => $servicio->getNombre(),
                     'descripcion' => $servicio->getDescripcion(),
-                    'img' => $servicio->getImg(),
+                    'duracion' => $servicio->getDuracion(),
                     'precio' => $servicio->getPrecio(),
                 ];
             }, self::obtenerServicios());
