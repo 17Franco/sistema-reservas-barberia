@@ -22,7 +22,7 @@
     try {
         $service = Fabrica::crearServicio(); //creo servicio utilizando la fabrica se las voy a mandar a los controlladores 
         //$empleadoService = Fabrica::crearEmpleadoServicio(); //servicio empleados
-
+        $disponibilidadService = Fabrica::crearDisponinilidadServicios();
         $method = $_SERVER['REQUEST_METHOD']; //obtengo metodo POST GET UPDATE ETC
 
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); //Quta queryParams
@@ -69,7 +69,7 @@
             ServicioController::listarServicios();
         }
         else if($method === 'GET' && str_contains($route, '/disponibilidad')){
-            AvailabilityController::days($service);
+            AvailabilityController::days($disponibilidadService);
         }
 
     } catch (Throwable $e) {

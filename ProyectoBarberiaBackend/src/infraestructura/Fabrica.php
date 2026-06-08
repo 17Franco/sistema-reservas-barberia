@@ -7,10 +7,12 @@ use Barberia\Backend\aplicacion\Servicios;
 
 use Barberia\Backend\aplicacion\impl\EmpleadoServiciosImpl;
 use Barberia\Backend\aplicacion\EmpleadoServicios;
+use Barberia\Backend\aplicacion\impl\ServiciosDisponibilidadImpl;
 use Barberia\Backend\aplicacion\impl\ServicioUsuarioImpl;
+use Barberia\Backend\aplicacion\ServiciosDisponibilidad;
 use Barberia\Backend\aplicacion\ServiciosUsuarios;
 use Barberia\Backend\infraestructura\persistencia\Conectar;
-use Barberia\Backend\infraestructura\persistencia\RepoEmpleadoImpl;
+use Barberia\Backend\infraestructura\persistencia\RepositorioDisponibilidadImpl;
 use Barberia\Backend\infraestructura\persistencia\RepoUsuarioImpl;
 
 class Fabrica {
@@ -24,12 +26,12 @@ class Fabrica {
         return new ServicioUsuarioImpl($repo);
     }
 
-    //EMPLEADOS
-    public static function crearEmpleadoServicio(): EmpleadoServicios {
+    //ServicioDisponibilidad
+    public static function crearDisponinilidadServicios(): ServiciosDisponibilidad {
 
         $conn = new Conectar();
-        $repo = new RepoEmpleadoImpl($conn->conectar());
+        $repo = new RepositorioDisponibilidadImpl($conn->conectar());
 
-        return new EmpleadoServiciosImpl($repo);
+        return new ServiciosDisponibilidadImpl($repo);
     }
 }
