@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { NavBar } from "../../components/nav-bar/nav-bar";
 import { Auth } from '../../services/auth';
@@ -12,6 +12,7 @@ import { Auth } from '../../services/auth';
 })
 export class Home {
   authService = inject(Auth);
+  router = inject(Router);
   cd = inject(ChangeDetectorRef);
   serviciosDestacados: any[] = [];
   cargando = true;
@@ -19,6 +20,11 @@ export class Home {
 
   constructor() {
     this.loadServicios();
+  }
+
+  get mostrarHome(): boolean {
+    const url = this.router.url.split('?')[0].split('#')[0];
+    return url === '/';
   }
 
   loadServicios(): void {
