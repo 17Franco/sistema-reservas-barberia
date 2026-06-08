@@ -1,0 +1,119 @@
+<div class="container profile-page py-4">
+  <div *ngIf="cargando" class="alert alert-info">Cargando perfil...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="usuarioActual && !cargando" class="card mb-4 shadow-sm rounded-3 border-0">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-md-9 d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center overflow-hidden flex-shrink-0" style="width:110px;height:110px;">
+            <img
+              *ngIf="fotoPerfilUrl; else fotoPlaceholder"
+              [src]="fotoPerfilUrl"
+              (error)="usarIniciales()"
+              alt="Foto de perfil"
+              class="w-100 h-100 object-fit-cover"
+            >
+            <ng-template #fotoPlaceholder>
+              <span class="fw-semibold text-secondary">
+                {{ (usuarioActual.nombre || 'U').charAt(0) }}{{ (usuarioActual.apellido || '').charAt(0) }}
+              </span>
+            </ng-template>
+          </div>
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <h4 class="mb-0">{{ usuarioActual.nombre }} {{ usuarioActual.apellido }}</h4>
+              <span class="badge bg-dark">{{ usuarioActual.tipo || 'Usuario' }}</span>
+            </div>
+            <p class="mb-2 text-muted">Perfil de usuario registrado</p>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <div class="badge bg-light text-dark border p-3">
+                Estado<br>
+                <small class="d-block fw-bold">{{ usuarioActual.logueado ? 'Sesión activa' : 'Sin sesión' }}</small>
+              </div>
+              <div class="badge bg-light text-dark border p-3">
+                ID de usuario<br>
+                <small class="d-block fw-bold">#{{ usuarioActual.usuario_id || 'Sin dato' }}</small>
+              </div>
+              <div class="badge bg-light text-dark border p-3">
+                Tipo de cuenta<br>
+                <small class="d-block fw-bold">{{ usuarioActual.tipo || 'Sin dato' }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 text-md-end mt-3 mt-md-0">
+          <button class="btn btn-outline-secondary">Editar Perfil</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm rounded-3 border-0">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Mis Reservas</h5>
+        <button class="btn btn-outline-secondary btn-sm">Ver Todas</button>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center" style="min-width:240px;">
+            <div class="me-3 badge bg-light text-dark border">01/07</div>
+            <div>
+              <div class="fw-bold">01/07/2026 · 15:30</div>
+              <div class="text-muted small">Corte de Pelo</div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="me-3 bg-light rounded" style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;">Foto</div>
+            <div class="fw-semibold">NombreBarbero</div>
+          </div>
+
+          <div class="text-end" style="min-width:110px;">
+            <span class="badge bg-success">Confirmada</span>
+          </div>
+        </li>
+
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center" style="min-width:240px;">
+            <div class="me-3 badge bg-light text-dark border">03/07</div>
+            <div>
+              <div class="fw-bold">03/07/2026 · 10:00</div>
+              <div class="text-muted small">Afeitado</div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="me-3 bg-light rounded" style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;">Foto</div>
+            <div class="fw-semibold">NombreBarbero</div>
+          </div>
+
+          <div class="text-end" style="min-width:110px;">
+            <span class="badge bg-warning text-dark">Pendiente</span>
+          </div>
+        </li>
+
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center" style="min-width:240px;">
+            <div class="me-3 badge bg-light text-dark border">10/07</div>
+            <div>
+              <div class="fw-bold">10/07/2026 · 18:00</div>
+              <div class="text-muted small">Corte + Diseño</div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="me-3 bg-light rounded" style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;">Foto</div>
+            <div class="fw-semibold">NombreBarbero</div>
+          </div>
+
+          <div class="text-end" style="min-width:110px;">
+            <span class="badge bg-danger">Cancelada</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

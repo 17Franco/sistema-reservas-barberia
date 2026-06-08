@@ -43,28 +43,55 @@ use Exception;
             return $this->repo->guardarCliente($usu); 
         }
 
-        public function guardarFotoPerfil(string $ci,array $foto){
-            $uploads = __DIR__ . "/../../../public/uploads";
-            $carpetaUsuario = $uploads . "/" . $ci;//donde quiero crear o si existe guardar la img
-            $rutaAdevolver=null;
-            $existe=false;
-            if(file_exists($uploads)){
-                if(file_exists($carpetaUsuario)){
-                    $existe=true;
-                }
+        public function guardarFotoPerfil(string $ci, array $foto): ?string {
+    if (!isset($foto["error"]) || $foto["error"] !== UPLOAD_ERR_OK) {
+        throw new Exception("No se recibió correctamente la foto de perfil", 400);
+    }
 
-                if(!$existe){
-                    mkdir($carpetaUsuario);//si no existe creo la carpeta donde guardare la fotoPerfil
-                }
+    $uploads = __DIR__ . "/../../../public/uploads";
+    $carpetaUsuario = $uploads . "/" . $ci;
 
-                $extencion =pathinfo($foto["name"], PATHINFO_EXTENSION);
-                $nombreImg ="fotoPerfil.". $extencion;//nombre de la img con extencion 
-                $rutaFinal = $carpetaUsuario. "/" . $nombreImg;
-                move_uploaded_file($foto["tmp_name"],$rutaFinal);
-                $rutaAdevolver = "/uploads/" . $ci . "/" . $nombreImg; //
-           }
-            return $rutaAdevolver;
+    if (!file_exists($uploads)) {
+        if (!mkdir($uploads, 0777, true)) {
+            throw new Exception("No se pudo crear la carpeta uploads", 500);
         }
+    }
+
+    if (!is_writable($uploads)) {
+        throw new Exception("La carpeta uploads no tiene permisos de escritura", 500);
+    }
+
+    if (!file_exists($carpetaUsuario)) {
+        if (!mkdir($carpetaUsuario, 0777, true)) {
+            throw new Exception("No se pudo crear la carpeta del usuario", 500);
+        }
+        }
+
+        if (!is_writable($carpetaUsuario)) {
+            throw new Exception("La carpeta del usuario no tiene permisos de escritura", 500);
+        }
+
+        $extension = strtolower(pathinfo($foto["name"], PATHINFO_EXTENSION));
+
+        if ($extension === "") {
+            throw new Exception("La foto no tiene extensión válida", 400);
+        }
+
+        $extensionesPermitidas = ["jpg", "jpeg", "png", "webp"];
+
+        if (!in_array($extension, $extensionesPermitidas)) {
+            throw new Exception("Formato de imagen no permitido", 400);
+        }
+
+        $nombreImg = "fotoPerfil." . $extension;
+        $rutaFinal = $carpetaUsuario . "/" . $nombreImg;
+
+        if (!move_uploaded_file($foto["tmp_name"], $rutaFinal)) {
+            throw new Exception("No se pudo guardar la foto de perfil", 500);
+        }
+
+        return "/uploads/" . $ci . "/" . $nombreImg;
+    }
     
         public function verificoCredenciales(string $ci,string $pass): ?Cliente{
             $usuario = $this->repo->verificar($ci,$pass);
