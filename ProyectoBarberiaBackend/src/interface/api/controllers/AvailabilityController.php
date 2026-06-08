@@ -1,7 +1,7 @@
 <?php
 namespace Barberia\Backend\interface\api\controllers;
 use Barberia\Backend\aplicacion\Servicios;
-use Barberia\Backend\aplicacion\ServiciosUsuarios;
+use Barberia\Backend\aplicacion\ServiciosDisponibilidad;
 //import se Symfony
 use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;//exepcion que lanza cuando faltan campos del contructor
 use Symfony\Component\Serializer\Encoder\JsonEncoder;//
@@ -14,10 +14,10 @@ use Exception;
 
 class AvailabilityController {
     
-   public static function days(ServiciosUsuarios $servicio):void{
+   public static function days(ServiciosDisponibilidad $servicio):void{
     $serializer = new Serializer([new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
        
-        $data = $servicio->disponibilidad();
+        $data = $servicio->disponibilidadDias();
 
         http_response_code(200);
 
