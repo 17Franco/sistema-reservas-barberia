@@ -49,19 +49,11 @@ use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
             return $meses[$mes];
         }
 
-        public function disponibilidadEmpleadoDia(Dia $dia, ServicioBarberia $servicio, Empleado $empleado ):bool{
-            //aca me traigo el horario del empleado y las reservas que son de el para ese dia 
-            //si no tiene reserva para ese dia devuelvo true 
-            //si tiene debo ver si puedo generar un espacion de la duracion del servicio es su horario sin chocar con otra reserva ni su media hora libre 
+        public function disponibilidadEmpleadoDia(Dia $dia, int $servicio, int $empleado ):bool{
+            //nesesito horario del empleado y sus reservas asignadas ese dia 
+
 
             return true;
-        }
-
-        public function disponibilidadServicioDia(Dia $dia, ServicioBarberia $servicio): bool{
-            //aca traigo lista de empleado que realizan ese servicio
-            //recorro y llamo a disponibilidadEmpleadoDia
-            return true;
-            
         }
         
         public function tieneDisponibilidad(Dia $dia): bool{
@@ -69,9 +61,9 @@ use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
             $servicios = $this->repo->listarServicios();
             //recorro
             foreach ($servicios as $servicio) {
-             $empleados = $this->repo->empleadosPorServicio($servicio);
+             $empleados = $this->repo->empleadosPorServicio($servicio->getIdServicio());
                 foreach ($empleados as $empleado) {
-                    if ($this->disponibilidadEmpleadoDia($dia,$servicio,$empleado)) {
+                    if ($this->disponibilidadEmpleadoDia($dia,$servicio->getDuracion(),(int)$empleado)) {
                         return true;
                     }
                 }  

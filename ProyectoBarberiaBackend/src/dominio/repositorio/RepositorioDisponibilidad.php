@@ -10,7 +10,7 @@ use Barberia\Backend\dominio\Usuario;
         
         public function listarServicios(): array;
 
-        public function empleadosPorServicio(ServicioBarberia $servicio):array;
+        public function empleadosPorServicio(int $idServicio):array;
           
     }
 ?>
