@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-06-2026 a las 18:01:45
+-- Tiempo de generación: 08-06-2026 a las 18:59:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -71,6 +71,24 @@ CREATE TABLE `empleado_servicios` (
   `idEmpleado` int(11) NOT NULL,
   `idServicio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `empleado_servicios`
+--
+
+INSERT INTO `empleado_servicios` (`idEmpleado`, `idServicio`) VALUES
+(1, 1),
+(1, 2),
+(1, 4),
+(2, 2),
+(2, 4),
+(3, 1),
+(3, 2),
+(3, 3),
+(4, 1),
+(4, 4),
+(5, 1),
+(5, 5);
 
 -- --------------------------------------------------------
 

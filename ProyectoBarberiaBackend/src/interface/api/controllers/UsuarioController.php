@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;//
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;//
 use Symfony\Component\Serializer\Serializer;//
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;//permite entender enum y 
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class UsuarioController {
     //url para hacer peticiones  http://localhost:8080/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php/NombreRecurso
@@ -137,15 +138,17 @@ class UsuarioController {
     }
 
     public static function listarEmpleados(ServiciosUsuarios $servicio): void {
-
+     $serializer = new Serializer([new DateTimeNormalizer(),new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
+        $data = $servicio->listarEmpleados();
+        $json = $serializer->serialize($data, 'json');
         //$servicio = Fabrica::crearServicioEmpleado();
 
-        $data = $servicio->listarEmpleados();
+       
 
-        echo json_encode([
-            "success" => true,
-            "empleados" => $data
-        ]);
+        echo $serializer->serialize([
+            'success' => true,
+            'empleados' => $data
+        ], 'json');
     }
 
     public static function actualizarEmpleado(ServiciosUsuarios $servicio): void {
@@ -163,9 +166,7 @@ class UsuarioController {
             $data["contraseña"],
             $data["email"],
             $data["celular"],
-            TipoUsuario::from($data["tipo"]),
-            $data["horaInicio"],
-            $data["horaFin"],
+            //TipoUsuario::from($data["tipo"]),
             EstadoEmpleado::from($data["estado"])
         );
 

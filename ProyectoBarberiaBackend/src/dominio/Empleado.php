@@ -5,42 +5,47 @@ use Barberia\Backend\dominio\Usuario;
 use DateTime;
 
 class Empleado extends Usuario {
-
-    private string $horaIni;
-    private string $horaFin;
+    
+    /**
+     * el array tendra el horario del empleado
+     */
+    private array $horarios = [];
     private EstadoEmpleado $estado;
+    private string $especialidad;
 
-    public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,TipoUsuario $tipo,string $horaIni,string $horaFin,EstadoEmpleado $estado) {
+    public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,EstadoEmpleado $estado) {
 
         parent::__construct($ci,$nombre,$apellido,$fechaNac,$pass,$email,$cel);
-        $this->horaIni = $horaIni;
-        $this->horaFin = $horaFin;
         $this->estado = $estado;
     }
 
-
-    public function getHoraIni(): string {
-        return $this->horaIni;
-    }
-
-    public function setHoraIni(string $horaIni): void {
-        $this->horaIni = $horaIni;
-    }
-
-    public function getHoraFin(): string {
-        return $this->horaFin;
-    }
-
-    public function setHoraFin(string $horaFin): void {
-        $this->horaFin = $horaFin;
-    }
 
     public function getEstado(): EstadoEmpleado {
         return $this->estado;
     }
 
+
     public function setEstado(EstadoEmpleado $estado): void {
         $this->estado = $estado;
+    }
+    public function getEspecialidad(): string {
+        return $this->especialidad;
+    }
+
+
+    public function setEspecialidad(string $especialidad): void {
+        $this->especialidad = $especialidad;
+    }
+
+    public function agregarHorario(Horario_Empleado $horario): void
+    {
+        $this->horarios[] = $horario;
+    }
+
+    //retorna la lista horario
+    public function getHorarios(): array
+    {
+        return $this->horarios;
     }
 }
 ?>

@@ -1,9 +1,9 @@
 <?php
 namespace Barberia\Backend\dominio;
 
- enum EstadoEmpleado: int {
-    case activo= 1; 
-    case inactivo = 2;
+enum EstadoEmpleado: string {
+    case ACTIVO = "ACTIVO";
+    case INACTIVO = "INACTIVO";
 }
 
 ?>
