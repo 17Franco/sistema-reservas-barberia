@@ -10,7 +10,11 @@ use Barberia\Backend\dominio\Usuario;
         
         public function listarServicios(): array;
 
-        public function empleadosPorServicio(int $idServicio):array;
+        public function obtenerIdsEmpleadosPorServicio(int $idServicio):array;
+
+        public function horarioEmpleado(int $empleado):array;
+
+       public function reservasPorFechaAEmpleado(string $fecha,int $empleado):array;
           
     }
 ?>

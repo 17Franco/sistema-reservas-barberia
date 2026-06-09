@@ -3,9 +3,10 @@
 
     use Barberia\Backend\aplicacion\ServiciosDisponibilidad;
     use Barberia\Backend\dominio\Dia;
-use Barberia\Backend\dominio\Empleado;
-use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
-    use Barberia\Backend\dominio\ServicioBarberia;
+    use Barberia\Backend\dominio\Empleado;
+    use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
+use Barberia\Backend\dominio\Reserva;
+use Barberia\Backend\dominio\ServicioBarberia;
     use DateTime;
 
     class ServiciosDisponibilidadImpl implements ServiciosDisponibilidad {
@@ -48,20 +49,102 @@ use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
             ];
             return $meses[$mes];
         }
+        //anda saber si funca esta poronga
+        public function disponibilidadEmpleadoDia(Dia $dia, int $servicio, int $empleado): bool{
+                //me traigo horario empleado
+                $horarios = $this->repo->horarioEmpleado($empleado);
+                //me traigo las reservas del epleado de tal dia
+                $reservas = $this->repo->reservasPorFechaAEmpleado($dia->getFecha(), $empleado);
 
-        public function disponibilidadEmpleadoDia(Dia $dia, int $servicio, int $empleado ):bool{
-            //nesesito horario del empleado y sus reservas asignadas ese dia 
+                foreach ($horarios as $horario) {
+                    //comiezo horario laboral empleado
+                    $inicio = new DateTime($horario->getHoraIni());
+                    //fin del primer turno en caso de horario cortado
+                    $fin    = new DateTime($horario->getHoraFin());
+                    //fecha hoy
+                    $hoy    = (new DateTime())->format('Y-m-d');
 
+                    // Si la consulta es para el día de hoy entonce debo fijarme la hora actual
+                    if ($dia->getFecha() === $hoy) {
+                        $horaActual = new DateTime();
+                        if ($horaActual > $inicio) {
+                            $inicio = $horaActual;
+                        }
+                        // si tiene horario cortado y la hora actual ya supero el primer turno voy al otro turno
+                        if ($inicio >= $fin) {
+                            continue;//salto a sig horario osea siguiente turno
+                        }
+                    }
 
-            return true;
+                    // guardo solo los bloqueso para el turno actual no me interesa otros
+                    $bloqueosTurno = [];
+
+                    //si horario no es cortado tiene descanzo me interesa tratarlo como un  bloqueo 
+                    if (!empty($horario->getHoraIniDescanso()) && !empty($horario->getHoraFinDescanso()) &&
+                        $horario->getHoraIniDescanso() !== "00:00:00" && $horario->getHoraFinDescanso() !== "00:00:00") {
+
+                        $bloqueosTurno[] = ['inicio' => new DateTime($horario->getHoraIniDescanso()),'fin' => new DateTime($horario->getHoraFinDescanso())];
+                    }
+                    // Agrego las reservas que se superponen solo en el turno actual
+                    foreach ($reservas as $reserva) {
+                        $reservaInicio = new DateTime($reserva->getHoraIni());
+                        $reservaFin    = new DateTime($reserva->getHoraFin());
+
+                        // Una reserva pertenece o afecta a este turno si termina después del inicio del turno
+                        // Y empieza antes de que el turno finalice
+                        if ($reservaFin > $inicio && $reservaInicio < $fin) {
+                            
+                            // ajustamos
+                            //si se cambia horario y ya exitia reserba anterior entonces esto lo arregla
+                            //si el horario de la reserva es menor al inicio laboral entonces clono inicio sono queda con el de la reserva
+                            $reservaInicioClamped = $reservaInicio < $inicio ? clone $inicio : $reservaInicio;
+                            //lo mismo
+                            $reservaFinClamped    = $reservaFin > $fin ? clone $fin : $reservaFin;
+
+                            $bloqueosTurno[] = [
+                                'inicio' => $reservaInicioClamped,
+                                'fin'    => $reservaFinClamped
+                            ];
+                        }
+                    }
+                    // ordeno los bloqueo sentido horario
+                    usort($bloqueosTurno, function ($a, $b) {
+                        return $a['inicio'] <=> $b['inicio'];
+                    });
+                    //Buscar huecos libres entre los bloqueos del turno usando el cursor
+                    $clonInicio = clone $inicio;
+
+                    foreach ($bloqueosTurno as $bloqueo) {
+                        // Calcular los minutos libres desde el cursor hasta el próximo bloqueo
+                        $minutos = ($bloqueo['inicio']->getTimestamp() - $clonInicio->getTimestamp()) / 60;
+
+                        if ($minutos >= $servicio) {
+                            return true; // Encontró un hueco válido dentro del turno
+                        }
+                        // muevo inicio hasta el fin del bloqueo 
+                        if ($bloqueo['fin'] > $clonInicio) {
+                            $clonInicio = clone $bloqueo['fin'];
+                        }
+                    }
+                    //Verificar el último hueco 
+                    //debo verificar la ultima reserva talves no supera el final del turno
+                    $minutosFinal = ($fin->getTimestamp() - $clonInicio->getTimestamp()) / 60;
+                    if ($minutosFinal >= $servicio) {
+                        return true;
+                    }
+                }
+
+                // si no encontro hueco no esta disponible
+                return false;
         }
+        
         
         public function tieneDisponibilidad(Dia $dia): bool{
             //debo traeme los servicios
             $servicios = $this->repo->listarServicios();
             //recorro
             foreach ($servicios as $servicio) {
-             $empleados = $this->repo->empleadosPorServicio($servicio->getIdServicio());
+             $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
                 foreach ($empleados as $empleado) {
                     if ($this->disponibilidadEmpleadoDia($dia,$servicio->getDuracion(),(int)$empleado)) {
                         return true;

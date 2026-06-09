@@ -9,7 +9,9 @@ use Barberia\Backend\dominio\Usuario;
 use Barberia\Backend\dominio\Cliente;
 use Barberia\Backend\dominio\Empleado;
 use Barberia\Backend\dominio\EstadoEmpleado;
+use Barberia\Backend\dominio\Horario_Empleado;
 use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
+use Barberia\Backend\dominio\Reserva;
 use Barberia\Backend\dominio\ServicioBarberia;
 use DateTime;
 use LDAP\Result;
@@ -38,7 +40,7 @@ use mysqli;
             return $servicios;
         }
 
-        public function empleadosPorServicio(int $idServicio):array{
+        public function obtenerIdsEmpleadosPorServicio(int $idServicio):array{
             $sql ="SELECT idEmpleado FROM empleado_servicios es where es.idServicio= ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("i",$idServicio);
@@ -48,11 +50,55 @@ use mysqli;
             $result = $stmt->get_result();
             $empleados =[];
             while ($rowEmpleado  = $result->fetch_assoc()) {
-                $empleados[]=$rowEmpleado;
+                $empleados[]=(int)$rowEmpleado['idEmpleado'];
             }
             
             return $empleados;
         }
+
+       public function horarioEmpleado(int $empleado):array{
+            $sql="SELECT * FROM horario_empleado he WHERE he.idEmpleado= ? ORDER BY horaIni";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i",$empleado);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+            $horario=[];
+
+            while ($rowHorario = $result->fetch_assoc()) {
+                    $horarioEmp = new Horario_Empleado($rowHorario['horaIni'],$rowHorario['horaFin']);
+                    $horarioEmp->setHoraIniDescanso($rowHorario['horaDescanzoIni']);
+                    $horarioEmp->setHoraFinDescanso($rowHorario['horaDescanzoFin']);
+                    $horario[]=$horarioEmp;
+            }
+            return $horario;
+       }
+
+       public function reservasPorFechaAEmpleado(string $fecha,int $empleado):array{
+            $sql = "SELECT * FROM reservas r where r.idEmpleado= ? and r.fecha= ? ORDER BY horainicio";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("is",$empleado,$fecha);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+            $reservas=[];
+            while ($rowReserva = $result->fetch_assoc()) {
+                $reserva = new Reserva(
+                    (int)$rowReserva["idServicio"],
+                    (int)$rowReserva["idEmpleado"],
+                    (int)$rowReserva["idCliente"],
+                    $rowReserva["fecha"],
+                    $rowReserva["horaInicio"],
+                    $rowReserva["horaFin"]
+                );
+                $reserva->setidReserva((int)$rowReserva["idReserva"]);
+                $reservas[]=$reserva;
+            }
+            
+            return $reservas;
+       }
 
     }
 ?>

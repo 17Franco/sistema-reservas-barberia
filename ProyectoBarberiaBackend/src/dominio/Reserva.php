@@ -5,18 +5,36 @@ use DateTime;
 
 class Reserva {
 
+    private int $idReserva;
     private int $idServicio;
-    private string $idEmpleado;
-    private string $idUsuario;
-    private DateTime $fecha;
-    private string $hora;
+    private int $idEmpleado;
+    private int $idCliente;
+    private string $fecha;
+    private string $horaIni;
+    private string $horaFin;
 
-    public function __construct(int $idServicio,string $idEmpleado,string $idUsuario,DateTime $fecha,string $hora) {
+    public function __construct(
+        int $idServicio,
+        int $idEmpleado,
+        int $idCliente,
+        string $fecha,
+        string $horaIni,
+        string $horaFin
+    ) {
         $this->idServicio = $idServicio;
         $this->idEmpleado = $idEmpleado;
-        $this->idUsuario = $idUsuario;
+        $this->idCliente = $idCliente;
         $this->fecha = $fecha;
-        $this->hora = $hora;
+        $this->horaIni = $horaIni;
+        $this->horaFin = $horaFin;
+    }
+
+    public function getIdReserva(): int {
+        return $this->idReserva;
+    }
+
+    public function setIdReserva(int $idReserva): void {
+        $this->idReserva = $idReserva;
     }
 
     public function getIdServicio(): int {
@@ -27,37 +45,44 @@ class Reserva {
         $this->idServicio = $idServicio;
     }
 
-    public function getIdEmpleado(): string {
+    public function getIdEmpleado(): int {
         return $this->idEmpleado;
     }
 
-    public function setIdEmpleado(string $idEmpleado): void {
+    public function setIdEmpleado(int $idEmpleado): void {
         $this->idEmpleado = $idEmpleado;
     }
 
-    public function getIdUsuario(): string {
-        return $this->idUsuario;
+    public function getIdCliente(): int {
+        return $this->idCliente;
     }
 
-    public function setIdUsuario(string $idUsuario): void {
-        $this->idUsuario = $idUsuario;
+    public function setIdCliente(int $idCliente): void {
+        $this->idCliente = $idCliente;
     }
 
-    public function getFecha(): DateTime {
+    public function getFecha(): string {
         return $this->fecha;
     }
 
-    public function setFecha(DateTime $fecha): void {
+    public function setFecha(string $fecha): void {
         $this->fecha = $fecha;
     }
 
-    public function getHora(): string {
-        return $this->hora;
+    public function getHoraIni(): string {
+        return $this->horaIni;
     }
 
-    public function setHora(string $hora): void {
-        $this->hora = $hora;
+    public function setHoraIni(string $horaIni): void {
+        $this->horaIni = $horaIni;
     }
 
+    public function getHoraFin(): string {
+        return $this->horaFin;
+    }
+
+    public function setHoraFin(string $horaFin): void {
+        $this->horaFin = $horaFin;
+    }
 }
 ?>
