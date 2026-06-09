@@ -9,6 +9,7 @@
         //diasDiponibles devuelve una lista de fecha en las que todavia entran reservas
         public function disponibilidadDias(): array;
 
+        
        
     }
 ?>
