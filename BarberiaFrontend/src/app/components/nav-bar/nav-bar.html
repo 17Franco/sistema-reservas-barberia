@@ -18,6 +18,12 @@
 
         } 
 
+        @if(modo === "admin"){
+
+          <img src="logos/LogoPanelAdministrativo.png" class="logoHome" alt="">
+
+        }
+
       </a>
 
     </div>
@@ -26,11 +32,13 @@
 
     <div class="gap-5 d-flex">
 
+      <a class="link" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo=== 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
+
       <a class="link" (click)="cambiarModo('Home')" routerLink="/" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
 
       <a class="link" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
 
-    </div> 
+    </div>
 
 
 

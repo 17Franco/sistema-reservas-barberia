@@ -22,15 +22,6 @@ export class Auth {
   );
   }
 
-  getServicios(){
-    return this.http.get(
-      `${this.apiUrl}/servicios`,
-      {
-        withCredentials:true
-      }
-    );
-  }
-
   login(datos:any){
 
     return this.http.post(

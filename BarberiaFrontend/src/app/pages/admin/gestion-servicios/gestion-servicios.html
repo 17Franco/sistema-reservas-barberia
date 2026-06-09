@@ -1,0 +1,162 @@
+<section class="gestion-servicios-page">
+
+  <header class="page-hero">
+    <div>
+      <span class="eyebrow">Panel administrativo</span>
+      <h1>Gestión de servicios</h1>
+      <p>
+        Administrá los servicios disponibles de la barbería: agregá nuevos servicios,
+        editá precios, ajustá duraciones y eliminá opciones que ya no estén activas.
+      </p>
+    </div>
+
+    <div class="hero-badge">
+      <strong>{{ servicios.length }}</strong>
+      <span>Servicios cargados</span>
+    </div>
+  </header>
+
+  <section class="content-grid">
+
+    <article class="form-card">
+      <div class="card-header">
+        <span class="eyebrow">{{ modoEdicion ? 'Editar servicio' : 'Nuevo servicio' }}</span>
+        <h2>{{ modoEdicion ? 'Actualizar servicio' : 'Agregar servicio' }}</h2>
+        <p>
+          Completá los datos del servicio para que aparezca disponible en el sistema.
+        </p>
+      </div>
+
+      <form (ngSubmit)="guardarServicio()" class="service-form">
+
+        <div class="form-group">
+          <label>Nombre del servicio</label>
+          <input
+            type="text"
+            name="nombre"
+            [(ngModel)]="servicioForm.nombre"
+            placeholder="Ej: Corte degradado"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea
+            name="descripcion"
+            [(ngModel)]="servicioForm.descripcion"
+            placeholder="Ej: Corte moderno con terminación a máquina y tijera."
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Duración</label>
+            <div class="input-suffix">
+              <input
+                type="number"
+                name="duracion"
+                [(ngModel)]="servicioForm.duracion"
+                min="1"
+                required
+              >
+              <span>min</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Precio</label>
+            <div class="input-suffix">
+              <span>$</span>
+              <input
+                type="number"
+                name="precio"
+                [(ngModel)]="servicioForm.precio"
+                min="1"
+                required
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback error" *ngIf="error">
+          {{ error }}
+        </div>
+
+        <div class="feedback success" *ngIf="mensaje">
+          {{ mensaje }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            {{ modoEdicion ? 'Guardar cambios' : 'Agregar servicio' }}
+          </button>
+
+          <button
+            type="button"
+            class="btn-secondary"
+            *ngIf="modoEdicion"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </article>
+
+    <section class="list-card">
+      <div class="card-header list-header">
+        <div>
+          <span class="eyebrow">Servicios</span>
+          <h2>Listado actual</h2>
+          <p>Estos son los servicios que se muestran en la barbería.</p>
+        </div>
+      </div>
+
+      <div *ngIf="cargando" class="loading">
+        Cargando servicios...
+      </div>
+
+      <div *ngIf="!cargando && servicios.length === 0" class="empty-state">
+        <h3>No hay servicios cargados</h3>
+        <p>Agregá el primer servicio desde el formulario.</p>
+      </div>
+
+      <div class="services-list" *ngIf="!cargando && servicios.length > 0">
+        <article class="service-item" *ngFor="let servicio of servicios">
+
+          <div class="service-info">
+            <div class="service-icon">
+              ✂
+            </div>
+
+            <div>
+              <h3>{{ servicio.nombre }}</h3>
+              <p>{{ servicio.descripcion }}</p>
+
+              <div class="service-meta">
+                <span>{{ servicio.duracion }} min</span>
+                <strong>${{ servicio.precio }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-actions">
+            <button type="button" class="btn-edit" (click)="editarServicio(servicio)">
+              Editar
+            </button>
+
+            <button type="button" class="btn-delete" (click)="eliminarServicio(servicio)">
+              Eliminar
+            </button>
+          </div>
+
+        </article>
+      </div>
+    </section>
+
+  </section>
+
+</section>

@@ -6,6 +6,12 @@ import { Servicios } from './pages/servicios/servicios';
 import { PaginaPerfil } from './pages/pagina-perfil/pagina-perfil';
 import { PantallaPrincipal } from './pages/pantalla-principal/pantalla-principal'; // importamos la pantalla principal para agregarla a las rutas.
 
+//nuevos imports para las rutas de admin.
+import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
+import { GestionServicios } from './pages/admin/gestion-servicios/gestion-servicios';
+import { GestionBarberos } from './pages/admin/gestion-barberos/gestion-barberos';
+import { GestionReserva } from './pages/admin/gestion-reserva/gestion-reserva';
+
 //aca agregamos el path para que si en el navegador busca home redirija a page home o login etc
 //cada pagina debe tener una ruta
 export const routes: Routes = [
@@ -25,12 +31,31 @@ export const routes: Routes = [
       {
         path: 'MiPerfil',
         component: PaginaPerfil
+      },
+      {
+        path: 'admin',
+        component: AdminDashboard,
+        canActivate: []
+      },
+      {
+        path: 'admin/servicios',
+        component: GestionServicios,
+        canActivate: []
+      },
+      {
+        path: 'admin/barberos',
+        component: GestionBarberos,
+        canActivate: []
+      },
+      {
+        path: 'admin/reservas',
+        component: GestionReserva,
+        canActivate: [] 
       }
     ]
   },
   {
     path: 'auth',
     component: LoginRegistro
-  },
-
+  }
 ];
