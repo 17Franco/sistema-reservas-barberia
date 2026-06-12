@@ -1,7 +1,7 @@
 <?php
 namespace Barberia\Backend\dominio;
-
 use DateTime;
+use Barberia\Backend\dominio\EstadoReserva;
 
 class Reserva {
 
@@ -12,6 +12,7 @@ class Reserva {
     private string $fecha;
     private string $horaIni;
     private string $horaFin;
+    private EstadoReserva $estado;
 
     public function __construct(
         int $idServicio,
@@ -19,7 +20,8 @@ class Reserva {
         int $idCliente,
         string $fecha,
         string $horaIni,
-        string $horaFin
+        string $horaFin,
+        EstadoReserva $estado
     ) {
         $this->idServicio = $idServicio;
         $this->idEmpleado = $idEmpleado;
@@ -27,8 +29,9 @@ class Reserva {
         $this->fecha = $fecha;
         $this->horaIni = $horaIni;
         $this->horaFin = $horaFin;
+        $this->estado = $estado;
     }
-
+    //GETTERS
     public function getIdReserva(): int {
         return $this->idReserva;
     }
@@ -40,6 +43,12 @@ class Reserva {
     public function getIdServicio(): int {
         return $this->idServicio;
     }
+
+    public function getEstadoReserva(): EstadoReserva {
+        return $this->estado;
+    }
+
+    //SETTERS
 
     public function setIdServicio(int $idServicio): void {
         $this->idServicio = $idServicio;
@@ -83,6 +92,10 @@ class Reserva {
 
     public function setHoraFin(string $horaFin): void {
         $this->horaFin = $horaFin;
+    }
+
+    public function setEstadoReserva(Estadoreserva $estado): void {
+        $this->estado = $estao;
     }
 }
 ?>

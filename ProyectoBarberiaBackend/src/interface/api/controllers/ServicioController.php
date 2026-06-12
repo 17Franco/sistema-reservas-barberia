@@ -17,6 +17,17 @@ class ServicioController {
         ]);
     }
 
+    //le paso el id de un cliente y me retorna los servicios que se a hecho
+    public static function listarReservasClienteAsociado(ServiciosServicios $servicio, int $idCliente) : void{
+        $servicios = $servicio->listarReservasClienteAsociado($idCliente);
+        //si esta vacio no es error, simplemente no tiene servicios todavia
+        http_response_code(200);
+        echo json_encode([
+            "success" => true,
+            "servicios" => $servicios
+        ]);
+    }
+
     public static function buscarServicio(ServiciosServicios $servicio, int $idServicio): void {
         $servicioEncontrado = $servicio->buscarServicio($idServicio);
 

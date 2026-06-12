@@ -16,6 +16,10 @@ class ServiciosServicios {
         return $this->repo->listarServicios();
     }
 
+    public function listarReservasClienteAsociado(int $idCliente):array{
+        return $this->repo->listarReservasClienteAsociado($idCliente);
+    }
+
     public function buscarServicio(int $idServicio): ?array {
         return $this->repo->buscarServicio($idServicio);
     }

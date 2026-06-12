@@ -96,6 +96,21 @@ try {
         exit;
     }
 
+    //GET /reservasClienteAsociado/1
+    if (preg_match('#^/reservasClienteAsociado/(\d+)$#', $route, $matches)) {
+    $idCliente = (int)$matches[1];
+        //le pasas el id del cliente y te retorna sus reservas
+        if ($method === 'GET') {
+            ServicioController::listarReservasClienteAsociado($servicioServicios, $idCliente);
+            exit;
+        }
+    }
+
+
+
+
+
+
     // POST /servicios
     if ($method === 'POST' && $route === '/servicios') {
         ServicioController::crearServicio($servicioServicios);
