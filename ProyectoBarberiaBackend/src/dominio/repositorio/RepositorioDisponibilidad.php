@@ -15,6 +15,8 @@ use Barberia\Backend\dominio\Usuario;
         public function horarioEmpleado(int $empleado):array;
 
        public function reservasPorFechaAEmpleado(string $fecha,int $empleado):array;
+       
+       public function EmpleadosPorServicio(int $idServicio):array;
           
     }
 ?>
