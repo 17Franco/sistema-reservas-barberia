@@ -40,7 +40,7 @@ try {
     // Servicios de aplicación
     $service = Fabrica::crearServicio();
     $disponibilidadService = Fabrica::crearDisponinilidadServicios();
-    $servicioServicios = new ServiciosServicios();
+    $servicioServicios = new ServiciosServicios();// la fabrica de adorno
 
     /*
     |--------------------------------------------------------------------------
@@ -132,6 +132,10 @@ try {
 
     if ($method === 'GET' && $route === '/disponibilidad') {
         AvailabilityController::days($disponibilidadService);
+        exit;
+    }
+    if ($method === 'GET' && $route === '/servicio/disponibilidad') {
+        AvailabilityController::serviciosDiponiblesDia($disponibilidadService);
         exit;
     }
 

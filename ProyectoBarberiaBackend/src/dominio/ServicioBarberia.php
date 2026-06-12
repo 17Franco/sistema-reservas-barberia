@@ -7,7 +7,7 @@
         private string $descripcion;
         private int $duracion;
         private int $precio;
-        private string $disponible;
+        private bool $disponible;
 
         public function __construct(string $nombre,string $descripcion,int $duracion,int $precio) {
             $this->nombre = $nombre;
@@ -20,7 +20,7 @@
             return $this->idServicio;
         }
 
-        public function getDisponible(): int {
+        public function getDisponible(): bool {
             return $this->disponible;
         }
 
@@ -32,7 +32,7 @@
             $this->idServicio = $idServicio;
         }
 
-        public function setDisponible(string $disponible): void {
+        public function setDisponible(bool $disponible): void {
             $this->disponible = $disponible;
         }
 
