@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { Auth } from '../../services/auth';
 import { firstValueFrom } from 'rxjs';
@@ -12,10 +11,20 @@ interface UsuarioSesion {
   tipo?: string;
 }
 
+interface ReservaPerfil {
+  idReserva: number;
+  fecha: string;
+  horaInicio: string;
+  servicio?: string;
+  barbero?: string;
+  estado?: string;
+}
+
 @Component({
   selector: 'app-pagina-perfil',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './pagina-perfil.html',
+  styleUrl: './pagina-perfil.scss',
 })
 export class PaginaPerfil implements OnInit {
   //para detectar los cambios porque tiene delay
@@ -28,6 +37,7 @@ export class PaginaPerfil implements OnInit {
   public cargando = true;
   public error = '';
   public mostrarIniciales = false;
+  public reservas: ReservaPerfil[] = [];
 
   //uso esta funcion piruja para decirle que llame a mi funcion cargarPerfil en cuanto inicie la paginaPeril
 
@@ -59,5 +69,44 @@ export class PaginaPerfil implements OnInit {
 
   usarIniciales(): void {
     this.mostrarIniciales = true;
+  }
+
+  inicialesUsuario(): string {
+    const nombre = this.usuarioActual?.nombre || 'U';
+    const apellido = this.usuarioActual?.apellido || '';
+
+    return `${nombre.charAt(0)}${apellido.charAt(0)}`.toUpperCase();
+  }
+
+  diaMes(fecha: string): string {
+    const partes = fecha.split('-');
+
+    if (partes.length !== 3) {
+      return fecha;
+    }
+
+    return `${partes[2]}/${partes[1]}`;
+  }
+
+  fechaReserva(reserva: ReservaPerfil): string {
+    return `${this.diaMes(reserva.fecha)}/${reserva.fecha.slice(0, 4)} · ${reserva.horaInicio}`;
+  }
+
+  claseEstado(estado?: string): string {
+    const estadoNormalizado = estado?.toLowerCase() || '';
+
+    if (estadoNormalizado === 'confirmada') {
+      return 'bg-success';
+    }
+
+    if (estadoNormalizado === 'pendiente') {
+      return 'bg-warning text-dark';
+    }
+
+    if (estadoNormalizado === 'cancelada') {
+      return 'bg-danger';
+    }
+
+    return 'bg-secondary';
   }
 }
