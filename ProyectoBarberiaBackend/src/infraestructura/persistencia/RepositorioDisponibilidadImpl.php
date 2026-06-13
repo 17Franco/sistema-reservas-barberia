@@ -100,5 +100,11 @@ use mysqli;
             return $reservas;
        }
 
+       public function EmpleadosPorServicio(int $idServicio):array{
+        $empleado=[];
+
+        return $empleado;
+       }
+
     }
 ?>

@@ -13,7 +13,7 @@ class Reserva {
     private string $horaIni;
     private string $horaFin;
     private EstadoReserva $estado;
-
+    //no poner el estado en el contructor usar el seter 
     public function __construct(
         int $idServicio,
         int $idEmpleado,
@@ -21,7 +21,6 @@ class Reserva {
         string $fecha,
         string $horaIni,
         string $horaFin,
-        EstadoReserva $estado
     ) {
         $this->idServicio = $idServicio;
         $this->idEmpleado = $idEmpleado;
@@ -29,7 +28,6 @@ class Reserva {
         $this->fecha = $fecha;
         $this->horaIni = $horaIni;
         $this->horaFin = $horaFin;
-        $this->estado = $estado;
     }
     //GETTERS
     public function getIdReserva(): int {
@@ -95,7 +93,7 @@ class Reserva {
     }
 
     public function setEstadoReserva(Estadoreserva $estado): void {
-        $this->estado = $estao;
+        $this->estado = $estado;
     }
 }
 ?>

@@ -50,11 +50,11 @@ use Barberia\Backend\dominio\ServicioBarberia;
             return $meses[$mes];
         }
         //anda saber si funca esta poronga
-        public function disponibilidadEmpleadoDia(Dia $dia, int $servicio, int $empleado): bool{
+        public function disponibilidadEmpleadoDia(string $dia, int $servicio, int $empleado): bool{
                 //me traigo horario empleado
                 $horarios = $this->repo->horarioEmpleado($empleado);
                 //me traigo las reservas del epleado de tal dia
-                $reservas = $this->repo->reservasPorFechaAEmpleado($dia->getFecha(), $empleado);
+                $reservas = $this->repo->reservasPorFechaAEmpleado($dia, $empleado);
 
                 foreach ($horarios as $horario) {
                     //comiezo horario laboral empleado
@@ -65,7 +65,7 @@ use Barberia\Backend\dominio\ServicioBarberia;
                     $hoy    = (new DateTime())->format('Y-m-d');
 
                     // Si la consulta es para el día de hoy entonce debo fijarme la hora actual
-                    if ($dia->getFecha() === $hoy) {
+                    if ($dia === $hoy) {
                         $horaActual = new DateTime();
                         if ($horaActual > $inicio) {
                             $inicio = $horaActual;
@@ -146,7 +146,7 @@ use Barberia\Backend\dominio\ServicioBarberia;
             foreach ($servicios as $servicio) {
              $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
                 foreach ($empleados as $empleado) {
-                    if ($this->disponibilidadEmpleadoDia($dia,$servicio->getDuracion(),(int)$empleado)) {
+                    if ($this->disponibilidadEmpleadoDia($dia->getFecha(),$servicio->getDuracion(),(int)$empleado)) {
                         return true;
                     }
                 }  
@@ -154,7 +154,7 @@ use Barberia\Backend\dominio\ServicioBarberia;
             return false;
         }
 
-        public function disponibilidadDias(): array{
+        public function calendario(): array{
             //genero array de 30 dias 
             $dias = [];
             $hoy = new DateTime();
@@ -190,5 +190,29 @@ use Barberia\Backend\dominio\ServicioBarberia;
             return $dias;
         }
 
+        public function disponibilidadServicios(string $dia): array{
+            $servicios = $this->repo->listarServicios();
+
+            foreach ($servicios as $servicio) {
+             $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+                foreach ($empleados as $empleado) {
+                    $servicio->setDisponible($this->disponibilidadEmpleadoDia($dia,$servicio->getDuracion(),(int)$empleado));
+                }  
+            } 
+            return $servicios;
+        }
+
+        public function barberoServicioDisponiblePorDia(string $dia, int $idServicio):array{
+            //nesesito el array de empleados
+            $empleados = $this->repo->EmpleadosPorServicio($idServicio);
+
+           /* foreach ($empleados as $empleado) {
+                    $servicio->setDisponible($this->disponibilidadEmpleadoDia($dia,$idServicio,(int)$empleado));
+            }  */
+
+
+            return $empleados;
+
+        }
     }
 ?>
