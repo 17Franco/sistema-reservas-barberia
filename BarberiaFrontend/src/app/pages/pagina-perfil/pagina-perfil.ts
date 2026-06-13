@@ -68,8 +68,11 @@ export class PaginaPerfil implements OnInit {
   }
 
   usarIniciales(): void {
+    //es porque angular hace todo al mismo tiempo y sino se rompe
+  setTimeout(() => {
     this.mostrarIniciales = true;
-  }
+  },0);
+}
 
   inicialesUsuario(): string {
     const nombre = this.usuarioActual?.nombre || 'U';
