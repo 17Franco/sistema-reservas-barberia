@@ -116,7 +116,7 @@ use mysqli;
                     $fecha = new DateTime($data['fechaNac']);
 
                     //Creo usuario con todos sus datos 
-                    $result = new Cliente($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['password_hash'],$data['email'],$data['celular']);
+                    $result = new Cliente($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['password_hash'],$data['email'],$data['celular'], $data['fechaCreacion']);
                     $result->setTipo(TipoUsuario::from($data['tipoUsuario']));
                     $result->setId($data['id']);
                     $result->setFoto($data['foto']);
@@ -223,5 +223,13 @@ use mysqli;
 
         public function listar(): array{return [];}
 
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular): bool{
+            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ? WHERE id = ?";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("sssi", $nombre, $apellido, $celular, $idUsuario);
+
+            return $stmt->execute();
+        }
     }
 ?>

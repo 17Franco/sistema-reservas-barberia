@@ -9,9 +9,16 @@
   }
 
   @if(usuarioActual && !cargando){
-    <section class="card shadow-sm border-0 mb-4">
-      <div class="card-body d-flex align-items-center gap-3">
+    <header class="profile-hero">
+      <div>
+        <span class="eyebrow">Panel de usuario</span>
+        <h1>Administración de Usuario</h1>
+        <p>Visualizá un resumen de tus reservas y edita tus datos personales.</p>
+      </div>
+    </header>
 
+    <section class="profile-card">
+      <div class="profile-info">
         <div class="avatar">
           @if(fotoPerfilUrl){
             <img [src]="fotoPerfilUrl" (error)="usarIniciales()" alt="Foto de perfil">
@@ -20,40 +27,100 @@
           }
         </div>
 
-        <div>
-          <h4 class="mb-1">
-            {{ usuarioActual.nombre }} {{ usuarioActual.apellido }}
-          </h4>
+        <div class="profile-main">
+          @if(editandoPerfil){
+            <form class="profile-edit-form" (ngSubmit)="guardarEdicion()">
+              <div class="row g-2">
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="nombre" [(ngModel)]="formPerfil.nombre" placeholder="Nombre">
+                </div>
 
-          <span class="badge bg-dark">
-            {{ usuarioActual.tipo || 'Usuario' }}
-          </span>
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="apellido" [(ngModel)]="formPerfil.apellido" placeholder="Apellido">
+                </div>
+
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="celular" [(ngModel)]="formPerfil.celular" placeholder="Celular">
+                </div>
+              </div>
+
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cancelarEdicion()">Cancelar</button>
+              </div>
+            </form>
+          } @else {
+            <h4 class="mb-1">
+              {{ usuarioActual.nombre }} {{ usuarioActual.apellido }}
+            </h4>
+
+            <span class="badge bg-dark">
+              {{ usuarioActual.tipo || 'Usuario' }}
+            </span>
+
+            <p>{{ usuarioActual.email || 'Email no registrado' }}</p>
+          }
         </div>
 
+        <!--EDITAR PERFIL-->
+        @if(!editandoPerfil){
+          <button class="btn btn-outline-primary btn-sm" type="button" (click)="activarEdicion()">
+            Editar perfil
+          </button>
+        }
+      </div>
+
+      <div class="profile-stats">
+        <div>
+          <span>Cuenta creada</span>
+          <strong>{{ fechaUsuario(usuarioActual.fechaCreacion) }}</strong>
+        </div>
+
+        <div>
+          <span>Teléfono</span>
+          <strong>{{ usuarioActual.celular || 'No registrado' }}</strong>
+        </div>
+
+        <div>
+          <span>Dirección</span>
+          <strong>No registrada</strong>
+        </div>
       </div>
     </section>
   }
 
+  <!--Reservas-->
   <section class="card shadow-sm border-0">
     <div class="card-body">
 
       <h5 class="mb-3">Mis Reservas</h5>
 
-      @if(reservas.length > 0){
+      @if(reservasAsociadas.length > 0){
         <ul class="list-group">
-          @for(reserva of reservas; track reserva.idReserva){
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+          <!--Hago un for para recorrer la lista re reservas Asociadas-->
+          @for(reserva of reservasAsociadas; track reserva.idReserva){
+            <li class="list-group-item reserva-row">
 
-              <div>
+              @if(fotoEmpleadoUrl(reserva)){
+                <img class="reserva-barbero-foto" [src]="fotoEmpleadoUrl(reserva)" alt="Foto del barbero">
+              }
+
+              <div class="reserva-info">
+                <!--FECHA -> llamo a la funcion que muestra la fecha reserva en formato que deseo-->
                 <strong>{{ fechaReserva(reserva) }}</strong>
-                <div class="text-muted small">
-                  {{ reserva.servicio || 'Servicio sin dato' }}
+                <!--Servicio-->
+                <div class="text-muted small fw-semibold">
+                  {{ reserva.nombreServicio || 'Servicio sin nombre' }}
                 </div>
-                <div class="small">
-                  {{ reserva.barbero || 'Barbero sin dato' }}
+                <div class="text-muted small">
+                  {{ reserva.descripcion || 'Servicio sin descripcion' }}
+                </div>
+                <!--Empleado-->
+                <div class="barbero-line">
+                  <span>{{ nombreCompletoEmpleado(reserva) }}</span>
                 </div>
               </div>
-
+              <!--uso la funcion claseEstado para mostrar el span de diferente manera segun el estado de la reserva en ves de tener varios @if-->
               <span [class]="'badge ' + claseEstado(reserva.estado)">
                 {{ reserva.estado || 'Sin estado' }}
               </span>

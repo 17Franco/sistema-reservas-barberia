@@ -56,4 +56,32 @@ export class Auth {
     console.log("llego");
     return this.http.post(`${this.apiUrl}/usuarios`, datos);
   }
+
+
+  getReservasClienteAsociado(idCliente: number){
+    console.log("llegaon las reservas");
+    return this.http.get<any>(
+      `${this.apiUrl}/reservasClienteAsociado/${idCliente}`,
+      {
+        withCredentials: true
+      }
+    )
+  };
+
+
+  editarPerfilUsuario(datos: { nombre: string; apellido: string; celular: string }){
+    return this.http.put<any>(
+      `${this.apiUrl}/editarPerfil`,
+      datos,
+      {
+        withCredentials: true
+      }
+    )
+  };
+
+  
+
+
+
+
 }

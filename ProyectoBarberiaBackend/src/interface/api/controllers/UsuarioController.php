@@ -82,6 +82,8 @@ class UsuarioController {
             $_SESSION['apellido'] = $usuario->getApellido();
             $_SESSION['tipoUser'] = $usuario->getTipo()->value;
             $_SESSION['foto'] = $usuario->getFoto();
+            $_SESSION['usuario_celular'] = $usuario->getCel();
+            $_SESSION['fechaCreacion'] = $usuario->getFechaCreacion();
             
         }
 
@@ -127,9 +129,12 @@ class UsuarioController {
             "apellido" => $_SESSION['apellido'],
             "foto" => $_SESSION['foto'],
             "tipo" => $_SESSION['tipoUser'],
+            "email" => $_SESSION['usuario_email'],
+            "celular" => $_SESSION['usuario_celular'],
+            "fechaCreacion" => $_SESSION['fechaCreacion'],
         ]);
 
-        } else {
+        } else {    
 
             echo json_encode([
                 "logueado" => false
@@ -177,6 +182,51 @@ class UsuarioController {
         ]);
     }
 
+  
+  
+    public static function editarUsuario(ServiciosUsuarios $servicio): void {
+        session_start();
+
+        if (!isset($_SESSION['usuario_id'])) {
+            throw new Exception("No hay usuario logueado", 401);
+        }
+
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        if (!isset($data['nombre']) || !isset($data['apellido']) || !isset($data['celular'])) {
+            throw new Exception("Faltan campos", 400);
+        }
+
+        $nombre = trim($data['nombre']);
+        $apellido = trim($data['apellido']);
+        $celular = trim($data['celular']);
+
+        if ($nombre === '' || $apellido === '' || $celular === '') {
+            throw new Exception("Los campos no pueden estar vacios", 400);
+        }
+
+        $ok = $servicio->editarUsuario((int)$_SESSION['usuario_id'], $nombre, $apellido, $celular);
+
+        if ($ok) {
+            $_SESSION['nombre'] = $nombre;
+            $_SESSION['apellido'] = $apellido;
+            $_SESSION['usuario_celular'] = $celular;
+        }
+
+        echo json_encode([
+            "success" => $ok,
+            "usuario" => [
+                "nombre" => $nombre,
+                "apellido" => $apellido,
+                "celular" => $celular
+            ]
+        ]);
+    }
+
+
+
+
     public static function cambiarEstadoEmpleado(ServiciosUsuarios $servicio): void {
         // 1. Leer el JSON del frontend
         $json = file_get_contents("php://input");
@@ -198,5 +248,6 @@ class UsuarioController {
             "success" => $ok
         ]);
     }
+
 }
 ?>

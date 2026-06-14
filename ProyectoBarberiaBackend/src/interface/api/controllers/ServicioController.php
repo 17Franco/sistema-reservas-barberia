@@ -19,12 +19,13 @@ class ServicioController {
 
     //le paso el id de un cliente y me retorna los servicios que se a hecho
     public static function listarReservasClienteAsociado(ServiciosServicios $servicio, int $idCliente) : void{
-        $servicios = $servicio->listarReservasClienteAsociado($idCliente);
-        //si esta vacio no es error, simplemente no tiene servicios todavia
+        $reservasAsociadas = $servicio->listarReservasClienteAsociado($idCliente);
+        //si esta vacio no es error, simplemente no tiene reservasAsociadas todavia
         http_response_code(200);
+        //en este caso se llama "mensaje" pero se puede llamar "roberto" igual
         echo json_encode([
             "success" => true,
-            "servicios" => $servicios
+            "mensaje" => $reservasAsociadas
         ]);
     }
 

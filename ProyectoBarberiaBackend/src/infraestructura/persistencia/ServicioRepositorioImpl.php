@@ -44,19 +44,27 @@ class ServicioRepositorioImpl {
         $conexion = $this->conectar();
         //pido las reservas del cliente, para acceder a sus servicios reservados
          $sql = "SELECT
-                reserva.idReserva,
-                reserva.idServicio,
-                reserva.estado,
-                reserva.fecha,
-                reserva.horaInicio,
-                servicio.nombre,
-                servicio.descripcion,
-                servicio.duracion,
-                servicio.precio
-            FROM reservas reserva
-            INNER JOIN servicios servicio ON servicio.idServicio = reserva.idServicio
-            WHERE reserva.idCliente = ?
-            ORDER BY reserva.fecha DESC, reserva.horaInicio DESC";
+        reserva.idReserva,
+        reserva.idEmpleado,
+        reserva.idServicio,
+        reserva.estado,
+        reserva.fecha,
+        reserva.horaInicio,
+
+        servicio.nombre AS nombreServicio,
+        servicio.descripcion,
+        servicio.duracion,
+        servicio.precio,
+
+        usuarioEmpleado.nombre AS nombreEmpleado,
+        usuarioEmpleado.apellido AS apellidoEmpleado,
+        usuarioEmpleado.foto AS fotoEmpleado
+    FROM reservas reserva
+    INNER JOIN servicios servicio ON servicio.idServicio = reserva.idServicio
+    INNER JOIN empleado empleado ON empleado.id_usuario = reserva.idEmpleado
+    INNER JOIN usuarios usuarioEmpleado ON usuarioEmpleado.id = empleado.id_usuario
+    WHERE reserva.idCliente = ?
+    ORDER BY reserva.fecha DESC, reserva.horaInicio DESC";
 
         //Como usé "?" para indicarle a SQL que le iba a pasar después el id pues ahora preparo una consulta con ese parametro a la que llamo consultaPreparada
         $consultaPreparada = $conexion->prepare($sql);
@@ -67,19 +75,25 @@ class ServicioRepositorioImpl {
         $resultado = $consultaPreparada->get_result();
 
 
-        $serviciosRealizados = [];
+        $reservasAsociadas = [];
         //los casos en que no hay un tipo detras es porque es string
         while ($fila = $resultado->fetch_assoc()) {
-            $serviciosRealizados[] = [
-                "idServicio" => (int) $fila ["idServicio"],
-                "idReserva" => (int) $fila ["idReserva"],
-                "estado" => $fila ["estado"],
+            $reservasAsociadas[] = [
+                "idServicio" => (int) $fila["idServicio"],
+                "idReserva" => (int) $fila["idReserva"],
+                "idEmpleado" => (int) $fila["idEmpleado"],
+                "estado" => $fila["estado"],
                 "fecha" => $fila["fecha"],
                 "horaInicio" => $fila["horaInicio"],
-                "nombre" => $fila["nombre"],
+
+                "nombreServicio" => $fila["nombreServicio"],
                 "descripcion" => $fila["descripcion"],
-                "duracion" => (int)$fila["duracion"],
-                "precio" => (float)$fila["precio"]
+                "duracion" => (int) $fila["duracion"],
+                "precio" => (float) $fila["precio"],
+
+                "nombreEmpleado" => $fila["nombreEmpleado"],
+                "apellidoEmpleado" => $fila["apellidoEmpleado"],
+                "fotoEmpleado" => $fila["fotoEmpleado"]
             ];
         }
         
@@ -89,7 +103,7 @@ class ServicioRepositorioImpl {
         $consultaPreparada->close();
         $conexion->close();
 
-    return $serviciosRealizados;
+    return $reservasAsociadas;
 
     }
 
