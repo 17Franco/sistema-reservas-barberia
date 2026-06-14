@@ -182,6 +182,8 @@ class UsuarioController {
         ]);
     }
 
+  
+  
     public static function editarUsuario(ServiciosUsuarios $servicio): void {
         session_start();
 
@@ -224,6 +226,28 @@ class UsuarioController {
 
 
 
+
+    public static function cambiarEstadoEmpleado(ServiciosUsuarios $servicio): void {
+        // 1. Leer el JSON del frontend
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        // 2. Validar que vengan los dos datos necesarios
+        if (!isset($data['ci']) || !isset($data['estado'])) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "error" => "Faltan campos requeridos (ci, estado)"]);
+            return;
+        }
+
+        // 3. Ejecutar la activación/desactivación a través del servicio
+        $ok = $servicio->cambiarEstadoEmpleado($data['ci'], strtoupper($data['estado']));
+
+        // 4. Responder
+        http_response_code(200);
+        echo json_encode([
+            "success" => $ok
+        ]);
+    }
 
 }
 ?>

@@ -112,6 +112,12 @@ use Exception;
         public function actualizarEmpleado(Empleado $e): bool {
             return $this->repo->actualizar($e);
         }
+
+        public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool {
+            // Aquí puedes meter reglas de negocio si quisieras en el futuro, 
+            // por ahora va directo al grano:
+            return $this->repo->cambiarEstadoEmpleado($ci, $nuevoEstado);
+        }
     }
 
 
