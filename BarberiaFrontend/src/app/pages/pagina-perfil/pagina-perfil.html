@@ -26,21 +26,26 @@
             <span>{{ inicialesUsuario() }}</span>
           }
         </div>
-
+        <!--FORMULARIO EDICION-->
         <div class="profile-main">
           @if(editandoPerfil){
             <form class="profile-edit-form" (ngSubmit)="guardarEdicion()">
               <div class="row g-2">
+                <!--Nombre-->
                 <div class="col-md-4">
                   <input class="form-control form-control-sm" name="nombre" [(ngModel)]="formPerfil.nombre" placeholder="Nombre">
                 </div>
-
+                <!--Apellido-->
                 <div class="col-md-4">
                   <input class="form-control form-control-sm" name="apellido" [(ngModel)]="formPerfil.apellido" placeholder="Apellido">
                 </div>
-
+                <!--Celular-->
                 <div class="col-md-4">
                   <input class="form-control form-control-sm" name="celular" [(ngModel)]="formPerfil.celular" placeholder="Celular">
+                </div>
+                <!--Direccion-->
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="direccion" [(ngModel)]="formPerfil.direccion" placeholder="Direccion">
                 </div>
               </div>
 
@@ -83,7 +88,7 @@
 
         <div>
           <span>Dirección</span>
-          <strong>No registrada</strong>
+          <strong>{{ usuarioActual.direccion || 'No registrado' }}</strong>
         </div>
       </div>
     </section>

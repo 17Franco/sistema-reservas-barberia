@@ -85,7 +85,7 @@ class UsuarioController {
             $_SESSION['foto'] = $usuario->getFoto();
             $_SESSION['usuario_celular'] = $usuario->getCel();
             $_SESSION['fechaCreacion'] = $usuario->getFechaCreacion();
-            
+            $_SESSION['direccion'] = $usuario->getDireccion();
         }
 
         http_response_code(200);
@@ -133,6 +133,7 @@ class UsuarioController {
             "email" => $_SESSION['usuario_email'],
             "celular" => $_SESSION['usuario_celular'],
             "fechaCreacion" => $_SESSION['fechaCreacion'],
+            "direccion" => $_SESSION['direccion'],
         ]);
 
         } else {    
@@ -192,6 +193,7 @@ class UsuarioController {
             throw new Exception("No hay usuario logueado", 401);
         }
 
+        //esta funcion la uso para leer body de la petición que me hicieron, o sea por ej '{"nombre":"Santiago","apellido":"Guadalupe","celular":"093548866","direccion":"Av. Italia 123"}'
         $json = file_get_contents("php://input");
         $data = json_decode($json, true);
 
@@ -202,17 +204,19 @@ class UsuarioController {
         $nombre = trim($data['nombre']);
         $apellido = trim($data['apellido']);
         $celular = trim($data['celular']);
+        $direccion = isset($data['direccion']) ? trim($data['direccion']) : null; //direccion puede ser null si no quiere poner el usuario
 
         if ($nombre === '' || $apellido === '' || $celular === '') {
-            throw new Exception("Los campos no pueden estar vacios", 400);
+            throw new Exception("Los campos nombre, apellido y celular no pueden estar vacios", 400);
         }
 
-        $ok = $servicio->editarUsuario((int)$_SESSION['usuario_id'], $nombre, $apellido, $celular);
+        $ok = $servicio->editarUsuario((int)$_SESSION['usuario_id'], $nombre, $apellido, $celular, $direccion);
 
         if ($ok) {
             $_SESSION['nombre'] = $nombre;
             $_SESSION['apellido'] = $apellido;
             $_SESSION['usuario_celular'] = $celular;
+            $_SESSION['direccion'] = $direccion;
         }
 
         echo json_encode([
@@ -220,7 +224,8 @@ class UsuarioController {
             "usuario" => [
                 "nombre" => $nombre,
                 "apellido" => $apellido,
-                "celular" => $celular
+                "celular" => $celular,
+                "direccion" => $direccion,
             ]
         ]);
     }

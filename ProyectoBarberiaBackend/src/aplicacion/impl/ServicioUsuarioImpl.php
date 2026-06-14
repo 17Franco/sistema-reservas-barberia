@@ -43,8 +43,8 @@ use Exception;
             return $this->repo->guardarCliente($usu); 
         }
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular): bool{
-            return $this->repo->editarUsuario($idUsuario, $nombre, $apellido, $celular);
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool{
+            return $this->repo->editarUsuario($idUsuario, $nombre, $apellido, $celular, $direccion);
         }
 
         public function guardarFotoPerfil(string $ci, array $foto): ?string {

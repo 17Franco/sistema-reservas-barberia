@@ -120,6 +120,7 @@ use mysqli;
                     $result->setTipo(TipoUsuario::from($data['tipoUsuario']));
                     $result->setId($data['id']);
                     $result->setFoto($data['foto']);
+                    $result->setDireccion($data['direccion']);
                 }
             }
             
@@ -223,13 +224,13 @@ use mysqli;
 
         public function listar(): array{return [];}
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular): bool{
-            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ? WHERE id = ?";
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool{
+            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, direccion = ? WHERE id = ?";
 
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("sssi", $nombre, $apellido, $celular, $idUsuario);
+            $consultaPreparada = $this->conn->prepare($sql);
+            $consultaPreparada->bind_param("ssssi", $nombre, $apellido, $celular, $direccion, $idUsuario);
 
-            return $stmt->execute();
+            return $consultaPreparada->execute();
         }
     }
 ?>
