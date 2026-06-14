@@ -20,6 +20,8 @@
         public function listarEmpleados(): array;
 
         public function actualizarEmpleado(Empleado $e): bool;
+
+        public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool;
         
     }
 ?>

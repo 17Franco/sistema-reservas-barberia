@@ -199,6 +199,18 @@ use mysqli;
             return false;
         }
 
+        public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool {
+            // Apunta directamente a la tabla empleado filtrando por la CI del usuario
+            $sql = "UPDATE empleado 
+                    SET estado = ? 
+                    WHERE id_usuario = (SELECT id FROM usuarios WHERE ci = ?)";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ss", $nuevoEstado, $ci);
+
+            return $stmt->execute();
+        }
+
         public function buscarPorCiEmpleado(string $ci): ?Empleado {
             return null;
         }

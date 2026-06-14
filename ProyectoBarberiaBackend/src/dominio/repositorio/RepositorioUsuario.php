@@ -27,6 +27,8 @@
         public function actualizarEmpleado(Empleado $empleado): bool;
 
         public function buscarPorCiEmpleado(string $ci): ?Empleado;
+
+        public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool;
           
     }
 ?>
