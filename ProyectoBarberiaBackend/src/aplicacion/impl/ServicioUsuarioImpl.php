@@ -23,7 +23,7 @@ use Exception;
             $this->repo = $repo;
         }
         
-       
+        
         public function agregarUsuario(Cliente $usu,?array $foto = null): bool{
 
             if($this->repo->existe($usu->getCi()) || $this->repo->emailUsado($usu->getEmail())){
@@ -41,6 +41,10 @@ use Exception;
 
             //llamo al repo
             return $this->repo->guardarCliente($usu); 
+        }
+
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular): bool{
+            return $this->repo->editarUsuario($idUsuario, $nombre, $apellido, $celular);
         }
 
         public function guardarFotoPerfil(string $ci, array $foto): ?string {
@@ -109,5 +113,7 @@ use Exception;
             return $this->repo->actualizar($e);
         }
     }
+
+
 
 ?>

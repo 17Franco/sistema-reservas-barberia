@@ -68,6 +68,12 @@ try {
         exit;
     }
 
+    if ($method === 'PUT' && $route === '/editarPerfil') {
+        UsuarioController::editarUsuario($service);
+        exit;
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | EMPLEADOS
