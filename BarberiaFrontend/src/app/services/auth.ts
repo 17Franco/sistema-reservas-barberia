@@ -69,7 +69,7 @@ export class Auth {
   };
 
 
-  editarPerfilUsuario(datos: { nombre: string; apellido: string; celular: string }){
+  editarPerfilUsuario(datos: { nombre: string; apellido: string; celular: string, direccion: string}){
     return this.http.put<any>(
       `${this.apiUrl}/editarPerfil`,
       datos,

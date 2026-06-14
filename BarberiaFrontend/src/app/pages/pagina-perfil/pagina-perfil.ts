@@ -13,6 +13,7 @@ interface UsuarioSesion {
   email?:string;
   celular?:string;
   fechaCreacion?: string;
+  direccion?:string;
 }
 
 interface ReservaInterface {
@@ -51,6 +52,7 @@ export class PaginaPerfil implements OnInit {
 
   //Variables, tienen que ses ppublic para poder usarlas en el html
   public editandoPerfil = false;
+  //se carga con la funcion cargarPerfil
   public usuarioActual: UsuarioSesion | null = null;
   public cargando = true;
   public error = '';
@@ -62,7 +64,8 @@ export class PaginaPerfil implements OnInit {
   formPerfil = {
     nombre: '',
     apellido: '',
-    celular: ''
+    celular: '',
+    direccion:'',
   };
 
   activarEdicion() {
@@ -71,7 +74,8 @@ export class PaginaPerfil implements OnInit {
     this.formPerfil = {
       nombre: this.usuarioActual?.nombre || '',
       apellido: this.usuarioActual?.apellido || '',
-      celular: this.usuarioActual?.celular || ''
+      celular: this.usuarioActual?.celular || '',
+      direccion: this.usuarioActual?.direccion || '',
     };
   }
 
@@ -86,13 +90,14 @@ export class PaginaPerfil implements OnInit {
 
     try {
       const respuesta = await firstValueFrom(this.auth.editarPerfilUsuario(this.formPerfil));
-
+      //los 3 . son para copiar todas las propiedades del usuario aunque no las use todas (sino no se guardarian to)
       if (respuesta.success) {
         this.usuarioActual = {
           ...this.usuarioActual,
           nombre: this.formPerfil.nombre,
           apellido: this.formPerfil.apellido,
-          celular: this.formPerfil.celular
+          celular: this.formPerfil.celular,
+          direccion: this.formPerfil.direccion,
         };
 
         this.editandoPerfil = false;
@@ -104,12 +109,11 @@ export class PaginaPerfil implements OnInit {
   }
 
 
-  //uso esta funcion piruja para decirle que llame a mi funcion cargarPerfil en cuanto inicie la paginaPeril
-
+  //uso esta funcion para decirle que llame a mi funcion cargarPerfil en cuanto inicie la paginaPeril
   ngOnInit(): void {
     this.cargarPerfil();
   }
-
+  //duncion para cargar el usuario
   async cargarPerfil(): Promise<void> {
   try {
     const respuesta = await firstValueFrom(this.auth.me());
