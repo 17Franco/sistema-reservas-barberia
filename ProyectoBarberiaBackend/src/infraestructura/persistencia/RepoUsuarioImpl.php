@@ -26,7 +26,7 @@ use mysqli;
         
         public function guardarCliente(Cliente $u): bool{
 
-                $sql = "INSERT INTO usuarios(ci,nombre,apellido,fechaNac,password_hash,email,foto,celular,tipoUsuario) VALUES (?,?,?,?,?,?,?,?,?)"; 
+                $sql = "INSERT INTO usuarios(ci,nombre,apellido,fechaNac,password_hash,email,foto,celular,tipoUsuario,fechaCreacion) VALUES (?,?,?,?,?,?,?,?,?,?)"; 
                 
                 $stmt = $this->conn->prepare($sql);
                 
@@ -40,8 +40,8 @@ use mysqli;
                 $foto = $u->getFoto();
                 $cel = $u->getCel();
                 $tipo = "CLIENTE";
-
-                $stmt->bind_param("sssssssss", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo);
+                $fechaHoy = date('Y-m-d');//FECHA CREACION LA SACO DEL DIA ACTUAL
+                $stmt->bind_param("ssssssssss", $ci, $nombre,$apellido,$fechaNac, $pass, $email, $foto, $cel,$tipo,$fechaHoy);
 
                 if($stmt->execute()){
                     $id = $this->conn->insert_id; //obtiene ultimo id de la ultima consulta echa
@@ -52,7 +52,6 @@ use mysqli;
                     return $stmt2->execute();
                 }
                 
-
 
                 return false;
             
@@ -116,7 +115,8 @@ use mysqli;
                     $fecha = new DateTime($data['fechaNac']);
 
                     //Creo usuario con todos sus datos 
-                    $result = new Cliente($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['password_hash'],$data['email'],$data['celular'], $data['fechaCreacion']);
+                    $result = new Cliente($data['ci'],$data['nombre'],$data['apellido'],$fecha,$data['password_hash'],$data['email'],$data['celular']);
+                    $result->setFechaCreacion($data['fechaCreacion']);
                     $result->setTipo(TipoUsuario::from($data['tipoUsuario']));
                     $result->setId($data['id']);
                     $result->setFoto($data['foto']);

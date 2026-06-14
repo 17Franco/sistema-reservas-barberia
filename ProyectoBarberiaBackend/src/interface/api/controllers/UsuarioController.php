@@ -76,6 +76,7 @@ class UsuarioController {
         $usuario = $servicio->verificoCredenciales($email,$pass);
         if($usuario !== null){
             session_start(); 
+           
             $_SESSION['usuario_id'] = $usuario->getId();
             $_SESSION['usuario_email'] = $email;
             $_SESSION['nombre'] = $usuario->getNombre();

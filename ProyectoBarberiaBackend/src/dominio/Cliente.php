@@ -17,10 +17,9 @@ class Cliente extends Usuario {
         string $pass,
         string $email,
         string $cel,
-        string $fechaCreacion
     ) {
 
-        parent::__construct($ci,$nombre,$apellido,$fechaNac,$pass,$email,$cel,$fechaCreacion);
+        parent::__construct($ci,$nombre,$apellido,$fechaNac,$pass,$email,$cel);
         
     }
 
