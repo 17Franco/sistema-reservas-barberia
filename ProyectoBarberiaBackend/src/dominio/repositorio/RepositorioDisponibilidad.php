@@ -17,6 +17,8 @@ use Barberia\Backend\dominio\Usuario;
        public function reservasPorFechaAEmpleado(string $fecha,int $empleado):array;
        
        public function EmpleadosPorServicio(int $idServicio):array;
+
+       public function obtenerServicioPorId(int $idServicio):?ServicioBarberia;
           
     }
 ?>

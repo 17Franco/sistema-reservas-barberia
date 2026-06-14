@@ -13,6 +13,8 @@ use Barberia\Backend\dominio\Dia;
         public function disponibilidadServicios(string $dia): array;
 
         public function barberoServicioDisponiblePorDia(string $dia, int $idServicio):array;
+
+        public function horariosDiponiblesDia(string $dia, int $idServicio,int $idEmpleado):array;
         
        
     }

@@ -159,6 +159,14 @@ try {
         AvailabilityController::serviciosDiponiblesDia($disponibilidadService);
         exit;
     }
+    if ($method === 'GET' && $route === '/empleado/disponibilidad') {
+        AvailabilityController::EmpleadoDiponiblesDia($disponibilidadService);
+        exit;
+    }
+    if ($method === 'GET' && $route === '/disponibilidadHorarios') {
+        AvailabilityController::horarioDisponible($disponibilidadService);
+        exit;
+    }
 
     /*
     |--------------------------------------------------------------------------

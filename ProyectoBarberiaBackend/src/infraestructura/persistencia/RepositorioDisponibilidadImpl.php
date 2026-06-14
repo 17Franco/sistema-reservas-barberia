@@ -101,10 +101,58 @@ use mysqli;
        }
 
        public function EmpleadosPorServicio(int $idServicio):array{
-        $empleado=[];
+        $sql = "SELECT u.*,e.estado,e.especialidad,s.nombre as nomEspecialidad FROM empleado_servicios es 
+                INNER JOIN empleado e ON e.id_usuario=es.idEmpleado 
+                INNER JOIN usuarios u on e.id_usuario=u.id 
+                INNER JOIN servicios s on e.especialidad=s.idServicio where es.idServicio= ?";
 
-        return $empleado;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i",$idServicio);  
+        $stmt->execute();
+
+        $result = $stmt->get_result();     
+        $empleados=[];
+        while ($rowEmpleado = $result->fetch_assoc()) {
+                $empleado = new Empleado(
+                $rowEmpleado['ci'],
+                $rowEmpleado['nombre'],
+                $rowEmpleado['apellido'],
+                new DateTime($rowEmpleado['fechaNac']),
+                $rowEmpleado['password_hash'],//no mandar
+                $rowEmpleado['email'],
+                $rowEmpleado['celular'],
+                EstadoEmpleado::from($rowEmpleado['estado'])
+            );
+            $empleado->setId($rowEmpleado['id']);
+            $empleado->setFoto($rowEmpleado['foto']);
+            $empleado->setEspecialidad($rowEmpleado['nomEspecialidad']);
+                
+            $empleados[]=$empleado;
+            }
+
+        return $empleados;
        }
 
+       public function obtenerServicioPorId(int $idServicio):?ServicioBarberia{
+            $sql="SELECT * FROM servicios s WHERE s.idServicio= ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i",$idServicio);  
+            $stmt->execute();
+            
+            $result = $stmt->get_result();
+            $rowServicio = $result->fetch_assoc();
+
+            if (!$rowServicio) {
+                return null;
+            }
+
+            return new ServicioBarberia(
+                $rowServicio['idServicio'],
+                $rowServicio['nombre'],
+                $rowServicio['duracion'],
+                $rowServicio['precio']
+            );
+       
+       }
     }
 ?>
