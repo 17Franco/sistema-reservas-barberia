@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-06-2026 a las 03:02:36
+-- Tiempo de generación: 14-06-2026 a las 17:59:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,7 +40,8 @@ INSERT INTO `cliente` (`id_Usuario`) VALUES
 (7),
 (8),
 (9),
-(10);
+(10),
+(19);
 
 -- --------------------------------------------------------
 
@@ -256,24 +257,26 @@ CREATE TABLE `usuarios` (
   `email` varchar(50) NOT NULL,
   `foto` varchar(50) DEFAULT NULL,
   `celular` varchar(11) NOT NULL,
-  `tipoUsuario` enum('CLIENTE','ADMIN','EMPLEADO','') NOT NULL
+  `tipoUsuario` enum('CLIENTE','ADMIN','EMPLEADO','') NOT NULL,
+  `fechaCreacion` date NOT NULL DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_hash`, `email`, `foto`, `celular`, `tipoUsuario`) VALUES
-(1, '41234567', 'Carlos', 'Gómez', '1990-05-12', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'carlos@barberia.com', 'uploads/PerfilPorDefecto.png', '099123456', 'EMPLEADO'),
-(2, '47654321', 'María', 'Rodríguez', '1995-08-22', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'maria@barberia.com', 'uploads/PerfilPorDefecto.png', '098765432', 'EMPLEADO'),
-(3, '50123456', 'Juan', 'Pérez', '1988-01-30', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'juan@barberia.com', 'uploads/PerfilPorDefecto.png', '097111222', 'EMPLEADO'),
-(4, '39876543', 'Diego', 'Fernández', '1993-11-15', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'diego@barberia.com', 'uploads/PerfilPorDefecto.png', '096333444', 'EMPLEADO'),
-(5, '48521364', 'Ana', 'Martínez', '1997-03-05', '$2y$10$SampleHash1234567890abcdefghijklmnopqrstuv', 'ana@barberia.com', 'uploads/PerfilPorDefecto.png', '095555666', 'EMPLEADO'),
-(6, '51234567', 'Lucas', 'Silva', '1998-07-14', '$2y$10$SampleHashClient1234567890abcdefghijklm', 'lucas@gmail.com', 'uploads/PerfilPorDefecto.png', '094111222', 'CLIENTE'),
-(7, '49876542', 'Mateo', 'Álvarez', '1992-03-22', '$2y$10$SampleHashClient1234567890abcdefghijklm', 'mateo@gmail.com', 'uploads/PerfilPorDefecto.png', '093444555', 'CLIENTE'),
-(8, '41122334', 'Nicolas', 'Pereira', '2000-11-05', '$2y$10$SampleHashClient1234567890abcdefghijklm', 'nico@gmail.com', 'uploads/PerfilPorDefecto.png', '092777888', 'CLIENTE'),
-(9, '38527419', 'Santiago', 'Acosta', '1985-05-19', '$2y$10$SampleHashClient1234567890abcdefghijklm', 'santi@gmail.com', 'uploads/PerfilPorDefecto.png', '091999000', 'CLIENTE'),
-(10, '52341234', 'Mathias', 'Díaz', '1996-09-11', '$2y$10$SampleHashClient1234567890abcdefghijklm', 'mathi@gmail.com', 'uploads/PerfilPorDefecto.png', '095222333', 'CLIENTE');
+INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_hash`, `email`, `foto`, `celular`, `tipoUsuario`, `fechaCreacion`) VALUES
+(1, '41234567', 'Carlos', 'Gómez', '1990-05-12', '1234', 'carlos@barberia.com', 'uploads/PerfilPorDefecto.png', '099123456', 'EMPLEADO', '2026-06-14'),
+(2, '47654321', 'María', 'Rodríguez', '1995-08-22', '1234', 'maria@barberia.com', 'uploads/PerfilPorDefecto.png', '098765432', 'EMPLEADO', '2026-06-14'),
+(3, '50123456', 'Juan', 'Pérez', '1988-01-30', '1234', 'juan@barberia.com', 'uploads/PerfilPorDefecto.png', '097111222', 'EMPLEADO', '2026-06-14'),
+(4, '39876543', 'Diego', 'Fernández', '1993-11-15', '1234', 'diego@barberia.com', 'uploads/PerfilPorDefecto.png', '096333444', 'EMPLEADO', '2026-06-14'),
+(5, '48521364', 'Ana', 'Martínez', '1997-03-05', '1234', 'ana@barberia.com', 'uploads/PerfilPorDefecto.png', '095555666', 'EMPLEADO', '2026-06-14'),
+(6, '51234567', 'Lucas', 'Silva', '1998-07-14', '1234', 'lucas@gmail.com', 'uploads/PerfilPorDefecto.png', '094111222', 'CLIENTE', '2026-06-14'),
+(7, '49876542', 'Mateo', 'Álvarez', '1992-03-22', '1234', 'mateo@gmail.com', 'uploads/PerfilPorDefecto.png', '093444555', 'CLIENTE', '2026-06-14'),
+(8, '41122334', 'Nicolas', 'Pereira', '2000-11-05', '1234', 'nico@gmail.com', 'uploads/PerfilPorDefecto.png', '092777888', 'CLIENTE', '2026-06-14'),
+(9, '38527419', 'Santiago', 'Acosta', '1985-05-19', '1234', 'santi@gmail.com', 'uploads/PerfilPorDefecto.png', '091999000', 'CLIENTE', '2026-06-14'),
+(10, '52341234', 'Mathias', 'Díaz', '1996-09-11', '1234', 'mathi@gmail.com', 'uploads/PerfilPorDefecto.png', '095222333', 'CLIENTE', '2026-06-14'),
+(19, '53507227', 'Franco', 'Echaide', '2026-06-14', '1234', 'franco@gmail.com', '/uploads/53507227/fotoPerfil.png', '099123456', 'CLIENTE', '2026-06-14');
 
 -- --------------------------------------------------------
 
@@ -373,7 +376,7 @@ ALTER TABLE `servicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restricciones para tablas volcadas
