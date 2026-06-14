@@ -12,6 +12,8 @@ class Empleado extends Usuario {
     private array $horarios = [];
     private EstadoEmpleado $estado;
     private string $especialidad;
+    
+    private bool $disponible=false;
 
     public function __construct(string $ci,string $nombre,string $apellido,DateTime $fechaNac,string $pass,string $email,string $cel,EstadoEmpleado $estado) {
 
@@ -23,10 +25,15 @@ class Empleado extends Usuario {
     public function getEstado(): EstadoEmpleado {
         return $this->estado;
     }
-
+    public function getDisponible(): bool {
+        return $this->disponible;
+    }
 
     public function setEstado(EstadoEmpleado $estado): void {
         $this->estado = $estado;
+    }
+    public function setDisponible(bool $disponible): void {
+        $this->disponible = $disponible;
     }
     public function getEspecialidad(): string {
         return $this->especialidad;
