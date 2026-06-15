@@ -15,6 +15,7 @@ export class Servicios {
   authService = inject(Auth);
   ServiciosService = inject(ServiciosService);
   cd = inject(ChangeDetectorRef);
+
   servicios: any[] = [];
   cargando = true;
   error: string | null = null;
@@ -34,7 +35,7 @@ export class Servicios {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error(err);
+        console.error(err); // 👈 mantenido (de tu compa)
         this.error = 'No se pudieron cargar los servicios.';
         this.cargando = false;
         this.cd.detectChanges();

@@ -1,0 +1,47 @@
+<div class="container mt-4">
+
+  <h2>Crear Servicio</h2>
+
+  <form [formGroup]="form" (ngSubmit)="crear()">
+
+    <!-- NOMBRE -->
+    <div class="mb-3">
+      <label>Nombre</label>
+      <input class="form-control" formControlName="nombre">
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="mb-3">
+      <label>Descripción</label>
+      <textarea class="form-control" formControlName="descripcion"></textarea>
+    </div>
+
+    <!-- PRECIO -->
+    <div class="mb-3">
+      <label>Precio</label>
+      <input type="number" class="form-control" formControlName="precio">
+    </div>
+
+    <!-- IMAGEN -->
+    <div class="mb-3">
+      <label>Imagen (URL)</label>
+      <input class="form-control" formControlName="img">
+    </div>
+
+    <!-- MENSAJES -->
+    <div *ngIf="mensaje" class="alert alert-success">
+      {{ mensaje }}
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <!-- BOTÓN -->
+    <button class="btn btn-primary w-100" type="submit">
+      Crear servicio
+    </button>
+
+  </form>
+
+</div>

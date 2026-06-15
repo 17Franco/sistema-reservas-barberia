@@ -3,6 +3,7 @@
   <main class="servicios-page">
     <section class="services-list">
       <h1>Servicios</h1>
+
       <div class="page-actions">
         <a routerLink="/" class="btn btn-secondary">Volver a inicio</a>
       </div>
@@ -14,6 +15,7 @@
         <article *ngFor="let servicio of servicios" class="service-item">
           <h3>{{ servicio.nombre }}</h3>
           <p>{{ servicio.descripcion }}</p>
+
           <div class="service-meta">
             <span class="price">${{ servicio.precio }}</span>
           </div>
@@ -23,6 +25,7 @@
       <div *ngIf="!cargando && !error && servicios.length === 0" class="empty-state">
         No hay servicios disponibles.
       </div>
+
     </section>
   </main>
 </div>
