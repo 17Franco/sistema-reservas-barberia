@@ -11,6 +11,7 @@ import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
 import { GestionServicios } from './pages/admin/gestion-servicios/gestion-servicios';
 import { GestionBarberos } from './pages/admin/gestion-barberos/gestion-barberos';
 import { GestionReserva } from './pages/admin/gestion-reserva/gestion-reserva';
+import { Reserva } from './pages/reserva/reserva';
 
 //aca agregamos el path para que si en el navegador busca home redirija a page home o login etc
 //cada pagina debe tener una ruta
@@ -50,6 +51,11 @@ export const routes: Routes = [
       {
         path: 'admin/reservas',
         component: GestionReserva,
+        canActivate: [] 
+      },
+      {
+        path: 'reservar',
+        component: Reserva,
         canActivate: [] 
       }
     ]

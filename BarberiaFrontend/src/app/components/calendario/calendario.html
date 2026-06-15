@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-12 mb-4 fs-5 text fw-bold"><i class="bi bi-calendar-week me-2"></i>Elegi tu turno</div>
+    <div class="col-12 d-flex align-items-center gap-2">
+        <!--for que replica otro contenedor con -->
+        @for (item of diasVisible(); track item.fecha){
+            <div class="card text-center p-3 dia" style="width: 100px; " [class.selected]="item.fecha === diaSeleccionado" [class.disabled]="!item.disponible"  (click)="item.disponible && seleccionarDia(item)">
+                <span class="text-muted small">{{item.dia}}</span>
+                <span class="fs-4 fw-bold">{{item.numeroDia}}</span>
+                <span class="text-muted small">{{item.mes}}</span>
+            </div>
+        }@empty {
+            <div class="text-muted small">A ocurrio un error vuelva a intentar en otra vida</div>
+        }
+        
+        <div class="d-flex flex-column gap-2">
+            <button class="btn border btnHover ms-2" (click)="next()">
+                <i class="bi bi-chevron-right text-primary fs-4"></i>
+            </button>
+            <button class="btn border btnHover ms-2 " (click)="prev()">
+                <i class="bi bi-chevron-left text-primary fs-4"></i>
+            </button>
+        </div>
+        
+    </div>
+</div>

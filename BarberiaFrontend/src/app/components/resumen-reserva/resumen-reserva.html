@@ -1,0 +1,46 @@
+<div class="card shadow ">
+    <div class="card-body p-5 ">
+        <div class="titulo mb-3">
+            <h4 class="card-title fw-bold mb-4">Resumen de tu reserva</h4>
+        </div>
+        <div class="infoReserva">
+            <div class="coontenedo-img-barbero d-flex justify-content-center mb-3">
+                @if(empleado){
+                    <img [src]="obtenerFoto(empleado.foto)" class="" alt="fotoBarbero">
+                    }
+                @else{
+                    <img src="img/usuario.png">
+                }
+                
+            </div>
+            <div class="infoSeleccionada ">
+                <div class="row mb-4">
+                    <div class="col-5"><span class="fs-5 text fw-bold">Servicio:</span></div>
+                    <div class="col-7 text-start">{{servicio?.nombre || "Sin seleccionar"}}</div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-5"><span class="fs-5 text fw-bold">Barbero:</span></div>
+                    <div class="col-7 text-start">{{empleado ? empleado.nombre +" "+empleado.apellido : 'Sin seleccionar'}}</div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-5"><span class="fs-5 text fw-bold">Fecha:</span></div>
+                    <div class="col-7 text-start">{{ dia ? dia.dia + ' ' + dia.numeroDia + ' ' + dia.mes : 'Sin seleccionar' }}</div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-5"><span class="fs-5 text fw-bold ">Hora:</span></div>
+                    <div class="col-7 text-start">{{ horario ? horario.inicio : 'Sin seleccionar'}}</div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="total">
+            <div class="row mb-5">
+                <div class="col-6"><span class="fs-4 text fw-bold">Total:</span></div>
+                <div class="col-6"><span class="fs-4 text fw-bold text-primary ">${{servicio?.precio}}</span></div>
+            </div>
+        </div>
+        <div class="btnReservar">
+            <button class="btn btn-primary w-100 py-3 fs-5 fw-bold fw-bold"><i class="bi bi-calendar-week me-2"></i>RESERVAR AHORA</button>
+        </div>   
+    </div>
+</div>
