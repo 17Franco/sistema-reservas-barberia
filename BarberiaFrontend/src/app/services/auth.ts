@@ -8,7 +8,7 @@ import { RegistroUsuario } from '../interfaces/registro-usuario';
 export class Auth {
 
   private http = inject(HttpClient);
-  usuario:any=null;
+  usuario:any=null;       //uso esta para comunicar nav-bar con pagina-perfil
   
 
   private apiUrl='http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';

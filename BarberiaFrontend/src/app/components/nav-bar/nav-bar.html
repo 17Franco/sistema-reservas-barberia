@@ -52,7 +52,8 @@
             <span>{{ inicialesUsuario }}</span>
           }
         </span>
-        <span class="profile-name">{{ usuarioActual?.nombre || authService.usuario?.nombre }}</span>
+        <!--Cargo el nombre del usuario desede el auth-->
+        <span class="profile-name">{{ authService.usuario?.nombre || usuarioActual?.nombre }}</span>
       </a>
 
       <button class="btn btn-sm btn-outline-danger" type="button" (click)="logOut()">

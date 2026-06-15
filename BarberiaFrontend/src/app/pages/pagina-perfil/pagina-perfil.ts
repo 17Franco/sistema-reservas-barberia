@@ -101,6 +101,11 @@ export class PaginaPerfil implements OnInit {
         };
 
         this.editandoPerfil = false;
+        //aca modifico la variable nombre en auth porque auth se conecta con nav-bar y quiero que se refleje el cambio en el nav-bar tambien
+        this.auth.usuario = {
+        ...(this.auth.usuario || {}),
+        nombre: this.formPerfil.nombre
+      };
       }
     } catch (error) {
       console.error('Error editando perfil', error);
