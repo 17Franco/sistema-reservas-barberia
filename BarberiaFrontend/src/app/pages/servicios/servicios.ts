@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { NavBar } from '../../components/nav-bar/nav-bar';
 import { Auth } from '../../services/auth';
+import { ServiciosService } from '../../services/servicios/servicio';
 
 @Component({
   selector: 'app-servicios',
@@ -12,6 +13,7 @@ import { Auth } from '../../services/auth';
 })
 export class Servicios {
   authService = inject(Auth);
+  ServiciosService = inject(ServiciosService);
   cd = inject(ChangeDetectorRef);
 
   servicios: any[] = [];
@@ -26,7 +28,7 @@ export class Servicios {
     this.cargando = true;
     this.error = null;
 
-    this.authService.getServicios().subscribe({
+    this.ServiciosService.getServicios().subscribe({
       next: (res: any) => {
         this.servicios = res.servicios || [];
         this.cargando = false;

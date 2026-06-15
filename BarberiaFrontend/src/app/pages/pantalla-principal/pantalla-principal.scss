@@ -1,0 +1,152 @@
+.home-page {
+  padding: 2rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1.6fr 1fr;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: #da2f2f;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 3vw, 4rem);
+  line-height: 1.05;
+}
+
+.hero-copy p {
+  margin: 1rem 0 1.5rem;
+  max-width: 560px;
+  line-height: 1.7;
+  color: #555;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: #2e2bff;
+  color: #fff;
+}
+
+.btn-secondary {
+  border: 2px solid #2e2bff;
+  color: #2e2bff;
+  background: transparent;
+}
+
+.hero-cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.hero-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #f4f4ff;
+  box-shadow: 0 12px 30px rgba(46, 43, 255, 0.08);
+}
+
+.hero-card h2 {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+}
+
+.services {
+  padding: 1.5rem 0;
+}
+
+.services h2 {
+  margin-bottom: 1rem;
+}
+
+.services-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.service-item {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #fff;
+  border: 1px solid #e8e8f2;
+}
+
+.service-item h3 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.service-item p {
+  margin: 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+.service-meta {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-weight: 700;
+  color: #2e2bff;
+}
+
+.loading,
+.error,
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.loading {
+  background: #eef2ff;
+  color: #2e2bff;
+}
+
+.error {
+  background: #ffe9e9;
+  color: #b71c1c;
+}
+
+.empty-state {
+  background: #f7f7fb;
+  color: #555;
+}

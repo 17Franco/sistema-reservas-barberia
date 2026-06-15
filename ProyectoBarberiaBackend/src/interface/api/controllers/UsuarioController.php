@@ -1,7 +1,10 @@
 <?php
 namespace Barberia\Backend\interface\api\controllers;
-use Barberia\Backend\aplicacion\Servicios;
+
+use Barberia\Backend\aplicacion\ServiciosUsuarios;
 use Barberia\Backend\dominio\Cliente;
+use Barberia\Backend\dominio\Empleado;
+use Barberia\Backend\dominio\EstadoEmpleado;
 use Barberia\Backend\dominio\TipoUsuario;
 use Barberia\Backend\dominio\Usuario;
 use DateTime;
@@ -13,11 +16,12 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;//
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;//
 use Symfony\Component\Serializer\Serializer;//
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;//permite entender enum y 
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class UsuarioController {
     //url para hacer peticiones  http://localhost:8080/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php/NombreRecurso
 
-    public static function registrarUsuarioCliente(Servicios $servicio): void{
+    public static function registrarUsuarioCliente(ServiciosUsuarios $servicio): void{
        $serializer = new Serializer([new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
             // leer body JSON
             $json = json_encode($_POST);
@@ -55,7 +59,7 @@ class UsuarioController {
             
     }
 
-    public static function login(Servicios $servicio){
+    public static function login(ServiciosUsuarios $servicio){
          // leer body JSON
         $json = file_get_contents('php://input');
         // convertir JSON → array
@@ -72,13 +76,16 @@ class UsuarioController {
         $usuario = $servicio->verificoCredenciales($email,$pass);
         if($usuario !== null){
             session_start(); 
+           
             $_SESSION['usuario_id'] = $usuario->getId();
             $_SESSION['usuario_email'] = $email;
             $_SESSION['nombre'] = $usuario->getNombre();
             $_SESSION['apellido'] = $usuario->getApellido();
             $_SESSION['tipoUser'] = $usuario->getTipo()->value;
             $_SESSION['foto'] = $usuario->getFoto();
-            
+            $_SESSION['usuario_celular'] = $usuario->getCel();
+            $_SESSION['fechaCreacion'] = $usuario->getFechaCreacion();
+            $_SESSION['direccion'] = $usuario->getDireccion();
         }
 
         http_response_code(200);
@@ -123,14 +130,130 @@ class UsuarioController {
             "apellido" => $_SESSION['apellido'],
             "foto" => $_SESSION['foto'],
             "tipo" => $_SESSION['tipoUser'],
+            "email" => $_SESSION['usuario_email'],
+            "celular" => $_SESSION['usuario_celular'],
+            "fechaCreacion" => $_SESSION['fechaCreacion'],
+            "direccion" => $_SESSION['direccion'],
         ]);
 
-        } else {
+        } else {    
 
             echo json_encode([
                 "logueado" => false
             ]);
         }
     }
+
+    public static function listarEmpleados(ServiciosUsuarios $servicio): void {
+     $serializer = new Serializer([new DateTimeNormalizer(),new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
+        $data = $servicio->listarEmpleados();
+        $json = $serializer->serialize($data, 'json');
+        //$servicio = Fabrica::crearServicioEmpleado();
+
+       
+
+        echo $serializer->serialize([
+            'success' => true,
+            'empleados' => $data
+        ], 'json');
+    }
+
+    public static function actualizarEmpleado(ServiciosUsuarios $servicio): void {
+
+        //$servicio = Fabrica::crearServicioEmpleado();
+
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        $empleado = new Empleado(
+            $data["ci"],
+            $data["nombre"],
+            $data["apellido"],
+            new DateTime($data["fechaNac"]),
+            $data["contraseña"],
+            $data["email"],
+            $data["celular"],
+            //TipoUsuario::from($data["tipo"]),
+            EstadoEmpleado::from($data["estado"])
+        );
+
+        $ok = $servicio->actualizarEmpleado($empleado);
+
+        echo json_encode([
+            "success" => $ok
+        ]);
+    }
+
+  
+  
+    public static function editarUsuario(ServiciosUsuarios $servicio): void {
+        session_start();
+
+        if (!isset($_SESSION['usuario_id'])) {
+            throw new Exception("No hay usuario logueado", 401);
+        }
+
+        //esta funcion la uso para leer body de la petición que me hicieron, o sea por ej '{"nombre":"Santiago","apellido":"Guadalupe","celular":"093548866","direccion":"Av. Italia 123"}'
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        if (!isset($data['nombre']) || !isset($data['apellido']) || !isset($data['celular'])) {
+            throw new Exception("Faltan campos", 400);
+        }
+
+        $nombre = trim($data['nombre']);
+        $apellido = trim($data['apellido']);
+        $celular = trim($data['celular']);
+        $direccion = isset($data['direccion']) ? trim($data['direccion']) : null; //direccion puede ser null si no quiere poner el usuario
+
+        if ($nombre === '' || $apellido === '' || $celular === '') {
+            throw new Exception("Los campos nombre, apellido y celular no pueden estar vacios", 400);
+        }
+
+        $ok = $servicio->editarUsuario((int)$_SESSION['usuario_id'], $nombre, $apellido, $celular, $direccion);
+
+        if ($ok) {
+            $_SESSION['nombre'] = $nombre;
+            $_SESSION['apellido'] = $apellido;
+            $_SESSION['usuario_celular'] = $celular;
+            $_SESSION['direccion'] = $direccion;
+        }
+
+        echo json_encode([
+            "success" => $ok,
+            "usuario" => [
+                "nombre" => $nombre,
+                "apellido" => $apellido,
+                "celular" => $celular,
+                "direccion" => $direccion,
+            ]
+        ]);
+    }
+
+
+
+
+    public static function cambiarEstadoEmpleado(ServiciosUsuarios $servicio): void {
+        // 1. Leer el JSON del frontend
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        // 2. Validar que vengan los dos datos necesarios
+        if (!isset($data['ci']) || !isset($data['estado'])) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "error" => "Faltan campos requeridos (ci, estado)"]);
+            return;
+        }
+
+        // 3. Ejecutar la activación/desactivación a través del servicio
+        $ok = $servicio->cambiarEstadoEmpleado($data['ci'], strtoupper($data['estado']));
+
+        // 4. Responder
+        http_response_code(200);
+        echo json_encode([
+            "success" => $ok
+        ]);
+    }
+
 }
 ?>

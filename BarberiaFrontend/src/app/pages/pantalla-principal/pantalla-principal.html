@@ -1,0 +1,47 @@
+<div class="container-fluid">
+
+  <main class="home-page">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Barbería Premium</span>
+        <h1>Tu estilo perfecto comienza aquí</h1>
+        <p>Reserva tu turno, conoce nuestros servicios y mantente impecable con los mejores barberos de la ciudad.</p>
+        <div class="hero-actions">
+          
+          <a routerLink="/servicios" class="btn btn-secondary">Ver servicios</a>
+        </div>
+      </div>
+
+      <div class="hero-cards">
+        <article class="hero-card">
+          <h2>Reserva rápido</h2>
+          <p>Selecciona tu servicio, fecha y hora en pocos pasos.</p>
+        </article>
+        <article class="hero-card">
+          <h2>Estilo profesional</h2>
+          <p>Cortes, afeitados y diseños con barberos expertos.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="services" id="servicios">
+      <h2>Servicios destacados</h2>
+      <div class="services-grid">
+        <div *ngIf="cargando" class="loading">Cargando servicios destacados...</div>
+        <div *ngIf="error" class="error">{{ error }}</div>
+        <article *ngFor="let servicio of serviciosDestacados" class="service-item">
+          <h3>{{ servicio.nombre }}</h3>
+          <p>{{ servicio.descripcion }}</p>
+          <div class="service-meta">
+            <span class="price">${{ servicio.precio }}</span>
+          </div>
+        </article>
+        <div *ngIf="!cargando && serviciosDestacados.length === 0" class="empty-state">
+          No hay servicios destacados disponibles.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <router-outlet></router-outlet>
+</div>

@@ -22,15 +22,6 @@ export class Auth {
   );
   }
 
-  getServicios(){
-    return this.http.get(
-      `${this.apiUrl}/servicios`,
-      {
-        withCredentials:true
-      }
-    );
-  }
-
   login(datos:any){
 
     return this.http.post(
@@ -66,11 +57,31 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/usuarios`, datos);
   }
 
-  crearServicio(datos: any) {
-  return this.http.post(
-    `${this.apiUrl}/servicios`,
-    datos,
-    { withCredentials: true }
-  );
-  }
+
+  getReservasClienteAsociado(idCliente: number){
+    console.log("llegaon las reservas");
+    return this.http.get<any>(
+      `${this.apiUrl}/reservasClienteAsociado/${idCliente}`,
+      {
+        withCredentials: true
+      }
+    )
+  };
+
+
+  editarPerfilUsuario(datos: { nombre: string; apellido: string; celular: string, direccion: string}){
+    return this.http.put<any>(
+      `${this.apiUrl}/editarPerfil`,
+      datos,
+      {
+        withCredentials: true
+      }
+    )
+  };
+
+  
+
+
+
+
 }

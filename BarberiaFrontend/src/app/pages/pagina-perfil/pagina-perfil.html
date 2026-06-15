@@ -1,0 +1,145 @@
+<div class="container py-4">
+
+  @if(cargando){
+    <div class="alert alert-info">Cargando perfil...</div>
+  }
+
+  @if(error){
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if(usuarioActual && !cargando){
+    <header class="profile-hero">
+      <div>
+        <span class="eyebrow">Panel de usuario</span>
+        <h1>Administración de Usuario</h1>
+        <p>Visualizá un resumen de tus reservas y edita tus datos personales.</p>
+      </div>
+    </header>
+
+    <section class="profile-card">
+      <div class="profile-info">
+        <div class="avatar">
+          @if(fotoPerfilUrl){
+            <img [src]="fotoPerfilUrl" (error)="usarIniciales()" alt="Foto de perfil">
+          } @else {
+            <span>{{ inicialesUsuario() }}</span>
+          }
+        </div>
+        <!--FORMULARIO EDICION-->
+        <div class="profile-main">
+          @if(editandoPerfil){
+            <form class="profile-edit-form" (ngSubmit)="guardarEdicion()">
+              <div class="row g-2">
+                <!--Nombre-->
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="nombre" [(ngModel)]="formPerfil.nombre" placeholder="Nombre">
+                </div>
+                <!--Apellido-->
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="apellido" [(ngModel)]="formPerfil.apellido" placeholder="Apellido">
+                </div>
+                <!--Celular-->
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="celular" [(ngModel)]="formPerfil.celular" placeholder="Celular">
+                </div>
+                <!--Direccion-->
+                <div class="col-md-4">
+                  <input class="form-control form-control-sm" name="direccion" [(ngModel)]="formPerfil.direccion" placeholder="Direccion">
+                </div>
+              </div>
+
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cancelarEdicion()">Cancelar</button>
+              </div>
+            </form>
+          } @else {
+            <h4 class="mb-1">
+              {{ usuarioActual.nombre }} {{ usuarioActual.apellido }}
+            </h4>
+
+            <span class="badge bg-dark">
+              {{ usuarioActual.tipo || 'Usuario' }}
+            </span>
+
+            <p>{{ usuarioActual.email || 'Email no registrado' }}</p>
+          }
+        </div>
+
+        <!--EDITAR PERFIL-->
+        @if(!editandoPerfil){
+          <button class="btn btn-outline-primary btn-sm" type="button" (click)="activarEdicion()">
+            Editar perfil
+          </button>
+        }
+      </div>
+
+      <div class="profile-stats">
+        <div>
+          <span>Cuenta creada</span>
+          <strong>{{ fechaUsuario(usuarioActual.fechaCreacion) }}</strong>
+        </div>
+
+        <div>
+          <span>Teléfono</span>
+          <strong>{{ usuarioActual.celular || 'No registrado' }}</strong>
+        </div>
+
+        <div>
+          <span>Dirección</span>
+          <strong>{{ usuarioActual.direccion || 'No registrado' }}</strong>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!--Reservas-->
+  <section class="card shadow-sm border-0">
+    <div class="card-body">
+
+      <h5 class="mb-3">Mis Reservas</h5>
+
+      @if(reservasAsociadas.length > 0){
+        <ul class="list-group">
+          <!--Hago un for para recorrer la lista re reservas Asociadas-->
+          @for(reserva of reservasAsociadas; track reserva.idReserva){
+            <li class="list-group-item reserva-row">
+
+              @if(fotoEmpleadoUrl(reserva)){
+                <img class="reserva-barbero-foto" [src]="fotoEmpleadoUrl(reserva)" alt="Foto del barbero">
+              }
+
+              <div class="reserva-info">
+                <!--FECHA -> llamo a la funcion que muestra la fecha reserva en formato que deseo-->
+                <strong>{{ fechaReserva(reserva) }}</strong>
+                <!--Servicio-->
+                <div class="text-muted small fw-semibold">
+                  {{ reserva.nombreServicio || 'Servicio sin nombre' }}
+                </div>
+                <div class="text-muted small">
+                  {{ reserva.descripcion || 'Servicio sin descripcion' }}
+                </div>
+                <!--Empleado-->
+                <div class="barbero-line">
+                  <span>{{ nombreCompletoEmpleado(reserva) }}</span>
+                </div>
+              </div>
+              <!--uso la funcion claseEstado para mostrar el span de diferente manera segun el estado de la reserva en ves de tener varios @if-->
+              <span [class]="'badge ' + claseEstado(reserva.estado)">
+                {{ reserva.estado || 'Sin estado' }}
+              </span>
+
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="border rounded p-3 text-muted">
+          Todavía no tenés reservas registradas.
+        </div>
+      }
+
+    </div>
+  </section>
+
+</div>

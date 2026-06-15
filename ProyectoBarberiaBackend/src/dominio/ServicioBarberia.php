@@ -5,14 +5,14 @@
         private int $idServicio;
         private string $nombre;
         private string $descripcion;
-        private string $img;
+        private int $duracion;
         private int $precio;
+        private bool $disponible;
 
-        public function __construct(int $idServicio,string $nombre,string $descripcion,string $img,int $precio) {
-            $this->idServicio = $idServicio;
+        public function __construct(string $nombre,string $descripcion,int $duracion,int $precio) {
             $this->nombre = $nombre;
             $this->descripcion = $descripcion;
-            $this->img = $img;
+            $this ->duracion = $duracion;
             $this->precio = $precio;
         }
 
@@ -20,8 +20,24 @@
             return $this->idServicio;
         }
 
+        public function getDisponible(): bool {
+            return $this->disponible;
+        }
+
+        public function getDuracion(): int {
+            return $this->duracion;
+        }
+
         public function setIdServicio(int $idServicio): void {
             $this->idServicio = $idServicio;
+        }
+
+        public function setDisponible(bool $disponible): void {
+            $this->disponible = $disponible;
+        }
+
+        public function setIDuracion(int $duracion): void {
+            $this->duracion = $duracion;
         }
 
         public function getNombre(): string {
@@ -40,13 +56,6 @@
             $this->descripcion = $descripcion;
         }
 
-        public function getImg(): string {
-            return $this->img;
-        }
-
-        public function setImg(string $img): void {
-            $this->img = $img;
-        }
 
         public function getPrecio(): int {
             return $this->precio;

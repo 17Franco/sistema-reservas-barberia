@@ -1,0 +1,44 @@
+<section class="admin-dashboard">
+
+    <header class="admin-hero">
+        <div>
+            <span class="eyebrow">Panel administrativo</span>
+            <h1>Administración de la barbería</h1>
+            <p>
+                Visualizá un resumen general del sistema y accedé rápidamente a la gestión de servicios,
+                barberos y reservas.
+            </p>
+        </div>
+    </header>
+
+    <section class="summary-grid">
+        <article class="summary-card" *ngFor="let item of resumen">
+            <span>{{ item.titulo }}</span>
+            <strong>{{ item.valor }}</strong>
+            <p>{{ item.descripcion }}</p>
+            <a [routerLink]="item.ruta">Ver detalle</a>
+        </article>
+    </section>
+
+    <section class="management-section">
+        <div class="section-title">
+            <span class="eyebrow">Gestión</span>
+            <h2>Accesos rápidos</h2>
+            <p>Desde acá podés entrar a las principales áreas administrativas.</p>
+        </div>
+
+        <div class="management-grid">
+            <article class="management-card" *ngFor="let acceso of accesos">
+                <div>
+                    <h3>{{ acceso.titulo }}</h3>
+                    <p>{{ acceso.descripcion }}</p>
+                </div>
+
+                <a [routerLink]="acceso.ruta" class="btn-admin">
+                    {{ acceso.boton }}
+                </a>
+            </article>
+        </div>
+    </section>
+
+</section>

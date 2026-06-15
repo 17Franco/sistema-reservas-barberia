@@ -2,6 +2,7 @@
     namespace Barberia\Backend\dominio\repositorio;
 
     use Barberia\Backend\dominio\Cliente;
+    use Barberia\Backend\dominio\Empleado;
     use Barberia\Backend\dominio\Usuario;
 
     interface RepositorioUsuario {
@@ -20,6 +21,17 @@
         public function buscarPorId(string $id): ?Usuario;
 
         public function listar(): array;
+
+        public function listarEmpleado(): array;
+
+        public function actualizarEmpleado(Empleado $empleado): bool;
+
+        public function buscarPorCiEmpleado(string $ci): ?Empleado;
+
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool;
+
+        public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool;
+
           
     }
 ?>
