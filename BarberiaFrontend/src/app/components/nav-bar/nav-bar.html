@@ -46,8 +46,8 @@
 
       <a class="profile-summary" routerLink="/MiPerfil" (click)="cambiarModo('MiProfile')">
         <span class="profile-avatar">
-          @if(fotoPerfilUrl){
-            <img [src]="fotoPerfilUrl" (error)="usarIniciales()" alt="Foto de perfil">
+          @if(fotoPerfilUrl; as fotoUrl){
+            <img [src]="fotoUrl" (error)="usarIniciales()" alt="Foto de perfil">
           } @else {
             <span>{{ inicialesUsuario }}</span>
           }
