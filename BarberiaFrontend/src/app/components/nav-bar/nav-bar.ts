@@ -20,6 +20,8 @@ interface UsuarioSesion {
   styleUrl: './nav-bar.scss',
 })
 export class NavBar implements OnInit {
+  private readonly backendPublicUrl = 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public';
+
   authService = inject(Auth);
   router = inject(Router);
 
@@ -32,6 +34,7 @@ export class NavBar implements OnInit {
     this.authService.me().subscribe({
       next: (respuesta) => {
         this.usuarioActual = respuesta as UsuarioSesion;
+        this.mostrarIniciales = false;
       },
       error: () => {
         this.usuarioActual = null;
@@ -44,7 +47,15 @@ export class NavBar implements OnInit {
       return null;
     }
 
-    return 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + this.usuarioActual.foto;
+    return this.urlImagenBackend(this.usuarioActual.foto);
+  }
+
+  private urlImagenBackend(ruta: string): string {
+    if (ruta.startsWith('http://') || ruta.startsWith('https://')) {
+      return ruta;
+    }
+
+    return `${this.backendPublicUrl}${ruta.startsWith('/') ? ruta : `/${ruta}`}`;
   }
 
   get inicialesUsuario(): string {
@@ -55,7 +66,9 @@ export class NavBar implements OnInit {
   }
 
   usarIniciales(): void {
-    this.mostrarIniciales = true;
+    setTimeout(() => {
+      this.mostrarIniciales = true;
+    }, 0);
   }
 
   viewdropdawn(){

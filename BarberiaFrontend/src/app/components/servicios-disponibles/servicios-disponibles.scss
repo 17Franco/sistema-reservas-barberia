@@ -1,0 +1,32 @@
+.servicio {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.servicio:hover {
+  transform: scale(1.05);
+  border-color: #0d6efd;
+}
+
+.servicio.selected {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+.servicio.selected span {
+  color: white !important;
+}
+
+.servicio.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btnHover:hover {
+  border-color: #0d6efd !important;
+  background-color: transparent !important;
+  color: inherit;
+  box-shadow: none;
+}

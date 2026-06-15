@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light ">
 
   <div class="container-fluid ">
 
@@ -32,11 +32,11 @@
 
     <div class="gap-5 d-flex">
 
-      <a class="link" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo=== 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
+      <a class="link fw-bold" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo=== 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
 
-      <a class="link" (click)="cambiarModo('Home')" routerLink="/" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
+      <a class="link fw-bold" (click)="cambiarModo('Home')" routerLink="/" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
 
-      <a class="link" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
+      <a class="link fw-bold" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
 
     </div>
 
@@ -46,13 +46,14 @@
 
       <a class="profile-summary" routerLink="/MiPerfil" (click)="cambiarModo('MiProfile')">
         <span class="profile-avatar">
-          @if(fotoPerfilUrl){
-            <img [src]="fotoPerfilUrl" (error)="usarIniciales()" alt="Foto de perfil">
+          @if(fotoPerfilUrl; as fotoUrl){
+            <img [src]="fotoUrl" (error)="usarIniciales()" alt="Foto de perfil">
           } @else {
             <span>{{ inicialesUsuario }}</span>
           }
         </span>
-        <span class="profile-name">{{ usuarioActual?.nombre || authService.usuario?.nombre }}</span>
+        <!--Cargo el nombre del usuario desede el auth-->
+        <span class="profile-name">{{ authService.usuario?.nombre || usuarioActual?.nombre }}</span>
       </a>
 
       <button class="btn btn-sm btn-outline-danger" type="button" (click)="logOut()">
