@@ -7,24 +7,24 @@
             </div>
             <div class="opciones mb-4">
                 @if(reservaIniciada){
-                <app-servicios-disponibles [dia]="diaSeleccionado"  (ServicioSeleccionadoChange)="onServicio($event)"></app-servicios-disponibles>
+                <app-servicios-disponibles [dia]="diaSeleccionado" [reset]="reset" (ServicioSeleccionadoChange)="onServicio($event)"></app-servicios-disponibles>
                 }
                 
             </div> 
             <div class="opciones mb-4">
                 @if(reservaIniciada && servicioInicido){
-                    <app-empleado-disponibles [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" (EmpleadoSeleccionadoChange)="onEmpleado($event)"></app-empleado-disponibles>
+                    <app-empleado-disponibles [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" [reset]="reset" (EmpleadoSeleccionadoChange)="onEmpleado($event)"></app-empleado-disponibles>
                 }
             </div>
             <div class="opciones mb-4">
                 @if(reservaIniciada && servicioInicido && HorarioInicido){
-                    <app-horario-disponibles [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" [empleado]="EmpleadoSeleccionado" (HorarioSeleccionadoChange)="onHorario($event)" ></app-horario-disponibles>
+                    <app-horario-disponibles [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" [reset]="reset" [empleado]="EmpleadoSeleccionado" (HorarioSeleccionadoChange)="onHorario($event)" ></app-horario-disponibles>
                 }
             </div>
         </div>
         <div class="col-4 ">
             <div class="resumen">
-                <app-resumen-reserva [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" [empleado]="EmpleadoSeleccionado" [horario]="horarioSeleccionado" ></app-resumen-reserva>
+                <app-resumen-reserva [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado"  [empleado]="EmpleadoSeleccionado" [horario]="horarioSeleccionado" (reservaCreada)="resetPantalla()" ></app-resumen-reserva>
             </div>
         </div>
     </div>

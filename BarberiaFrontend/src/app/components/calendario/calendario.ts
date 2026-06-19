@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { Disponibilidad } from '../../services/disponibilidad/disponibilidad';
 import { NgClass } from '@angular/common';
 import { Dia } from '../../interfaces/disponibilidad-interfaces';
@@ -13,6 +13,8 @@ export class Calendario implements OnInit {
   constructor(private disponibilidad: Disponibilidad) {}
 
   @Output() diaSeleccionadoChange= new EventEmitter<Dia>();
+  @Input() reset: boolean | null = null;
+
   dias = signal<Dia[]>([]);
   diaSeleccionado: string | null = null;
   startIndex = 0;
@@ -21,7 +23,7 @@ export class Calendario implements OnInit {
       next:(res)=>{
       
         this.dias.set(res);
-        console.log('DIAS SETEADOS:', this.dias);
+        //console.log('DIAS SETEADOS:', this.dias);
       },
       error:(err)=>{
         console.error('Error al traer los turnos', err);
@@ -29,6 +31,7 @@ export class Calendario implements OnInit {
     })
   }
 
+  
   diasVisible() {
    return this.dias().slice(this.startIndex, this.startIndex + 7);
   }

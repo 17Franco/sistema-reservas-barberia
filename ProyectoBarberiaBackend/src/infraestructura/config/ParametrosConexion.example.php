@@ -6,4 +6,6 @@
     define('USUARIO','usuario');
     define('CONTRASEÑA','pass');
     define('BASEDATOS','bd');
+    define('EMAIL','ALGO.GMAI.COM');
+    define('EMAIL_PASS','PASS');
 ?>

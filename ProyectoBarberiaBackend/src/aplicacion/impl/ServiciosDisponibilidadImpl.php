@@ -5,8 +5,8 @@
     use Barberia\Backend\dominio\Dia;
     use Barberia\Backend\dominio\Empleado;
     use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
-use Barberia\Backend\dominio\Reserva;
-use Barberia\Backend\dominio\ServicioBarberia;
+    use Barberia\Backend\dominio\Reserva;
+    use Barberia\Backend\dominio\ServicioBarberia;
     use DateTime;
 
     class ServiciosDisponibilidadImpl implements ServiciosDisponibilidad {

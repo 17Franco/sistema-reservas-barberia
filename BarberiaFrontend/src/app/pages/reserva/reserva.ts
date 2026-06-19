@@ -26,6 +26,12 @@ EmpleadoSeleccionado: EmpleadoD | null = null;
 
 horarioSeleccionado: Horario | null = null;
 
+reset = false;
+
+resetPantalla() {
+  this.reset = !this.reset;
+}
+
 onDia(dia:Dia) {
   this.diaSeleccionado = dia;
   this.reservaIniciada = true;

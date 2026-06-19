@@ -36,9 +36,12 @@ class UsuarioController {
                 'json'
             );
 
-            if(isset($_FILES["foto"])){
+            if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] !== UPLOAD_ERR_NO_FILE) {
                 $foto = $_FILES["foto"];
             }
+           // if(isset($_FILES["foto"])){
+               // $foto = $_FILES["foto"];
+           // }
 
             } catch (MissingConstructorArgumentsException $e) {
                 //si lanza error lo agarro y lanzo exepcion 
