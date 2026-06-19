@@ -14,20 +14,11 @@ class Reserva {
     private string $horaFin;
     private EstadoReserva $estado;
     //no poner el estado en el contructor usar el seter 
-    public function __construct(
-        int $idServicio,
-        int $idEmpleado,
-        int $idCliente,
-        string $fecha,
-        string $horaIni,
-        string $horaFin,
-    ) {
+    public function __construct(int $idServicio,int $idEmpleado,string $fecha,string $horaIni) {
         $this->idServicio = $idServicio;
         $this->idEmpleado = $idEmpleado;
-        $this->idCliente = $idCliente;
         $this->fecha = $fecha;
         $this->horaIni = $horaIni;
-        $this->horaFin = $horaFin;
     }
     //GETTERS
     public function getIdReserva(): int {

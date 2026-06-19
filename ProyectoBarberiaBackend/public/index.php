@@ -15,6 +15,7 @@ use Barberia\Backend\interface\api\controllers\ServicioController;
 use Barberia\Backend\interface\api\controllers\EmpleadoController;
 
 use Barberia\Backend\aplicacion\ServiciosServicios;
+use Barberia\Backend\interface\api\controllers\ReservaController;
 
 date_default_timezone_set('America/Montevideo');
 
@@ -41,7 +42,7 @@ try {
     $service = Fabrica::crearServicio();
     $disponibilidadService = Fabrica::crearDisponinilidadServicios();
     $servicioServicios = new ServiciosServicios();// la fabrica de adorno
-
+    $servicioReserva = Fabrica::crearReservaServicios();
     /*
     |--------------------------------------------------------------------------
     | USUARIOS / AUTH
@@ -167,7 +168,20 @@ try {
         AvailabilityController::horarioDisponible($disponibilidadService);
         exit;
     }
-
+    /*
+    |--------------------------------------------------------------------------
+    | RESERVA
+    |--------------------------------------------------------------------------
+    */
+    if ($method === 'POST' && $route === '/reservas') {
+        ReservaController::reservar($servicioReserva);
+        exit;
+    }
+    if ($method === 'POST' && preg_match('#^/reservas/(\d+)/enviar-comprobante$#', $route, $matches)) {
+        $idReserva = (int)$matches[1];
+        ReservaController::enviarComprobante($servicioReserva,$idReserva);
+        exit;
+    }
     /*
     |--------------------------------------------------------------------------
     | SI NO ENCUENTRA RUTA

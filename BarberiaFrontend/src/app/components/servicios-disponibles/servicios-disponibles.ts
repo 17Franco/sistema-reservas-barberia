@@ -17,6 +17,7 @@ export class ServiciosDisponibles {
   ServicioSeleccionado: number| null = null;
 
   @Input() dia: Dia | null = null;
+  @Input() reset: boolean | null = null;
 
   ngOnChanges() {
     this.ServicioSeleccionado=null;

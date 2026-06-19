@@ -68,8 +68,8 @@ use mysqli;
 
             while ($rowHorario = $result->fetch_assoc()) {
                     $horarioEmp = new Horario_Empleado($rowHorario['horaIni'],$rowHorario['horaFin']);
-                    $horarioEmp->setHoraIniDescanso($rowHorario['horaDescanzoIni']);
-                    $horarioEmp->setHoraFinDescanso($rowHorario['horaDescanzoFin']);
+                    $horarioEmp->setHoraIniDescanso($rowHorario['horaDescansoIni']);
+                    $horarioEmp->setHoraFinDescanso($rowHorario['horaDescansoFin']);
                     $horario[]=$horarioEmp;
             }
             return $horario;
@@ -88,11 +88,11 @@ use mysqli;
                 $reserva = new Reserva(
                     (int)$rowReserva["idServicio"],
                     (int)$rowReserva["idEmpleado"],
-                    (int)$rowReserva["idCliente"],
                     $rowReserva["fecha"],
-                    $rowReserva["horaInicio"],
-                    $rowReserva["horaFin"]
+                    $rowReserva["horaInicio"]  
                 );
+                $reserva->setIdCliente((int)$rowReserva["idCliente"]);
+                $reserva->setHoraFin($rowReserva["horaFin"]);
                 $reserva->setidReserva((int)$rowReserva["idReserva"]);
                 $reservas[]=$reserva;
             }

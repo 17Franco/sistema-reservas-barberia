@@ -11,6 +11,7 @@ use Barberia\Backend\dominio\Empleado;
 use Barberia\Backend\dominio\EstadoEmpleado;
 use Barberia\Backend\dominio\Horario_Empleado;
 use DateTime;
+use Exception;
 use LDAP\Result;
 use mysqli;
 
@@ -59,12 +60,40 @@ use mysqli;
         }
 
         //comprueba ci
-        public function existe(string $ci): bool{
+        public function existeClientePorCi(string $ci): bool{
             $sql = "SELECT * FROM usuarios WHERE ci = ?";
 
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bind_param("s", $ci);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+        }
+        
+        public function existeClientePorId(int $id): bool{
+            $sql = "SELECT * FROM cliente WHERE id_Usuario = ?";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bind_param("i", $id);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+        }
+
+        public function existeEmpleado(int $id): bool{
+            $sql = "SELECT * FROM empleado WHERE id_usuario = ?";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bind_param("i", $id);
 
             $stmt->execute();
 
@@ -152,7 +181,7 @@ use mysqli;
             $empleado->setEspecialidad($row['especialidadName']);
 
             //nesesito el horario
-            $sqlH = "SELECT idEmpleado,horaIni,horaFin,horaDescanzoIni,horaDescanzoFin FROM empleado u INNER JOIN horario_empleado e ON u.id_usuario = e.idEmpleado where u.id_usuario= ?";
+            $sqlH = "SELECT idEmpleado,horaIni,horaFin,horaDescansoIni,horaDescansoFin FROM empleado u INNER JOIN horario_empleado e ON u.id_usuario = e.idEmpleado where u.id_usuario= ?";
             $stmt = $this->conn->prepare($sqlH);
 
             $id=$empleado->getId();
@@ -167,8 +196,8 @@ use mysqli;
             
             while ($rowHorario  = $result2->fetch_assoc()) {
                 $horario = new Horario_Empleado($rowHorario['horaIni'],$rowHorario['horaFin'],);
-                $horario->setHoraIniDescanso($rowHorario['horaDescanzoIni']);
-                $horario->setHoraFinDescanso($rowHorario['horaDescanzoFin']);
+                $horario->setHoraIniDescanso($rowHorario['horaDescansoIni']);
+                $horario->setHoraFinDescanso($rowHorario['horaDescansoFin']);
 
                 $empleado->agregarHorario($horario);
             }
@@ -179,7 +208,23 @@ use mysqli;
 
         return $lista;
     }
+        public function getEmailById(int $idUsuario):?string{
+            $sql = "SELECT email FROM usuarios WHERE id = ?";
 
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Error en la consulta");
+            }
+
+            $stmt->bind_param("i", $idUsuario);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+
+            return $row['email'] ?? null;
+        }
+        
         public function actualizarEmpleado(Empleado $e): bool {
 
           /*  $sql = "UPDATE empleado 
@@ -212,7 +257,7 @@ use mysqli;
             return $stmt->execute();
         }
 
-        public function buscarPorCiEmpleado(string $ci): ?Empleado {
+        public function obtenerEmpleado(string $ci): ?Empleado {
             return null;
         }
 
@@ -220,7 +265,7 @@ use mysqli;
 
         public function eliminar(string $id): bool{return false;}
 
-        public function buscarPorId(string $id): ?Cliente{return null;}
+        public function obtenerCliente(string $id): ?Cliente{return null;}
 
         public function listar(): array{return [];}
 
