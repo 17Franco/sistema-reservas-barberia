@@ -29,8 +29,9 @@ export class NavBar implements OnInit {
   dropdown: boolean = false;
   usuarioActual: UsuarioSesion | null = null;
   mostrarIniciales = false;
-
+  admin: boolean = false;
   ngOnInit(): void {
+    this.admin = this.isAdmin();
     this.authService.me().subscribe({
       next: (respuesta) => {
         this.usuarioActual = respuesta as UsuarioSesion;
@@ -83,11 +84,19 @@ export class NavBar implements OnInit {
       next:(res:any)=>{
         if(res.success){
           console.log(res);
+          this.authService.usuario = null;
           this.router.navigateByUrl('/auth')
+          
         }
       }
     });
+  }
 
-    
+  isAdmin(){
+    console.log(this.authService.usuario.tipo);
+    if(this.authService.usuario.tipo=="ADMIN"){
+      return true;
+    } 
+    return false;
   }
 }

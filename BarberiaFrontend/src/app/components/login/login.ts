@@ -40,13 +40,19 @@ export class Login {
       }
 
       let datos =this.formLogin.value;
-      console.log(datos);
+      //console.log(datos);
       
       this.authService.login(datos).subscribe({
         next:(res:any) => {
           if(res.success){
-            console.log(res);
-            this.router.navigateByUrl('/')
+            //console.log(res);
+            
+            if (res.tipo === 'ADMIN') {
+                this.router.navigate(['/admin']);
+            } else if(res.tipo === 'CLIENTE') {
+                this.router.navigate(['/']);
+            }
+           // this.router.navigateByUrl('/')
           }
         },
         error:(err)=>{
