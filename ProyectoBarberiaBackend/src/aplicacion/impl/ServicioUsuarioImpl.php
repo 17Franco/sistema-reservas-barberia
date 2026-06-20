@@ -118,6 +118,20 @@ use Exception;
             // por ahora va directo al grano:
             return $this->repo->cambiarEstadoEmpleado($ci, $nuevoEstado);
         }
+
+        public function validarEmail(string $email):bool{
+            if($email !=""){
+             return $this->repo->emailUsado($email);
+            }
+            return false;
+        }
+        
+        public function validarCi(string $ci):bool{
+            if($ci !=""){
+             return $this->repo->existeClientePorCi($ci);
+            }
+            return false;
+        }
     }
 
 
