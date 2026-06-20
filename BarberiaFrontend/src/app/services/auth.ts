@@ -53,7 +53,7 @@ export class Auth {
   }
 
   registrarUsuario(datos:FormData){
-    console.log("llego");
+    //console.log("llego");
     return this.http.post(`${this.apiUrl}/usuarios`, datos);
   }
 
@@ -79,9 +79,13 @@ export class Auth {
     )
   };
 
-  
+  validarEmail(email:string){
+    return this.http.get<any>(`${this.apiUrl}/usuarios/validar-email?email=${email}`)
+  }
 
-
+   validarCi(ci:string){
+    return this.http.get<any>(`${this.apiUrl}/usuarios/validar-ci?ci=${ci}`)
+  }
 
 
 }

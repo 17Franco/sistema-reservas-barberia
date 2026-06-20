@@ -24,6 +24,9 @@
         public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool;
 
         public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool;
+
+        public function validarEmail(string $email):bool;
+        public function validarCi(string $ci):bool;
     }
         
 ?>

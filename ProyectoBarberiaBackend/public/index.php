@@ -73,6 +73,13 @@ try {
         UsuarioController::editarUsuario($service);
         exit;
     }
+    if ($method === 'GET' && $route === '/usuarios/validar-email') {
+        UsuarioController::validarEmail($service);
+        exit;
+    }if ($method === 'GET' && $route === '/usuarios/validar-ci') {
+        UsuarioController::validarCi($service);
+        exit;
+    }
 
 
     /*

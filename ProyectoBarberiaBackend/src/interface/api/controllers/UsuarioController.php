@@ -258,5 +258,38 @@ class UsuarioController {
         ]);
     }
 
+    public static function validarEmail(ServiciosUsuarios $servicio): void {
+        
+        if (!isset($_GET['email'])) {
+            throw new Exception("No se recibio un email", 400);
+        }
+        //OBTENGO EL DATO DEL QUERY PARAM
+        $email = $_GET['email'];
+
+        $resu = $servicio->validarEmail($email);
+
+        // 4. Responder
+        http_response_code(200);
+        echo json_encode([
+            "existe" => $resu
+        ]);
+    }
+
+    public static function validarCi(ServiciosUsuarios $servicio): void {
+        
+        if (!isset($_GET['ci'])) {
+            throw new Exception("No se recibio la cedula", 400);
+        }
+        //OBTENGO EL DATO DEL QUERY PARAM
+        $ci = $_GET['ci'];
+
+        $resu = $servicio->validarCi($ci);
+
+        // 4. Responder
+        http_response_code(200);
+        echo json_encode([
+            "existe" => $resu
+        ]);
+    }
 }
 ?>
