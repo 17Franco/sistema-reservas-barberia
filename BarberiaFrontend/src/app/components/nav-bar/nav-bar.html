@@ -32,11 +32,11 @@
 
     <div class="gap-5 d-flex">
 
-      <a class="link fw-bold" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo=== 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
+      <a class="link fw-bold" [class.d-none]="!admin" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo=== 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
 
-      <a class="link fw-bold" (click)="cambiarModo('Home')" routerLink="/" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
+      <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('Home')" routerLink="/" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
 
-      <a class="link fw-bold" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
+      <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
 
     </div>
 

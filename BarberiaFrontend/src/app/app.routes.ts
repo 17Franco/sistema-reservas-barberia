@@ -12,6 +12,7 @@ import { GestionServicios } from './pages/admin/gestion-servicios/gestion-servic
 import { GestionBarberos } from './pages/admin/gestion-barberos/gestion-barberos';
 import { GestionReserva } from './pages/admin/gestion-reserva/gestion-reserva';
 import { Reserva } from './pages/reserva/reserva';
+import { tipoUserGuard } from './guards/tipo-user-guard';
 
 //aca agregamos el path para que si en el navegador busca home redirija a page home o login etc
 //cada pagina debe tener una ruta
@@ -36,22 +37,22 @@ export const routes: Routes = [
       {
         path: 'admin',
         component: AdminDashboard,
-        canActivate: []
+        canActivate: [tipoUserGuard]
       },
       {
         path: 'admin/servicios',
         component: GestionServicios,
-        canActivate: []
+        canActivate: [tipoUserGuard]
       },
       {
         path: 'admin/barberos',
         component: GestionBarberos,
-        canActivate: []
+        canActivate: [tipoUserGuard]
       },
       {
         path: 'admin/reservas',
         component: GestionReserva,
-        canActivate: [] 
+        canActivate: [tipoUserGuard] 
       },
       {
         path: 'reservar',
