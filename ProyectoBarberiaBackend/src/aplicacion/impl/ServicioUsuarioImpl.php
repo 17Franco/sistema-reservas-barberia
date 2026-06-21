@@ -146,8 +146,15 @@ use Exception;
         return $this->repo->listarEmpleado();
     }
 
-        public function actualizarEmpleado(Empleado $e): bool {
-            return $this->repo->actualizar($e);
+        public function agregarEmpleado(array $datos): bool {
+            if ($this->repo->existeClientePorCi($datos['ci']) || $this->repo->emailUsado($datos['email'])) {
+                throw new Exception("La cédula o el email ya existen", 409);
+            }
+            return $this->repo->guardarEmpleado($datos);
+        }
+
+        public function actualizarEmpleado(int $idEmpleado, array $datos): bool {
+            return $this->repo->actualizarEmpleado($idEmpleado, $datos);
         }
 
         public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool {

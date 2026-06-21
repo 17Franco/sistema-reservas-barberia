@@ -148,43 +148,35 @@ class UsuarioController {
     }
 
     public static function listarEmpleados(ServiciosUsuarios $servicio): void {
-     $serializer = new Serializer([new DateTimeNormalizer(),new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
         $data = $servicio->listarEmpleados();
-        $json = $serializer->serialize($data, 'json');
-        //$servicio = Fabrica::crearServicioEmpleado();
-
-       
-
-        echo $serializer->serialize([
+        echo json_encode([
             'success' => true,
             'empleados' => $data
-        ], 'json');
+        ]);
     }
 
-    public static function actualizarEmpleado(ServiciosUsuarios $servicio): void {
+    public static function registrarEmpleado(ServiciosUsuarios $servicio): void {
+        $data = self::datosEmpleado(true);
+        http_response_code(201);
+        echo json_encode(['success' => $servicio->agregarEmpleado($data)]);
+    }
 
-        //$servicio = Fabrica::crearServicioEmpleado();
+    public static function actualizarEmpleado(ServiciosUsuarios $servicio, int $id): void {
+        echo json_encode(['success' => $servicio->actualizarEmpleado($id, self::datosEmpleado(false))]);
+    }
 
-        $json = file_get_contents("php://input");
-        $data = json_decode($json, true);
-
-        $empleado = new Empleado(
-            $data["ci"],
-            $data["nombre"],
-            $data["apellido"],
-            new DateTime($data["fechaNac"]),
-            $data["contraseña"],
-            $data["email"],
-            $data["celular"],
-            //TipoUsuario::from($data["tipo"]),
-            EstadoEmpleado::from($data["estado"])
-        );
-
-        $ok = $servicio->actualizarEmpleado($empleado);
-
-        echo json_encode([
-            "success" => $ok
-        ]);
+    private static function datosEmpleado(bool $alta): array {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $requeridos = $alta
+            ? ['ci','nombre','apellido','fechaNac','password','email','celular','idEspecialidad']
+            : ['nombre','apellido','email','celular','idEspecialidad'];
+        foreach ($requeridos as $campo) {
+            if (empty($data[$campo])) throw new Exception("Falta el campo $campo", 400);
+        }
+        if ($alta && !preg_match('/^\d{8}$/', $data['ci'])) {
+            throw new Exception("La cédula debe tener exactamente 8 números", 400);
+        }
+        return $data;
     }
 
   

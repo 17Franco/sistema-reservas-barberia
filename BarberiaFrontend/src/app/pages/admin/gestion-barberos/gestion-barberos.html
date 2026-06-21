@@ -1,1 +1,58 @@
-<p>gestion-barberos works!</p>
+<section class="barbers-page">
+  <header class="hero">
+    <div><small>Panel administrativo</small><h1>Gestión de barberos</h1><p>Administrá el equipo, sus especialidades y estado.</p></div>
+    <strong>{{ barberos.length }}<span>Barberos</span></strong>
+  </header>
+
+  <div class="layout">
+    <form class="panel barber-form" (ngSubmit)="guardar()">
+      <small>{{ idEditando ? 'EDITAR BARBERO' : 'NUEVO BARBERO' }}</small>
+      <h2>{{ idEditando ? 'Actualizar datos' : 'Agregar barbero' }}</h2>
+      <input class="form-control" name="nombre" [(ngModel)]="form.nombre" placeholder="Nombre" required>
+      <input class="form-control" name="apellido" [(ngModel)]="form.apellido" placeholder="Apellido" required>
+
+      @if (!idEditando) {
+        <input class="form-control" name="ci" [(ngModel)]="form.ci" placeholder="Cédula (8 números)" inputmode="numeric" maxlength="8" pattern="[0-9]{8}" required>
+        <input class="form-control" type="date" name="fechaNac" [(ngModel)]="form.fechaNac" required>
+        <input class="form-control" type="password" name="password" [(ngModel)]="form.password" placeholder="Contraseña" required>
+      }
+
+      <input class="form-control" type="email" name="email" [(ngModel)]="form.email" placeholder="Email" required>
+      <input class="form-control" name="celular" [(ngModel)]="form.celular" placeholder="Celular" required>
+
+      <div class="specialty-heading">
+        <label for="especialidad">Especialidad</label>
+        <a routerLink="/admin/servicios">＋ Crear nueva</a>
+      </div>
+      <select id="especialidad" class="form-select" name="especialidad" [(ngModel)]="form.idEspecialidad" required>
+        @for (servicio of servicios; track servicio.idServicio) { <option [ngValue]="servicio.idServicio">{{ servicio.nombre }}</option> }
+      </select>
+
+      @if (error) { <div class="alert alert-danger py-2">{{ error }}</div> }
+      @if (mensaje) { <div class="alert alert-success py-2">{{ mensaje }}</div> }
+      <button class="btn-save" type="submit">{{ idEditando ? 'Guardar cambios' : 'Agregar barbero' }}</button>
+      @if (idEditando) { <button class="btn-cancel" type="button" (click)="cancelar()">Cancelar</button> }
+    </form>
+
+    <section class="panel list-panel">
+      <small>EQUIPO</small><h2>Listado actual</h2>
+      <div class="barbers-list">
+        @for (barbero of barberos; track barbero.id) {
+          <article class="barber-item" [class.inactive]="barbero.estado === 'INACTIVO'">
+            <img [src]="'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
+            <div class="barber-data">
+              <h3>{{ barbero.nombre }} {{ barbero.apellido }}</h3>
+              <p>{{ barbero.email }}</p>
+              <span>{{ barbero.especialidad }}</span>
+            </div>
+            <b [class.off]="barbero.estado === 'INACTIVO'">{{ barbero.estado }}</b>
+            <div class="actions">
+              <button (click)="editar(barbero)">Editar</button>
+              <button class="danger" (click)="cambiarEstado(barbero)">{{ barbero.estado === 'ACTIVO' ? 'Dar de baja' : 'Activar' }}</button>
+            </div>
+          </article>
+        } @empty { <p class="empty">No hay barberos cargados.</p> }
+      </div>
+    </section>
+  </div>
+</section>

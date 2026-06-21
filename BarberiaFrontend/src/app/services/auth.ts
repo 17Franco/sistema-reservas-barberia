@@ -75,7 +75,7 @@ export class Auth {
     )
   };
 
-   getReservasBarberoAsociado(idBarbero: number){
+  getReservasBarberoAsociado(idBarbero: number){
     console.log("llegaon las reservas");
     return this.http.get<any>(
       `${this.apiUrl}/reservasBarberoAsociado/${idBarbero}`,
@@ -84,6 +84,22 @@ export class Auth {
       }
     )
   };
+
+  getBarberos(){
+    return this.http.get<any>(`${this.apiUrl}/empleados`, { withCredentials: true });
+  }
+
+  crearBarbero(datos: any){
+    return this.http.post<any>(`${this.apiUrl}/empleados`, datos, { withCredentials: true });
+  }
+
+  actualizarBarbero(id: number, datos: any){
+    return this.http.put<any>(`${this.apiUrl}/empleados/${id}`, datos, { withCredentials: true });
+  }
+
+  cambiarEstadoBarbero(ci: string, estado: 'ACTIVO' | 'INACTIVO'){
+    return this.http.put<any>(`${this.apiUrl}/empleados/estado`, { ci, estado }, { withCredentials: true });
+  }
 
 
   editarPerfilUsuario(datos: FormData){
