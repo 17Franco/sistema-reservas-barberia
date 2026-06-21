@@ -118,15 +118,16 @@ class RepositorioReservaImpl implements RepositorioReserva{
 
 
 
-    public function cancelar(int $idReserva, int $idCliente): bool{
+    public function cancelar(int $idReserva, int $idUsuario, bool $esEmpleado): bool{
+        $columnaUsuario = $esEmpleado ? 'idEmpleado' : 'idCliente';
         $sql = "UPDATE reservas
                 SET estado = 'CANCELADA'
                 WHERE idReserva = ?
-                AND idCliente = ?
+                AND {$columnaUsuario} = ?
                 AND estado = 'PENDIENTE'";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idReserva, $idCliente);
+        $stmt->bind_param("ii", $idReserva, $idUsuario);
         $stmt->execute();
 
         return $stmt->affected_rows === 1;
@@ -134,15 +135,35 @@ class RepositorioReservaImpl implements RepositorioReserva{
 
 
 
-    public function confirmar(int $idReserva, int $idCliente): bool{
+    public function confirmar(int $idReserva, int $idUsuario, bool $esEmpleado): bool{
+        $columnaUsuario = $esEmpleado ? 'idEmpleado' : 'idCliente';
         $sql = "UPDATE reservas
                 SET estado = 'CONFIRMADA'
                 WHERE idReserva = ?
-                AND idCliente = ?
+                AND {$columnaUsuario} = ?
                 AND estado = 'PENDIENTE'";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idReserva, $idCliente);
+        $stmt->bind_param("ii", $idReserva, $idUsuario);
+        $stmt->execute();
+
+        return $stmt->affected_rows === 1;
+    }
+
+    public function completar(int $idReserva, int $idUsuario, bool $esAdmin): bool{
+        $filtroUsuario = $esAdmin ? '' : 'AND idEmpleado = ?';
+        $sql = "UPDATE reservas
+                SET estado = 'COMPLETADA'
+                WHERE idReserva = ?
+                {$filtroUsuario}
+                AND estado = 'CONFIRMADA'";
+
+        $stmt = $this->conn->prepare($sql);
+        if ($esAdmin) {
+            $stmt->bind_param("i", $idReserva);
+        } else {
+            $stmt->bind_param("ii", $idReserva, $idUsuario);
+        }
         $stmt->execute();
 
         return $stmt->affected_rows === 1;

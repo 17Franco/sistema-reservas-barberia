@@ -85,9 +85,10 @@ use Symfony\Component\Serializer\Serializer;
                 throw new Exception("Debes iniciar sesión", 401);
             }
 
-            $idCliente = (int) $_SESSION["usuario_id"];
+            $idUsuario = (int) $_SESSION["usuario_id"];
+            $tipoUsuario = (string) ($_SESSION["tipoUser"] ?? '');
 
-            $servicio->cancelarReserva($idReserva, $idCliente);
+            $servicio->cancelarReserva($idReserva, $idUsuario, $tipoUsuario);
 
             http_response_code(200);
 
@@ -103,15 +104,35 @@ use Symfony\Component\Serializer\Serializer;
             if (!isset($_SESSION["usuario_id"])) {
                 throw new Exception("Debes iniciar sesión", 401);
             }
-            $idCliente = (int) $_SESSION["usuario_id"];
+            $idUsuario = (int) $_SESSION["usuario_id"];
+            $tipoUsuario = (string) ($_SESSION["tipoUser"] ?? '');
 
-            $servicio->confirmarReserva($idReserva, $idCliente);
+            $servicio->confirmarReserva($idReserva, $idUsuario, $tipoUsuario);
 
             http_response_code(200);
 
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Reserva confirmada correctamente"
+            ]);
+        }
+
+        public static function completar(ServiciosReserva $servicio, int $idReserva): void {
+            session_start();
+
+            if (!isset($_SESSION["usuario_id"])) {
+                throw new Exception("Debes iniciar sesión", 401);
+            }
+
+            $idUsuario = (int) $_SESSION["usuario_id"];
+            $tipoUsuario = (string) ($_SESSION["tipoUser"] ?? '');
+
+            $servicio->completarReserva($idReserva, $idUsuario, $tipoUsuario);
+
+            http_response_code(200);
+            echo json_encode([
+                "success" => true,
+                "mensaje" => "Reserva completada correctamente"
             ]);
         }
 

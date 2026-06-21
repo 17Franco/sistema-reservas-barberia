@@ -141,4 +141,14 @@ export class Auth {
     );
   }
 
+  completarReserva(idReserva: number) {
+    return this.http.put<any>(
+      `${this.apiUrl}/reservas/${idReserva}/completar`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
+
 }
