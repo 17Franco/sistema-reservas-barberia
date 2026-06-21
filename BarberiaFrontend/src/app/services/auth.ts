@@ -75,6 +75,16 @@ export class Auth {
     )
   };
 
+   getReservasBarberoAsociado(idBarbero: number){
+    console.log("llegaon las reservas");
+    return this.http.get<any>(
+      `${this.apiUrl}/reservasBarberoAsociado/${idBarbero}`,
+      {
+        withCredentials: true
+      }
+    )
+  };
+
 
   editarPerfilUsuario(datos: FormData){
     return this.http.post<any>(

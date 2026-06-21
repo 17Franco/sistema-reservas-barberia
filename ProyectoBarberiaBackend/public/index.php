@@ -120,6 +120,16 @@ try {
         }
     }
 
+    //GET /reservasBarberoAsociado/1
+    if (preg_match('#^/reservasBarberoAsociado/(\d+)$#', $route, $matches)) {
+    $idBarbero = (int)$matches[1];
+        //le pasas el id del cliente y te retorna sus reservas
+        if ($method === 'GET') {
+            ServicioController::listarReservasBarberoAsociado($servicioServicios, $idBarbero);
+            exit;
+        }
+    }
+
 
 
 

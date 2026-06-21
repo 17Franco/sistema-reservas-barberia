@@ -29,6 +29,19 @@ class ServicioController {
         ]);
     }
 
+    public static function listarReservasBarberoAsociado(ServiciosServicios $servicio, int $idBarbero) : void{
+        $reservasAsociadas = $servicio->listarReservasBarberoAsociado($idBarbero);
+        //si esta vacio no es error, simplemente no tiene reservasAsociadas todavia
+        http_response_code(200);
+        //en este caso se llama "mensaje" pero se puede llamar "roberto" igual
+        echo json_encode([
+            "success" => true,
+            "mensaje" => $reservasAsociadas
+        ]);
+    }
+
+
+
     public static function buscarServicio(ServiciosServicios $servicio, int $idServicio): void {
         $servicioEncontrado = $servicio->buscarServicio($idServicio);
 

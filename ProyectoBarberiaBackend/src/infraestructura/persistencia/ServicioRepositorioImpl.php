@@ -108,6 +108,76 @@ class ServicioRepositorioImpl {
     }
 
 
+
+
+    public function listarReservasBarberoAsociado(int $idBarbero): array{
+        $conexion = $this->conectar();
+
+        $sql = "SELECT
+            reserva.idReserva,
+            reserva.idCliente,
+            reserva.idEmpleado,
+            reserva.idServicio,
+            reserva.estado,
+            reserva.fecha,
+            reserva.horaInicio,
+
+            servicio.nombre AS nombreServicio,
+            servicio.descripcion,
+            servicio.duracion,
+            servicio.precio,
+
+            usuarioCliente.nombre AS nombreCliente,
+            usuarioCliente.apellido AS apellidoCliente,
+            usuarioCliente.foto AS fotoCliente
+
+        FROM reservas reserva
+
+        INNER JOIN servicios servicio
+            ON servicio.idServicio = reserva.idServicio
+
+        INNER JOIN usuarios usuarioCliente
+            ON usuarioCliente.id = reserva.idCliente
+
+        WHERE reserva.idEmpleado = ?
+
+        ORDER BY reserva.fecha DESC, reserva.horaInicio DESC";
+
+        $consultaPreparada = $conexion->prepare($sql);
+        $consultaPreparada->bind_param("i", $idBarbero);
+        $consultaPreparada->execute();
+
+        $resultado = $consultaPreparada->get_result();
+        $reservasAsociadas = [];
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $reservasAsociadas[] = [
+                "idReserva" => (int) $fila["idReserva"],
+                "idCliente" => (int) $fila["idCliente"],
+                "idEmpleado" => (int) $fila["idEmpleado"],
+                "idServicio" => (int) $fila["idServicio"],
+                "estado" => $fila["estado"],
+                "fecha" => $fila["fecha"],
+                "horaInicio" => $fila["horaInicio"],
+
+                "nombreServicio" => $fila["nombreServicio"],
+                "descripcion" => $fila["descripcion"],
+                "duracion" => (int) $fila["duracion"],
+                "precio" => (float) $fila["precio"],
+
+                "nombreCliente" => $fila["nombreCliente"],
+                "apellidoCliente" => $fila["apellidoCliente"],
+                "fotoCliente" => $fila["fotoCliente"],
+            ];
+        }
+
+        $consultaPreparada->close();
+        $conexion->close();
+
+        return $reservasAsociadas;
+    }
+
+
     public function buscarServicio(int $idServicio): ?array {
         $conexion = $this->conectar();
 

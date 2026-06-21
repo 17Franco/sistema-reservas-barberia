@@ -5,6 +5,7 @@ import { authGuard } from './guards/auth-guard';
 import { Servicios } from './pages/servicios/servicios';
 import { PaginaPerfil } from './pages/pagina-perfil/pagina-perfil';
 import { PantallaPrincipal } from './pages/pantalla-principal/pantalla-principal'; // importamos la pantalla principal para agregarla a las rutas.
+import { PerfilBarbero } from './pages/perfil-barbero/perfil-barbero';
 
 //nuevos imports para las rutas de admin.
 import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
@@ -33,6 +34,10 @@ export const routes: Routes = [
       {
         path: 'MiPerfil',
         component: PaginaPerfil
+      },
+      {
+        path: 'perfilBarbero',
+        component: PerfilBarbero
       },
       {
         path: 'admin',
