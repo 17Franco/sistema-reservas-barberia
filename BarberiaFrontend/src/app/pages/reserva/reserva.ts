@@ -15,38 +15,49 @@ import { HorarioDisponibles } from "../../components/horario-disponibles/horario
   styleUrl: './reserva.scss',
 })
 export class Reserva {
-reservaIniciada = false;
-servicioInicido=false;
-HorarioInicido=false;
-diaSeleccionado: Dia | null = null;
+  //variables para saber que ya los componente por lo menos tiene algo cargado
+  reservaIniciada = false;
+  servicioInicido=false;
+  HorarioInicido=false;
 
-ServicioSeleccionado: Servicio | null = null;
+  //variables / objetos que mando desde el padre a los otros componentes
+  diaSeleccionado: Dia | null = null;
 
-EmpleadoSeleccionado: EmpleadoD | null = null;
+  ServicioSeleccionado: Servicio | null = null;
 
-horarioSeleccionado: Horario | null = null;
+  EmpleadoSeleccionado: EmpleadoD | null = null;
 
-onDia(dia:Dia) {
-  this.diaSeleccionado = dia;
-  this.reservaIniciada = true;
-  this.ServicioSeleccionado = null;
-  this.EmpleadoSeleccionado = null;
-  this.horarioSeleccionado = null;
-}
+  horarioSeleccionado: Horario | null = null;
 
-onServicio(servicio:Servicio) {
-  this.servicioInicido=true;
-  this.ServicioSeleccionado = servicio;
-  this.EmpleadoSeleccionado = null;
-  this.horarioSeleccionado = null;
-}
+  reset = false;
 
-onEmpleado(empleado:EmpleadoD) {
-  this.HorarioInicido=true;
-  this.EmpleadoSeleccionado = empleado;
-  this.horarioSeleccionado = null;
-}
-onHorario(horario:Horario){
-   this.horarioSeleccionado = horario;
-}
+  resetPantalla() {
+    this.reset = !this.reset;
+  }
+
+  //funciones donde cargo el objeto y borro seleccion anteriores
+  
+  onDia(dia:Dia) {
+    this.diaSeleccionado = dia;
+    this.reservaIniciada = true;
+    this.ServicioSeleccionado = null;
+    this.EmpleadoSeleccionado = null;
+    this.horarioSeleccionado = null;
+  }
+
+  onServicio(servicio:Servicio) {
+    this.servicioInicido=true;
+    this.ServicioSeleccionado = servicio;
+    this.EmpleadoSeleccionado = null;
+    this.horarioSeleccionado = null;
+  }
+
+  onEmpleado(empleado:EmpleadoD) {
+    this.HorarioInicido=true;
+    this.EmpleadoSeleccionado = empleado;
+    this.horarioSeleccionado = null;
+  }
+  onHorario(horario:Horario){
+    this.horarioSeleccionado = horario;
+  }
 }

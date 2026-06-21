@@ -12,6 +12,7 @@ import { Dia, EmpleadoD, Servicio } from '../../interfaces/disponibilidad-interf
 export class EmpleadoDisponibles {
   @Input() dia: Dia | null = null;
   @Input() servicio: Servicio | null = null;
+  @Input() reset: boolean | null = null;
 
   constructor(private disponibilidad: Disponibilidad) {}
   startIndex = 0;

@@ -28,9 +28,9 @@ interface ReservaInterface {
   descripcion: string;
   duracion: number;
   precio: number;
-  nombreEmpleado: string;
-  apellidoEmpleado: string;
-  fotoEmpleado?: string | null;
+  nombreCliente : string;
+  apellidoCliente: string;
+  fotoCliente?: string | null;
 }
 
 interface FormularioPerfil {
@@ -41,12 +41,12 @@ interface FormularioPerfil {
 }
 
 @Component({
-  selector: 'app-pagina-perfil',
+  selector: 'app-perfil-barbero',
   imports: [FormsModule],
-  templateUrl: './pagina-perfil.html',
-  styleUrl: './pagina-perfil.scss',
+  templateUrl: './perfil-barbero.html',
+  styleUrl: './perfil-barbero.scss',
 })
-export class PaginaPerfil implements OnInit {
+export class PerfilBarbero implements OnInit{
   // Dependencias y configuración
   private readonly backendPublicUrl =
     'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public';
@@ -76,6 +76,8 @@ export class PaginaPerfil implements OnInit {
   public mostrarOpcionesCancelar = false;
   public reservaConfirmandoId: number | null = null;
   public mostrarOpcionesConfirmar = false;
+  public mostrarOpcionesCompletar = false;
+  public reservaCompletandoId: number | null = null;
 
 
   // Datos del formulario de edición
@@ -95,11 +97,11 @@ export class PaginaPerfil implements OnInit {
       const respuesta = await firstValueFrom(this.auth.me());
       this.usuarioActual = respuesta as UsuarioSesion;
 
-      const idCliente = this.usuarioActual.usuario_id;
+      const idBarbero = this.usuarioActual.usuario_id;
 
-      if (idCliente) {
+      if (idBarbero) {
         const respuestaReservas = await firstValueFrom(
-          this.auth.getReservasClienteAsociado(idCliente),
+          this.auth.getReservasBarberoAsociado(idBarbero),
         );
 
         const reservas = respuestaReservas.mensaje || [];
@@ -121,7 +123,7 @@ export class PaginaPerfil implements OnInit {
         ).length;
 
         this.reservasAsociadas = reservas.filter(
-          (reserva: ReservaInterface) => reserva.estado == 'PENDIENTE' || reserva.estado == 'CONFIRMADA', 
+          (reserva: ReservaInterface) => reserva.estado == 'PENDIENTE' || reserva.estado == 'CONFIRMADA',
         );
 
         this.historialReservas = reservas.filter(
@@ -206,12 +208,12 @@ export class PaginaPerfil implements OnInit {
     return this.urlImagenBackend(this.usuarioActual.foto);
   }
 
-  fotoEmpleadoUrl(reserva: ReservaInterface): string | null {
-    if (!reserva.fotoEmpleado) {
+  fotoClienteUrl(reserva: ReservaInterface): string | null {
+    if (!reserva.fotoCliente) {
       return null;
     }
 
-    return this.urlImagenBackend(reserva.fotoEmpleado);
+    return this.urlImagenBackend(reserva.fotoCliente);
   }
 
   usarIniciales(): void {
@@ -281,9 +283,9 @@ export class PaginaPerfil implements OnInit {
     return `${nombre.charAt(0)}${apellido.charAt(0)}`.toUpperCase();
   }
 
-  nombreCompletoEmpleado(reserva: ReservaInterface): string {
+  nombreCompletoCliente(reserva: ReservaInterface): string {
     return (
-      `${reserva.nombreEmpleado || ''} ${reserva.apellidoEmpleado || ''}`.trim() ||
+      `${reserva.nombreCliente || ''} ${reserva.apellidoCliente || ''}`.trim() ||
       'Barbero sin dato'
     );
   }
@@ -503,6 +505,59 @@ async confirmarReserva(reserva: ReservaInterface): Promise<void> {
 
   } finally {
     this.reservaConfirmandoId = null;
+    this.cd.detectChanges();
+  }
+}
+
+async completarReserva(reserva: ReservaInterface): Promise<void> {
+  if (reserva.estado !== 'CONFIRMADA') {
+    return;
+  }
+
+  const resultado = await Swal.fire({
+    title: '¿Completar esta reserva?',
+    text: 'La reserva pasará al historial como completada.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#0d6efd',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sí, completar',
+    cancelButtonText: 'Volver',
+  });
+
+  if (!resultado.isConfirmed) {
+    return;
+  }
+
+  this.reservaCompletandoId = reserva.idReserva;
+
+  try {
+    await firstValueFrom(this.auth.completarReserva(reserva.idReserva));
+
+    const reservaCompletada = { ...reserva, estado: 'COMPLETADA' };
+    this.reservasAsociadas = this.reservasAsociadas.filter(
+      reservaActual => reservaActual.idReserva !== reserva.idReserva
+    );
+    this.historialReservas = [reservaCompletada, ...this.historialReservas];
+    this.cantidadConfirmadas = Math.max(0, this.cantidadConfirmadas - 1);
+    this.cantidadCompletadas++;
+    this.cd.detectChanges();
+
+    await Swal.fire({
+      title: 'Reserva completada',
+      text: 'La reserva fue enviada al historial correctamente.',
+      icon: 'success',
+    });
+  } catch (error: any) {
+    console.error('Error completando reserva', error);
+
+    await Swal.fire({
+      title: 'Error',
+      text: error.error?.error || 'No se pudo completar la reserva.',
+      icon: 'error',
+    });
+  } finally {
+    this.reservaCompletandoId = null;
     this.cd.detectChanges();
   }
 }

@@ -15,6 +15,7 @@ use Barberia\Backend\interface\api\controllers\ServicioController;
 use Barberia\Backend\interface\api\controllers\EmpleadoController;
 
 use Barberia\Backend\aplicacion\ServiciosServicios;
+use Barberia\Backend\interface\api\controllers\ReservaController;
 
 date_default_timezone_set('America/Montevideo');
 
@@ -41,7 +42,7 @@ try {
     $service = Fabrica::crearServicio();
     $disponibilidadService = Fabrica::crearDisponinilidadServicios();
     $servicioServicios = new ServiciosServicios();// la fabrica de adorno
-
+    $servicioReserva = Fabrica::crearReservaServicios();
     /*
     |--------------------------------------------------------------------------
     | USUARIOS / AUTH
@@ -68,8 +69,15 @@ try {
         exit;
     }
 
-    if ($method === 'PUT' && $route === '/editarPerfil') {
+    if ($method === 'POST' && $route === '/editarPerfil') {
         UsuarioController::editarUsuario($service);
+        exit;
+    }
+    if ($method === 'GET' && $route === '/usuarios/validar-email') {
+        UsuarioController::validarEmail($service);
+        exit;
+    }if ($method === 'GET' && $route === '/usuarios/validar-ci') {
+        UsuarioController::validarCi($service);
         exit;
     }
 
@@ -85,8 +93,18 @@ try {
         exit;
     }
 
-    if ($method === 'PUT' && $route === '/empleados') {
-        UsuarioController::actualizarEmpleado($service);
+    if ($method === 'POST' && $route === '/empleados') {
+        UsuarioController::registrarEmpleado($service);
+        exit;
+    }
+
+    if ($method === 'PUT' && preg_match('#^/empleados/(\d+)$#', $route, $matches)) {
+        UsuarioController::actualizarEmpleado($service, (int)$matches[1]);
+        exit;
+    }
+
+    if ($method === 'PUT' && $route === '/empleados/estado') {
+        UsuarioController::cambiarEstadoEmpleado($service);
         exit;
     }
 
@@ -112,9 +130,15 @@ try {
         }
     }
 
-
-
-
+    //GET /reservasBarberoAsociado/1
+    if (preg_match('#^/reservasBarberoAsociado/(\d+)$#', $route, $matches)) {
+    $idBarbero = (int)$matches[1];
+        //le pasas el id del cliente y te retorna sus reservas
+        if ($method === 'GET') {
+            ServicioController::listarReservasBarberoAsociado($servicioServicios, $idBarbero);
+            exit;
+        }
+    }
 
 
     // POST /servicios
@@ -165,6 +189,35 @@ try {
     }
     if ($method === 'GET' && $route === '/disponibilidadHorarios') {
         AvailabilityController::horarioDisponible($disponibilidadService);
+        exit;
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | RESERVA
+    |--------------------------------------------------------------------------
+    */
+    if ($method === 'POST' && $route === '/reservas') {
+        ReservaController::reservar($servicioReserva);
+        exit;
+    }
+    if ($method === 'POST' && preg_match('#^/reservas/(\d+)/enviar-comprobante$#', $route, $matches)) {
+        $idReserva = (int)$matches[1];
+        ReservaController::enviarComprobante($servicioReserva,$idReserva);
+        exit;
+    }
+    if ($method === 'PUT' && preg_match('#^/reservas/(\d+)/cancelar$#', $route, $matches)) {
+        $idReserva = (int) $matches[1];
+        ReservaController::cancelar($servicioReserva, $idReserva);
+        exit;
+    }
+    if ($method === 'PUT' && preg_match('#^/reservas/(\d+)/confirmar$#', $route, $matches)) {
+        $idReserva = (int) $matches[1];
+        ReservaController::confirmar($servicioReserva, $idReserva);
+        exit;
+    }
+    if ($method === 'PUT' && preg_match('#^/reservas/(\d+)/completar$#', $route, $matches)) {
+        $idReserva = (int) $matches[1];
+        ReservaController::completar($servicioReserva, $idReserva);
         exit;
     }
 

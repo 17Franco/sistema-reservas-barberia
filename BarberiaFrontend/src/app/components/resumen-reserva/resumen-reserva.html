@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="btnReservar">
-            <button class="btn btn-primary w-100 py-3 fs-5 fw-bold fw-bold"><i class="bi bi-calendar-week me-2"></i>RESERVAR AHORA</button>
+            <button class="btn btn-primary w-100 py-3 fs-5 fw-bold fw-bold" [class.disabled]="habilitoReserva()" (click)="reservar()" ><i class="bi bi-calendar-week me-2"></i>RESERVAR AHORA</button>
         </div>   
     </div>
 </div>

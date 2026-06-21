@@ -63,7 +63,8 @@ export class Registro {
     ),
     email: new FormControl('',
       
-      [Validators.required]
+      [Validators.required,
+      ]
     
     ),
     pass: new FormControl('',
@@ -156,7 +157,13 @@ export class Registro {
           return 'Ingrese un celular válido';
         }
       }
-
+      
+      if(control?.hasError('emailExistente')){
+        return 'Ya existe cuenta asociada a este email';
+      }
+       if(control?.hasError('ciExistente')){
+        return 'Ya existe cuenta asociada';
+      }
       if(control?.hasError('edadMinima')){
         return 'Debe ser mayor a 12';
       }
@@ -164,23 +171,94 @@ export class Registro {
         return 'Debe ser menor de 100';
       }
       
-
-
       return '';
-  }
+  } 
 
    
-  btndisabled(){
-    return this.formRegistro.invalid;
+    btndisabled(){
+      return this.formRegistro.invalid;
 
-  }
-  campoInvalido(nombre:string){
-      const campo = this.formRegistro.get(nombre);
+    }
+    campoInvalido(nombre:string){
+        const campo = this.formRegistro.get(nombre);
 
-      return (campo?.invalid && (campo?.touched ||  campo?.dirty)) ;
-      
-  }
+        return (campo?.invalid && (campo?.touched ||  campo?.dirty)) ;
+        
+    }
+    peticionValidarEmail(){
+      const control = this.formRegistro.get('email');
+      if (control?.invalid || control == null) {
+        return;
+      }
+      const email = control.value || "";
+      this.authService.validarEmail(email).subscribe({
+        next:(res:any) =>{
+          //console.log(res);
+          if(res.existe){
+            //intento agregar el error si junto con los que ya podria tener 
+            control.setErrors({
+              ...(control.errors ?? {}),
+              emailExistente: true
+            });
+          }else{
+            //quito el error especifico 
+            const errores = control?.errors;
+
+            if (errores) {
+              delete errores['emailExistente'];
+
+              control?.setErrors(
+                Object.keys(errores).length ? errores : null
+              );
+            }
+          }
+          
+        },
+        error: (err:any) =>{
+          console.log(err);
+        }
+      })
+    }
+
+     peticionValidarCi(){
+      const control = this.formRegistro.get('ci');
+      if (control?.invalid || control == null) {
+        return;
+      }
+      const ci = control.value || "";
+      this.authService.validarCi(ci).subscribe({
+        next:(res:any) =>{
+          //console.log(res);
+          if(res.existe){
+            //intento agregar el error si junto con los que ya podria tener 
+            control.setErrors({
+              ...(control.errors ?? {}),
+              ciExistente: true
+            });
+          }else{
+            //quito el error especifico 
+            const errores = control?.errors;
+
+            if (errores) {
+              delete errores['ciExistente'];
+
+              control?.setErrors(
+                Object.keys(errores).length ? errores : null
+              );
+            }
+          }
+          
+        },
+        error: (err:any) =>{
+          console.log(err);
+        }
+      })
+    }
+
+
 }
+
+
 
 function validadFecha(control:any){
   //nesesito que minmio tenga 12 anios 
@@ -197,4 +275,9 @@ function validadFecha(control:any){
   }
 
   return null;
+}
+
+function validarEmail(usado:boolean){
+  
+  
 }

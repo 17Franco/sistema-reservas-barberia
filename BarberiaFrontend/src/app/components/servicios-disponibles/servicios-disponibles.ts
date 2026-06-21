@@ -11,12 +11,18 @@ import { Dia, Servicio } from '../../interfaces/disponibilidad-interfaces';
 })
 export class ServiciosDisponibles {
   constructor(private disponibilidad: Disponibilidad) {}
+
   startIndex = 0;
+
   servicios = signal<Servicio[]>([]);
+
   @Output() ServicioSeleccionadoChange= new EventEmitter<Servicio>();
+
   ServicioSeleccionado: number| null = null;
 
   @Input() dia: Dia | null = null;
+  
+  @Input() reset: boolean | null = null;
 
   ngOnChanges() {
     this.ServicioSeleccionado=null;

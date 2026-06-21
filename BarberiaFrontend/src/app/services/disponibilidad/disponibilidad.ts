@@ -3,7 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ApiResponse, Dia, EmpleadoD, Horario, ResponseEmpleado, ResponseHorarios, ResponseServicioDisponible, Servicio } from '../../interfaces/disponibilidad-interfaces';
 
+export interface Reserva {
+  idEmpleado: number;
+  idServicio: number;
+  fecha: string;
+  horaIni:string;
 
+}
 
 @Injectable({
   providedIn: 'root',
@@ -47,5 +53,16 @@ export class Disponibilidad {
     }).pipe(
     map(res => res.data)
    );
+  }
+
+  reservar(reserva: Reserva){
+    return this.http.post<any>(`${this.apiUrl}/reservas`, reserva, {
+      withCredentials: true
+    });
+  }
+  eviarComprobante(idReserva:number){
+    return this.http.post<any>(`${this.apiUrl}/reservas/${idReserva}/enviar-comprobante`, 
+      {},
+      { withCredentials: true});
   }
 }

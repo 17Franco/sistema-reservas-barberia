@@ -11,6 +11,7 @@ use Barberia\Backend\dominio\Empleado;
 use Barberia\Backend\dominio\EstadoEmpleado;
 use Barberia\Backend\dominio\Horario_Empleado;
 use DateTime;
+use Exception;
 use LDAP\Result;
 use mysqli;
 
@@ -59,12 +60,40 @@ use mysqli;
         }
 
         //comprueba ci
-        public function existe(string $ci): bool{
+        public function existeClientePorCi(string $ci): bool{
             $sql = "SELECT * FROM usuarios WHERE ci = ?";
 
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bind_param("s", $ci);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+        }
+        
+        public function existeClientePorId(int $id): bool{
+            $sql = "SELECT * FROM cliente WHERE id_Usuario = ?";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bind_param("i", $id);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+        }
+
+        public function existeEmpleado(int $id): bool{
+            $sql = "SELECT * FROM empleado WHERE id_usuario = ?";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bind_param("i", $id);
 
             $stmt->execute();
 
@@ -128,76 +157,80 @@ use mysqli;
         }
 
         public function listarEmpleado(): array {
-        //primero su info
-        $sql = "SELECT u.*, e.*, s.nombre as especialidadName FROM usuarios u INNER JOIN empleado e ON u.id = e.id_usuario INNER JOIN servicios s ON s.idServicio= e.especialidad";
-
-        $result = $this->conn->query($sql);
-
-        $lista = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $empleado = new Empleado(
-                $row['ci'],
-                $row['nombre'],
-                $row['apellido'],
-                new DateTime($row['fechaNac']),
-                $row['password_hash'],//no mandar
-                $row['email'],
-                $row['celular'],
-                EstadoEmpleado::from($row['estado'])
-            );
-            $empleado->setId($row['id']);
-            $empleado->setFoto($row['foto']);
-            $empleado->setTipo(TipoUsuario::from($row['tipoUsuario']));
-            $empleado->setEspecialidad($row['especialidadName']);
-
-            //nesesito el horario
-            $sqlH = "SELECT idEmpleado,horaIni,horaFin,horaDescanzoIni,horaDescanzoFin FROM empleado u INNER JOIN horario_empleado e ON u.id_usuario = e.idEmpleado where u.id_usuario= ?";
-            $stmt = $this->conn->prepare($sqlH);
-
-            $id=$empleado->getId();
-            //inserta las variables/datos en la cosnulta 
-            $stmt->bind_param("i",$id);
-
-            $stmt->execute();
-
-            $result2 = $stmt->get_result();
-
-            //$horarioLista =[];
-            
-            while ($rowHorario  = $result2->fetch_assoc()) {
-                $horario = new Horario_Empleado($rowHorario['horaIni'],$rowHorario['horaFin'],);
-                $horario->setHoraIniDescanso($rowHorario['horaDescanzoIni']);
-                $horario->setHoraFinDescanso($rowHorario['horaDescanzoFin']);
-
-                $empleado->agregarHorario($horario);
-            }
-            
-            
-            $lista[] = $empleado;
+            $sql = "SELECT u.id, u.ci, u.nombre, u.apellido, u.fechaNac, u.email, u.foto,
+                           u.celular, e.estado, e.especialidad AS idEspecialidad,
+                           s.nombre AS especialidad
+                    FROM usuarios u
+                    INNER JOIN empleado e ON e.id_usuario = u.id
+                    INNER JOIN servicios s ON s.idServicio = e.especialidad
+                    ORDER BY u.nombre";
+            return $this->conn->query($sql)->fetch_all(MYSQLI_ASSOC);
         }
-
-        return $lista;
-    }
-
-        public function actualizarEmpleado(Empleado $e): bool {
-
-          /*  $sql = "UPDATE empleado 
-                    SET horaInicio=?, horaFin=?, estado=?, especialidad=? 
-                    WHERE ci=?";
+        public function getEmailById(int $idUsuario):?string{
+            $sql = "SELECT email FROM usuarios WHERE id = ?";
 
             $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Error en la consulta");
+            }
 
-            $hi = $e->getHoraIni();
-            $hf = $e->getHoraFin();
-            $estado = $e->getEstado()->value;
-            $esp = 1;
-            $ci = $e->getCi();
+            $stmt->bind_param("i", $idUsuario);
+            $stmt->execute();
 
-            $stmt->bind_param("sssis", $hi, $hf, $estado, $esp, $ci);
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
 
-            return $stmt->execute();*/
-            return false;
+            return $row['email'] ?? null;
+        }
+        
+        public function guardarEmpleado(array $d): bool {
+            $this->conn->begin_transaction();
+            try {
+                $stmt = $this->conn->prepare("INSERT INTO usuarios
+                    (ci,nombre,apellido,fechaNac,password_hash,email,foto,celular,tipoUsuario,fechaCreacion)
+                    VALUES (?,?,?,?,?,?,'/uploads/PerfilPorDefecto.png',?,'EMPLEADO',CURDATE())");
+                $stmt->bind_param("sssssss", $d['ci'], $d['nombre'], $d['apellido'], $d['fechaNac'], $d['password'], $d['email'], $d['celular']);
+                $stmt->execute();
+                $id = $this->conn->insert_id;
+
+                $stmt = $this->conn->prepare("INSERT INTO empleado (id_usuario,estado,especialidad) VALUES (?,'ACTIVO',?)");
+                $stmt->bind_param("ii", $id, $d['idEspecialidad']);
+                $stmt->execute();
+
+                $stmt = $this->conn->prepare("INSERT INTO empleado_servicios (idEmpleado,idServicio) VALUES (?,?)");
+                $stmt->bind_param("ii", $id, $d['idEspecialidad']);
+                $stmt->execute();
+                $this->conn->commit();
+                return true;
+            } catch (\Throwable $e) {
+                $this->conn->rollback();
+                throw $e;
+            }
+        }
+
+        public function actualizarEmpleado(int $id, array $d): bool {
+            $this->conn->begin_transaction();
+            try {
+                $stmt = $this->conn->prepare("UPDATE usuarios SET nombre=?,apellido=?,email=?,celular=? WHERE id=?");
+                $stmt->bind_param("ssssi", $d['nombre'], $d['apellido'], $d['email'], $d['celular'], $id);
+                $stmt->execute();
+
+                $stmt = $this->conn->prepare("UPDATE empleado SET especialidad=? WHERE id_usuario=?");
+                $stmt->bind_param("ii", $d['idEspecialidad'], $id);
+                $stmt->execute();
+
+                $stmt = $this->conn->prepare("DELETE FROM empleado_servicios WHERE idEmpleado=?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $stmt = $this->conn->prepare("INSERT INTO empleado_servicios (idEmpleado,idServicio) VALUES (?,?)");
+                $stmt->bind_param("ii", $id, $d['idEspecialidad']);
+                $stmt->execute();
+                $this->conn->commit();
+                return true;
+            } catch (\Throwable $e) {
+                $this->conn->rollback();
+                throw $e;
+            }
         }
 
         public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool {
@@ -212,7 +245,7 @@ use mysqli;
             return $stmt->execute();
         }
 
-        public function buscarPorCiEmpleado(string $ci): ?Empleado {
+        public function obtenerEmpleado(string $ci): ?Empleado {
             return null;
         }
 
@@ -220,17 +253,27 @@ use mysqli;
 
         public function eliminar(string $id): bool{return false;}
 
-        public function buscarPorId(string $id): ?Cliente{return null;}
+        public function obtenerCliente(string $id): ?Cliente{return null;}
 
         public function listar(): array{return [];}
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool{
-            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, direccion = ? WHERE id = ?";
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion, ?string $foto): bool{
+            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, direccion = ?, foto = COALESCE(?, foto) WHERE id = ?";
 
             $consultaPreparada = $this->conn->prepare($sql);
-            $consultaPreparada->bind_param("ssssi", $nombre, $apellido, $celular, $direccion, $idUsuario);
+            $consultaPreparada->bind_param("sssssi", $nombre, $apellido, $celular, $direccion, $foto, $idUsuario);
 
             return $consultaPreparada->execute();
+        }
+
+        public function obtenerCiPorId(int $idUsuario): ?string{
+            $sql = "SELECT ci FROM usuarios WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $idUsuario);
+            $stmt->execute();
+            $fila = $stmt->get_result()->fetch_assoc();
+
+            return $fila ? $fila['ci'] : null;
         }
     }
 ?>

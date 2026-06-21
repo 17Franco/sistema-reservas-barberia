@@ -36,9 +36,12 @@ class UsuarioController {
                 'json'
             );
 
-            if(isset($_FILES["foto"])){
+            if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] !== UPLOAD_ERR_NO_FILE) {
                 $foto = $_FILES["foto"];
             }
+           // if(isset($_FILES["foto"])){
+               // $foto = $_FILES["foto"];
+           // }
 
             } catch (MissingConstructorArgumentsException $e) {
                 //si lanza error lo agarro y lanzo exepcion 
@@ -145,43 +148,35 @@ class UsuarioController {
     }
 
     public static function listarEmpleados(ServiciosUsuarios $servicio): void {
-     $serializer = new Serializer([new DateTimeNormalizer(),new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
         $data = $servicio->listarEmpleados();
-        $json = $serializer->serialize($data, 'json');
-        //$servicio = Fabrica::crearServicioEmpleado();
-
-       
-
-        echo $serializer->serialize([
+        echo json_encode([
             'success' => true,
             'empleados' => $data
-        ], 'json');
+        ]);
     }
 
-    public static function actualizarEmpleado(ServiciosUsuarios $servicio): void {
+    public static function registrarEmpleado(ServiciosUsuarios $servicio): void {
+        $data = self::datosEmpleado(true);
+        http_response_code(201);
+        echo json_encode(['success' => $servicio->agregarEmpleado($data)]);
+    }
 
-        //$servicio = Fabrica::crearServicioEmpleado();
+    public static function actualizarEmpleado(ServiciosUsuarios $servicio, int $id): void {
+        echo json_encode(['success' => $servicio->actualizarEmpleado($id, self::datosEmpleado(false))]);
+    }
 
-        $json = file_get_contents("php://input");
-        $data = json_decode($json, true);
-
-        $empleado = new Empleado(
-            $data["ci"],
-            $data["nombre"],
-            $data["apellido"],
-            new DateTime($data["fechaNac"]),
-            $data["contraseña"],
-            $data["email"],
-            $data["celular"],
-            //TipoUsuario::from($data["tipo"]),
-            EstadoEmpleado::from($data["estado"])
-        );
-
-        $ok = $servicio->actualizarEmpleado($empleado);
-
-        echo json_encode([
-            "success" => $ok
-        ]);
+    private static function datosEmpleado(bool $alta): array {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $requeridos = $alta
+            ? ['ci','nombre','apellido','fechaNac','password','email','celular','idEspecialidad']
+            : ['nombre','apellido','email','celular','idEspecialidad'];
+        foreach ($requeridos as $campo) {
+            if (empty($data[$campo])) throw new Exception("Falta el campo $campo", 400);
+        }
+        if ($alta && !preg_match('/^\d{8}$/', $data['ci'])) {
+            throw new Exception("La cédula debe tener exactamente 8 números", 400);
+        }
+        return $data;
     }
 
   
@@ -193,9 +188,9 @@ class UsuarioController {
             throw new Exception("No hay usuario logueado", 401);
         }
 
-        //esta funcion la uso para leer body de la petición que me hicieron, o sea por ej '{"nombre":"Santiago","apellido":"Guadalupe","celular":"093548866","direccion":"Av. Italia 123"}'
-        $json = file_get_contents("php://input");
-        $data = json_decode($json, true);
+        // El formulario llega como multipart/form-data para poder incluir la foto.
+        $data = $_POST;
+        $foto = $_FILES['foto'] ?? null;
 
         if (!isset($data['nombre']) || !isset($data['apellido']) || !isset($data['celular'])) {
             throw new Exception("Faltan campos", 400);
@@ -210,22 +205,30 @@ class UsuarioController {
             throw new Exception("Los campos nombre, apellido y celular no pueden estar vacios", 400);
         }
 
-        $ok = $servicio->editarUsuario((int)$_SESSION['usuario_id'], $nombre, $apellido, $celular, $direccion);
+        $rutaFotoNueva = $servicio->editarUsuario(
+            (int)$_SESSION['usuario_id'],
+            $nombre,
+            $apellido,
+            $celular,
+            $direccion,
+            $foto
+        );
 
-        if ($ok) {
-            $_SESSION['nombre'] = $nombre;
-            $_SESSION['apellido'] = $apellido;
-            $_SESSION['usuario_celular'] = $celular;
-            $_SESSION['direccion'] = $direccion;
-        }
+        $fotoFinal = $rutaFotoNueva ?? $_SESSION['foto'];
+        $_SESSION['nombre'] = $nombre;
+        $_SESSION['apellido'] = $apellido;
+        $_SESSION['usuario_celular'] = $celular;
+        $_SESSION['direccion'] = $direccion;
+        $_SESSION['foto'] = $fotoFinal;
 
         echo json_encode([
-            "success" => $ok,
+            "success" => true,
             "usuario" => [
                 "nombre" => $nombre,
                 "apellido" => $apellido,
                 "celular" => $celular,
                 "direccion" => $direccion,
+                "foto" => $fotoFinal,
             ]
         ]);
     }
@@ -255,5 +258,38 @@ class UsuarioController {
         ]);
     }
 
+    public static function validarEmail(ServiciosUsuarios $servicio): void {
+        
+        if (!isset($_GET['email'])) {
+            throw new Exception("No se recibio un email", 400);
+        }
+        //OBTENGO EL DATO DEL QUERY PARAM
+        $email = $_GET['email'];
+
+        $resu = $servicio->validarEmail($email);
+
+        // 4. Responder
+        http_response_code(200);
+        echo json_encode([
+            "existe" => $resu
+        ]);
+    }
+
+    public static function validarCi(ServiciosUsuarios $servicio): void {
+        
+        if (!isset($_GET['ci'])) {
+            throw new Exception("No se recibio la cedula", 400);
+        }
+        //OBTENGO EL DATO DEL QUERY PARAM
+        $ci = $_GET['ci'];
+
+        $resu = $servicio->validarCi($ci);
+
+        // 4. Responder
+        http_response_code(200);
+        echo json_encode([
+            "existe" => $resu
+        ]);
+    }
 }
 ?>

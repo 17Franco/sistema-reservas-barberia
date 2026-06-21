@@ -21,7 +21,7 @@ export const authGuard: CanActivateFn = () => {
       );
       return true;
     }
-
+    
     return router.createUrlTree(['/auth']);
 
     }),
@@ -31,9 +31,5 @@ export const authGuard: CanActivateFn = () => {
       return of(router.createUrlTree(['/auth']));
     })
   );
-
-  
-  
-
   
 };

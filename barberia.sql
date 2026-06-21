@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 15-06-2026 a las 04:26:02
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 19-06-2026 a las 04:50:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -41,10 +41,8 @@ INSERT INTO `cliente` (`id_Usuario`) VALUES
 (8),
 (9),
 (10),
-(19),
-(20),
-(21),
-(22);
+(26),
+(27);
 
 -- --------------------------------------------------------
 
@@ -67,8 +65,7 @@ INSERT INTO `empleado` (`id_usuario`, `estado`, `especialidad`) VALUES
 (2, 'ACTIVO', 2),
 (3, 'ACTIVO', 3),
 (4, 'ACTIVO', 1),
-(5, 'ACTIVO', 5),
-(22, 'ACTIVO', 5);
+(5, 'ACTIVO', 5);
 
 -- --------------------------------------------------------
 
@@ -110,15 +107,15 @@ CREATE TABLE `horario_empleado` (
   `idEmpleado` int(11) NOT NULL,
   `horaIni` time NOT NULL,
   `horaFin` time NOT NULL,
-  `horaDescanzoIni` time DEFAULT NULL,
-  `horaDescanzoFin` time DEFAULT NULL
+  `horaDescansoIni` time DEFAULT NULL,
+  `horaDescansoFin` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `horario_empleado`
 --
 
-INSERT INTO `horario_empleado` (`idHorario`, `idEmpleado`, `horaIni`, `horaFin`, `horaDescanzoIni`, `horaDescanzoFin`) VALUES
+INSERT INTO `horario_empleado` (`idHorario`, `idEmpleado`, `horaIni`, `horaFin`, `horaDescansoIni`, `horaDescansoFin`) VALUES
 (1, 1, '09:00:00', '13:00:00', '00:00:00', '00:00:00'),
 (2, 1, '16:00:00', '20:00:00', '00:00:00', '00:00:00'),
 (3, 2, '10:00:00', '14:00:00', '00:00:00', '00:00:00'),
@@ -141,7 +138,7 @@ CREATE TABLE `reservas` (
   `fecha` date NOT NULL,
   `horaInicio` time NOT NULL,
   `horaFin` time NOT NULL,
-  `estado` enum('PENDIENTE','CONFIRMADA','CANCELADA') NOT NULL DEFAULT 'PENDIENTE'
+  `estado` enum('PENDIENTE','CONFIRMADA','CANCELADA','COMPLETADA') NOT NULL DEFAULT 'PENDIENTE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -149,8 +146,6 @@ CREATE TABLE `reservas` (
 --
 
 INSERT INTO `reservas` (`idReserva`, `idCliente`, `idEmpleado`, `idServicio`, `fecha`, `horaInicio`, `horaFin`, `estado`) VALUES
-(1, 20, 3, 3, '2026-06-18', '16:30:12', '17:15:48', 'CONFIRMADA'),
-(2, 20, 22, 5, '2026-06-18', '15:00:00', '16:10:01', 'PENDIENTE'),
 (141, 6, 1, 1, '2026-06-20', '09:00:00', '09:30:00', 'PENDIENTE'),
 (142, 7, 1, 2, '2026-06-20', '09:30:00', '10:15:00', 'PENDIENTE'),
 (143, 8, 1, 4, '2026-06-20', '10:15:00', '10:35:00', 'PENDIENTE'),
@@ -245,7 +240,8 @@ INSERT INTO `servicios` (`idServicio`, `nombre`, `descripcion`, `duracion`, `pre
 (2, 'Perfilado de Barba', 'Arreglo de barba con toalla premium y navaja.', 45, 350),
 (3, 'Corte + Barba Combo', 'Servicio completo de corte de cabello y diseño de barba.', 60, 700),
 (4, 'Lavado y Peinado', 'Lavado con productos premium y peinado con cera o pomada.', 20, 200),
-(5, 'Coloración / Tintura', 'Tinte completo para cabello o barba.', 40, 600);
+(5, 'Coloración / Tintura', 'Tinte completo para cabello o barba.', 40, 600),
+(6, 'Corte Premium', 'Servicio completo que incluye corte personalizado, lavado, perfilado de contornos y peinado profesional para un acabado impecable.', 60, 750);
 
 -- --------------------------------------------------------
 
@@ -275,18 +271,16 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_hash`, `email`, `foto`, `celular`, `tipoUsuario`, `fechaCreacion`, `direccion`) VALUES
 (1, '41234567', 'Carlos', 'Gómez', '1990-05-12', '1234', 'carlos@barberia.com', '/uploads/PerfilPorDefecto.png', '099123456', 'EMPLEADO', '2026-06-14', NULL),
 (2, '47654321', 'María', 'Rodríguez', '1995-08-22', '1234', 'maria@barberia.com', '/uploads/PerfilPorDefecto.png', '098765432', 'EMPLEADO', '2026-06-14', NULL),
-(3, '50123456', 'Juan', 'Pérez', '1988-01-30', '1234', 'juan@barberia.com', '/uploads/JuanPerez/eeveeeBarbera.jpeg', '097111222', 'EMPLEADO', '2026-06-14', NULL),
+(3, '50123456', 'Juan', 'Pérez', '1988-01-30', '1234', 'juan@barberia.com', '/uploads/PerfilPorDefecto.png', '097111222', 'EMPLEADO', '2026-06-14', NULL),
 (4, '39876543', 'Diego', 'Fernández', '1993-11-15', '1234', 'diego@barberia.com', '/uploads/PerfilPorDefecto.png', '096333444', 'EMPLEADO', '2026-06-14', NULL),
 (5, '48521364', 'Ana', 'Martínez', '1997-03-05', '1234', 'ana@barberia.com', '/uploads/PerfilPorDefecto.png', '095555666', 'EMPLEADO', '2026-06-14', NULL),
 (6, '51234567', 'Lucas', 'Silva', '1998-07-14', '1234', 'lucas@gmail.com', '/uploads/PerfilPorDefecto.png', '094111222', 'CLIENTE', '2026-06-14', NULL),
 (7, '49876542', 'Mateo', 'Álvarez', '1992-03-22', '1234', 'mateo@gmail.com', '/uploads/PerfilPorDefecto.png', '093444555', 'CLIENTE', '2026-06-14', NULL),
-(8, '41122334', 'Nicolas', 'Pereira', '2000-11-05', '1234', 'nico@gmail.com', '/uploads/PerfilPorDefecto.png', '092777888', 'CLIENTE', '2026-06-14', NULL),
+(8, '41122334', 'Roberto', 'Pereira', '2000-11-05', '1234', 'nico@gmail.com', '/uploads/PerfilPorDefecto.png', '092777888', 'CLIENTE', '2026-06-14', NULL),
 (9, '38527419', 'Santiago', 'Acosta', '1985-05-19', '1234', 'santi@gmail.com', '/uploads/PerfilPorDefecto.png', '091999000', 'CLIENTE', '2026-06-14', NULL),
 (10, '52341234', 'Mathias', 'Díaz', '1996-09-11', '1234', 'mathi@gmail.com', '/uploads/PerfilPorDefecto.png', '095222333', 'CLIENTE', '2026-06-14', NULL),
-(19, '53507227', 'Franco', 'Echaide', '2026-06-14', '1234', 'franco@gmail.com', '/uploads/53507227/fotoPerfil.png', '099123456', 'CLIENTE', '2026-06-14', NULL),
-(20, '55537375', 'Santiaguini', 'Guadalupe', '2026-06-14', '1234', 'santiago@gmail.com', '/uploads/55537375/fotoPerfil.jpeg', '093548866', 'CLIENTE', '2026-06-14', 'Maldonado'),
-(21, '55537376', 'Santiago', 'Guadalupe', '2026-06-14', '1234', 'santi2@gmail.com', '/uploads/55537376/fotoPerfil.jpeg', '093548866', 'CLIENTE', '2026-06-14', 'Aldea de la Hoja'),
-(22, '78787878', 'Clefa', 'Clefa', '2026-06-14', '1234', 'clefa@gmail.com', '/uploads/78787878/fotoPerfil.png', '095778987', 'EMPLEADO', '2026-06-14', NULL);
+(26, '53507227', 'Franco', 'Echaide', '2026-06-18', '1234', 'franco@gmail.com', '/uploads/53507227/fotoPerfil.png', '099123456', 'CLIENTE', '2026-06-18', NULL),
+(27, '53507226', 'Franco', 'Echaide', '2026-06-18', '1234', 'echaidefranco@gmail.com', '/uploads/53507226/fotoPerfil.png', '099123456', 'CLIENTE', '2026-06-18', NULL);
 
 -- --------------------------------------------------------
 
@@ -374,19 +368,19 @@ ALTER TABLE `horario_empleado`
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `idReserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
+  MODIFY `idReserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
 --
 ALTER TABLE `servicios`
-  MODIFY `idServicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idServicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Restricciones para tablas volcadas

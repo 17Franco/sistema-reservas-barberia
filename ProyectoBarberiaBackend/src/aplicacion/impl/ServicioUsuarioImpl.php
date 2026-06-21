@@ -26,7 +26,7 @@ use Exception;
         
         public function agregarUsuario(Cliente $usu,?array $foto = null): bool{
 
-            if($this->repo->existe($usu->getCi()) || $this->repo->emailUsado($usu->getEmail())){
+            if($this->repo->existeClientePorCi($usu->getCi()) || $this->repo->emailUsado($usu->getEmail())){
                 //lanzo exepcion es agarrada por el catch del index
                throw  new Exception("Usuario ya Existe",409); 
             }
@@ -43,58 +43,95 @@ use Exception;
             return $this->repo->guardarCliente($usu); 
         }
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool{
-            return $this->repo->editarUsuario($idUsuario, $nombre, $apellido, $celular, $direccion);
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion, ?array $foto = null): ?string{
+            $rutaFoto = null;
+
+            if ($foto !== null && $foto['error'] !== UPLOAD_ERR_NO_FILE) {
+                $ci = $this->repo->obtenerCiPorId($idUsuario);
+
+                if ($ci === null) {
+                    throw new Exception("El usuario no existe", 404);
+                }
+
+                $rutaFoto = $this->guardarFotoPerfil($ci, $foto);
+            }
+
+            $ok = $this->repo->editarUsuario(
+                $idUsuario,
+                $nombre,
+                $apellido,
+                $celular,
+                $direccion,
+                $rutaFoto
+            );
+
+            if (!$ok) {
+                throw new Exception("No se pudo actualizar el perfil", 500);
+            }
+
+            return $rutaFoto;
         }
 
         public function guardarFotoPerfil(string $ci, array $foto): ?string {
-    if (!isset($foto["error"]) || $foto["error"] !== UPLOAD_ERR_OK) {
-        throw new Exception("No se recibió correctamente la foto de perfil", 400);
-    }
+            if (!isset($foto["error"]) || $foto["error"] !== UPLOAD_ERR_OK) {
+                throw new Exception("No se recibió correctamente la foto de perfil", 400);
+            }
 
-    $uploads = __DIR__ . "/../../../public/uploads";
-    $carpetaUsuario = $uploads . "/" . $ci;
+            if ($foto["size"] > 5 * 1024 * 1024) {
+                throw new Exception("La foto no puede superar los 5 MB", 400);
+            }
 
-    if (!file_exists($uploads)) {
-        if (!mkdir($uploads, 0777, true)) {
-            throw new Exception("No se pudo crear la carpeta uploads", 500);
-        }
-    }
+            $uploads = __DIR__ . "/../../../public/uploads";
+            $carpetaUsuario = $uploads . "/" . $ci;
 
-    if (!is_writable($uploads)) {
-        throw new Exception("La carpeta uploads no tiene permisos de escritura", 500);
-    }
+            if (!file_exists($uploads)) {
+                if (!mkdir($uploads, 0777, true)) {
+                    throw new Exception("No se pudo crear la carpeta uploads", 500);
+                }
+            }
 
-    if (!file_exists($carpetaUsuario)) {
-        if (!mkdir($carpetaUsuario, 0777, true)) {
-            throw new Exception("No se pudo crear la carpeta del usuario", 500);
-        }
-        }
+            if (!is_writable($uploads)) {
+                throw new Exception("La carpeta uploads no tiene permisos de escritura", 500);
+            }
 
-        if (!is_writable($carpetaUsuario)) {
-            throw new Exception("La carpeta del usuario no tiene permisos de escritura", 500);
-        }
+            if (!file_exists($carpetaUsuario)) {
+                if (!mkdir($carpetaUsuario, 0777, true)) {
+                    throw new Exception("No se pudo crear la carpeta del usuario", 500);
+                }
+                }
 
-        $extension = strtolower(pathinfo($foto["name"], PATHINFO_EXTENSION));
+                if (!is_writable($carpetaUsuario)) {
+                    throw new Exception("La carpeta del usuario no tiene permisos de escritura", 500);
+                }
 
-        if ($extension === "") {
-            throw new Exception("La foto no tiene extensión válida", 400);
-        }
+                $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($foto["tmp_name"]);
+                $formatosPermitidos = [
+                    "image/jpeg" => "jpg",
+                    "image/png" => "png",
+                    "image/webp" => "webp"
+                ];
 
-        $extensionesPermitidas = ["jpg", "jpeg", "png", "webp"];
+                if (!isset($formatosPermitidos[$mime])) {
+                    throw new Exception("Formato de imagen no permitido", 400);
+                }
 
-        if (!in_array($extension, $extensionesPermitidas)) {
-            throw new Exception("Formato de imagen no permitido", 400);
-        }
+                $extension = $formatosPermitidos[$mime];
 
-        $nombreImg = "fotoPerfil." . $extension;
-        $rutaFinal = $carpetaUsuario . "/" . $nombreImg;
+                foreach (glob($carpetaUsuario . "/fotoPerfil*") ?: [] as $fotoAnterior) {
+                    if (is_file($fotoAnterior)) {
+                        unlink($fotoAnterior);
+                    }
+                }
 
-        if (!move_uploaded_file($foto["tmp_name"], $rutaFinal)) {
-            throw new Exception("No se pudo guardar la foto de perfil", 500);
-        }
+                // El nombre cambia para evitar que el navegador muestre la foto anterior desde caché.
+                $nombreImg = "fotoPerfil_" . time() . "." . $extension;
+                $rutaFinal = $carpetaUsuario . "/" . $nombreImg;
 
-        return "/uploads/" . $ci . "/" . $nombreImg;
+                if (!move_uploaded_file($foto["tmp_name"], $rutaFinal)) {
+                    throw new Exception("No se pudo guardar la foto de perfil", 500);
+                }
+
+                return "/uploads/" . $ci . "/" . $nombreImg;
     }
     
         public function verificoCredenciales(string $ci,string $pass): ?Cliente{
@@ -109,14 +146,35 @@ use Exception;
         return $this->repo->listarEmpleado();
     }
 
-        public function actualizarEmpleado(Empleado $e): bool {
-            return $this->repo->actualizar($e);
+        public function agregarEmpleado(array $datos): bool {
+            if ($this->repo->existeClientePorCi($datos['ci']) || $this->repo->emailUsado($datos['email'])) {
+                throw new Exception("La cédula o el email ya existen", 409);
+            }
+            return $this->repo->guardarEmpleado($datos);
+        }
+
+        public function actualizarEmpleado(int $idEmpleado, array $datos): bool {
+            return $this->repo->actualizarEmpleado($idEmpleado, $datos);
         }
 
         public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool {
             // Aquí puedes meter reglas de negocio si quisieras en el futuro, 
             // por ahora va directo al grano:
             return $this->repo->cambiarEstadoEmpleado($ci, $nuevoEstado);
+        }
+
+        public function validarEmail(string $email):bool{
+            if($email !=""){
+             return $this->repo->emailUsado($email);
+            }
+            return false;
+        }
+        
+        public function validarCi(string $ci):bool{
+            if($ci !=""){
+             return $this->repo->existeClientePorCi($ci);
+            }
+            return false;
         }
     }
 

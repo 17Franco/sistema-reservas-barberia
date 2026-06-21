@@ -5,8 +5,8 @@
     use Barberia\Backend\dominio\Dia;
     use Barberia\Backend\dominio\Empleado;
     use Barberia\Backend\dominio\repositorio\RepositorioDisponibilidad;
-use Barberia\Backend\dominio\Reserva;
-use Barberia\Backend\dominio\ServicioBarberia;
+    use Barberia\Backend\dominio\Reserva;
+    use Barberia\Backend\dominio\ServicioBarberia;
     use DateTime;
 
     class ServiciosDisponibilidadImpl implements ServiciosDisponibilidad {
@@ -144,6 +144,7 @@ use Barberia\Backend\dominio\ServicioBarberia;
             //recorro
             foreach ($servicios as $servicio) {
              $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+             
                 foreach ($empleados as $empleado) {
                     if ($this->disponibilidadEmpleadoDia($dia->getFecha(),$servicio->getDuracion(),(int)$empleado)) {
                         return true;
@@ -193,10 +194,15 @@ use Barberia\Backend\dominio\ServicioBarberia;
             $servicios = $this->repo->listarServicios();
 
             foreach ($servicios as $servicio) {
-             $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+                $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+                $disponible = false;
                 foreach ($empleados as $empleado) {
-                    $servicio->setDisponible($this->disponibilidadEmpleadoDia($dia,$servicio->getDuracion(),(int)$empleado));
+                    if ($this->disponibilidadEmpleadoDia($dia, $servicio->getDuracion(), (int)$empleado)) {
+                        $disponible = true;
+                        break;
+                    }
                 }  
+                $servicio->setDisponible($disponible);
             } 
             return $servicios;
         }

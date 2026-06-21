@@ -18,6 +18,7 @@ export class HorarioDisponibles {
   @Input() dia: Dia | null = null;
   @Input() servicio: Servicio | null = null;
   @Input() empleado: EmpleadoD | null = null;
+  @Input() reset: boolean | null = null;
 
 
   ngOnChanges() {

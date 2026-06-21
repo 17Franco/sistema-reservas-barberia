@@ -1,4 +1,4 @@
-import { Injectable,  inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RegistroUsuario } from '../interfaces/registro-usuario';
 
@@ -44,7 +44,7 @@ export class Auth {
     );
   }
 
-  guardarUsuario(usuario:string, nombre:string, tipo:number){
+  guardarUsuario(usuario:string, nombre:string, tipo:string){
     this.usuario = {
       usuario: usuario,
       nombre: nombre,
@@ -52,8 +52,15 @@ export class Auth {
     };
   }
 
+  actualizarUsuario(datos: Record<string, unknown>): void {
+    this.usuario = {
+      ...(this.usuario || {}),
+      ...datos,
+    };
+  }
+
   registrarUsuario(datos:FormData){
-    console.log("llego");
+    //console.log("llego");
     return this.http.post(`${this.apiUrl}/usuarios`, datos);
   }
 
@@ -68,9 +75,35 @@ export class Auth {
     )
   };
 
+  getReservasBarberoAsociado(idBarbero: number){
+    console.log("llegaon las reservas");
+    return this.http.get<any>(
+      `${this.apiUrl}/reservasBarberoAsociado/${idBarbero}`,
+      {
+        withCredentials: true
+      }
+    )
+  };
 
-  editarPerfilUsuario(datos: { nombre: string; apellido: string; celular: string, direccion: string}){
-    return this.http.put<any>(
+  getBarberos(){
+    return this.http.get<any>(`${this.apiUrl}/empleados`, { withCredentials: true });
+  }
+
+  crearBarbero(datos: any){
+    return this.http.post<any>(`${this.apiUrl}/empleados`, datos, { withCredentials: true });
+  }
+
+  actualizarBarbero(id: number, datos: any){
+    return this.http.put<any>(`${this.apiUrl}/empleados/${id}`, datos, { withCredentials: true });
+  }
+
+  cambiarEstadoBarbero(ci: string, estado: 'ACTIVO' | 'INACTIVO'){
+    return this.http.put<any>(`${this.apiUrl}/empleados/estado`, { ci, estado }, { withCredentials: true });
+  }
+
+
+  editarPerfilUsuario(datos: FormData){
+    return this.http.post<any>(
       `${this.apiUrl}/editarPerfil`,
       datos,
       {
@@ -79,9 +112,43 @@ export class Auth {
     )
   };
 
-  
+  validarEmail(email:string){
+    return this.http.get<any>(`${this.apiUrl}/usuarios/validar-email?email=${email}`)
+  }
+
+   validarCi(ci:string){
+    return this.http.get<any>(`${this.apiUrl}/usuarios/validar-ci?ci=${ci}`)
+  }
 
 
+  cancelarReserva(idReserva: number) {
+    return this.http.put<any>(
+      `${this.apiUrl}/reservas/${idReserva}/cancelar`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
 
+  confirmarReserva(idReserva: number) {
+    return this.http.put<any>(
+      `${this.apiUrl}/reservas/${idReserva}/confirmar`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
+
+  completarReserva(idReserva: number) {
+    return this.http.put<any>(
+      `${this.apiUrl}/reservas/${idReserva}/completar`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
 
 }
