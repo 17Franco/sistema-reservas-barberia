@@ -11,6 +11,10 @@ export const tipoUserGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
+  if( authService.usuario?.tipo === 'EMPLEADO'){
+    return router.createUrlTree(['/perfilBarbero']);
+  }
+  
   return router.createUrlTree(['/']);
   //return true;
 };
