@@ -215,6 +215,11 @@ try {
         ReservaController::confirmar($servicioReserva, $idReserva);
         exit;
     }
+    if ($method === 'PUT' && preg_match('#^/reservas/(\d+)/completar$#', $route, $matches)) {
+        $idReserva = (int) $matches[1];
+        ReservaController::completar($servicioReserva, $idReserva);
+        exit;
+    }
 
     /*
     |--------------------------------------------------------------------------

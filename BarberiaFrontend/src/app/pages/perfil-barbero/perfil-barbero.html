@@ -184,6 +184,22 @@
                   </button>
                 }
 
+                @if (mostrarOpcionesCompletar && reserva.estado === 'CONFIRMADA') {
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    [disabled]="reservaCompletandoId === reserva.idReserva"
+                    (click)="completarReserva(reserva)">
+
+                    @if (reservaCompletandoId === reserva.idReserva) {
+                      Completando...
+                    } @else {
+                      Completar
+                    }
+                  </button>
+                }
+
+
                 @if (mostrarOpcionesConfirmar && reserva.estado === 'PENDIENTE') {
                   <button
                     type="button"
@@ -235,7 +251,8 @@
               type="button"
              (click)="
                   mostrarOpcionesCancelar = !mostrarOpcionesCancelar;
-                  mostrarOpcionesConfirmar = false
+                  mostrarOpcionesConfirmar = false;
+                  mostrarOpcionesCompletar = false;
                 ">
 
               @if (mostrarOpcionesCancelar) {
@@ -244,19 +261,37 @@
                 Cancelar reserva
               }
             </button>
-
+            <!--Confirmar Reserva boton-->
             <button
               class="btn badge bg-success"
               type="button"
               (click)="
                 mostrarOpcionesConfirmar = !mostrarOpcionesConfirmar;
-                mostrarOpcionesCancelar = false
+                mostrarOpcionesCancelar = false;
+                mostrarOpcionesCompletar = false;
               ">
 
               @if (mostrarOpcionesConfirmar) {
                 Ocultar confirmación
               } @else {
                 Confirmar reserva
+              }
+            </button>
+
+            <!--Completar Reserva boton-->
+            <button
+              class="btn badge bg-primary"
+              type="button"
+              (click)="
+                mostrarOpcionesCompletar = !mostrarOpcionesCompletar;
+                mostrarOpcionesCancelar = false;
+                mostrarOpcionesConfirmar = false;
+              ">
+
+              @if (mostrarOpcionesCompletar) {
+                Ocultar completar
+              } @else {
+                Completar reserva
               }
             </button>
           </div>

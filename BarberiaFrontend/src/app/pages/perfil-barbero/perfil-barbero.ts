@@ -76,6 +76,8 @@ export class PerfilBarbero implements OnInit{
   public mostrarOpcionesCancelar = false;
   public reservaConfirmandoId: number | null = null;
   public mostrarOpcionesConfirmar = false;
+  public mostrarOpcionesCompletar = false;
+  public reservaCompletandoId: number | null = null;
 
 
   // Datos del formulario de edición
@@ -503,6 +505,59 @@ async confirmarReserva(reserva: ReservaInterface): Promise<void> {
 
   } finally {
     this.reservaConfirmandoId = null;
+    this.cd.detectChanges();
+  }
+}
+
+async completarReserva(reserva: ReservaInterface): Promise<void> {
+  if (reserva.estado !== 'CONFIRMADA') {
+    return;
+  }
+
+  const resultado = await Swal.fire({
+    title: '¿Completar esta reserva?',
+    text: 'La reserva pasará al historial como completada.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#0d6efd',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sí, completar',
+    cancelButtonText: 'Volver',
+  });
+
+  if (!resultado.isConfirmed) {
+    return;
+  }
+
+  this.reservaCompletandoId = reserva.idReserva;
+
+  try {
+    await firstValueFrom(this.auth.completarReserva(reserva.idReserva));
+
+    const reservaCompletada = { ...reserva, estado: 'COMPLETADA' };
+    this.reservasAsociadas = this.reservasAsociadas.filter(
+      reservaActual => reservaActual.idReserva !== reserva.idReserva
+    );
+    this.historialReservas = [reservaCompletada, ...this.historialReservas];
+    this.cantidadConfirmadas = Math.max(0, this.cantidadConfirmadas - 1);
+    this.cantidadCompletadas++;
+    this.cd.detectChanges();
+
+    await Swal.fire({
+      title: 'Reserva completada',
+      text: 'La reserva fue enviada al historial correctamente.',
+      icon: 'success',
+    });
+  } catch (error: any) {
+    console.error('Error completando reserva', error);
+
+    await Swal.fire({
+      title: 'Error',
+      text: error.error?.error || 'No se pudo completar la reserva.',
+      icon: 'error',
+    });
+  } finally {
+    this.reservaCompletandoId = null;
     this.cd.detectChanges();
   }
 }

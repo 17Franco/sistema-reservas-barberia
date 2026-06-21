@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Auth } from '../../../services/auth';
 import { Servicio, ServiciosService } from '../../../services/servicios/servicio';
+import { firstValueFrom } from 'rxjs';
+import Swal from 'sweetalert2';
 
 interface Barbero {
   id?: number;
@@ -82,10 +84,38 @@ export class GestionBarberos implements OnInit {
     this.form = { ...barbero, idEspecialidad: Number(barbero.idEspecialidad), password: '' };
   }
 
-  cambiarEstado(barbero: Barbero): void {
+  async cambiarEstado(barbero: Barbero): Promise<void> {
     const estado = barbero.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
-    if (!confirm(`¿Cambiar estado de ${barbero.nombre} a ${estado}?`)) return;
-    this.auth.cambiarEstadoBarbero(barbero.ci, estado).subscribe(() => this.cargar());
+
+    const resultado = await Swal.fire({
+      title: `¿${estado === 'INACTIVO' ? 'Dar de baja' : 'Reactivar'} a ${barbero.nombre}?`,
+      text: `El barbero pasará al estado ${estado}.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: estado === 'INACTIVO' ? '#dc3545' : '#198754',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: estado === 'INACTIVO' ? 'Sí, dar de baja' : 'Sí, reactivar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (!resultado.isConfirmed) return;
+
+    try {
+      await firstValueFrom(this.auth.cambiarEstadoBarbero(barbero.ci, estado));
+      this.cargar();
+
+      await Swal.fire({
+        title: 'Estado actualizado',
+        text: `${barbero.nombre} ahora está ${estado.toLowerCase()}.`,
+        icon: 'success',
+      });
+    } catch (error: any) {
+      await Swal.fire({
+        title: 'Error',
+        text: error.error?.error || 'No se pudo cambiar el estado del barbero.',
+        icon: 'error',
+      });
+    }
   }
 
   cancelar(): void {

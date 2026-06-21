@@ -176,14 +176,19 @@ class ServiciosReservaImpl implements ServiciosReserva {
 
 
 
-        public function cancelarReserva(int $idReserva, int $idCliente): void{
+        public function cancelarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void{
             $reserva = $this->repoReserva->obtenerReserva($idReserva);
 
             if ($reserva === null) {
                 throw new Exception("La reserva no existe", 404);
             }
 
-            if ($reserva->getIdCliente() !== $idCliente) {
+            $esEmpleado = $tipoUsuario === 'EMPLEADO';
+            $esPropietario = $esEmpleado
+                ? $reserva->getIdEmpleado() === $idUsuario
+                : $tipoUsuario === 'CLIENTE' && $reserva->getIdCliente() === $idUsuario;
+
+            if (!$esPropietario) {
                 throw new Exception("No tienes permiso para cancelar esta reserva", 403);
             }
 
@@ -194,21 +199,26 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 );
             }
 
-            if (!$this->repoReserva->cancelar($idReserva, $idCliente)) {
+            if (!$this->repoReserva->cancelar($idReserva, $idUsuario, $esEmpleado)) {
                 throw new Exception("No se pudo cancelar la reserva", 500);
             }
         }
 
 
 
-        public function confirmarReserva(int $idReserva, int $idCliente): void{
+        public function confirmarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void{
             $reserva = $this->repoReserva->obtenerReserva($idReserva);
 
             if ($reserva === null) {
                 throw new Exception("La reserva no existe", 404);
             }
 
-            if ($reserva->getIdCliente() !== $idCliente) {
+            $esEmpleado = $tipoUsuario === 'EMPLEADO';
+            $esPropietario = $esEmpleado
+                ? $reserva->getIdEmpleado() === $idUsuario
+                : $tipoUsuario === 'CLIENTE' && $reserva->getIdCliente() === $idUsuario;
+
+            if (!$esPropietario) {
                 throw new Exception(
                     "No tienes permiso para confirmar esta reserva",
                     403
@@ -222,8 +232,32 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 );
             }
 
-            if (!$this->repoReserva->confirmar($idReserva, $idCliente)) {
+            if (!$this->repoReserva->confirmar($idReserva, $idUsuario, $esEmpleado)) {
                 throw new Exception("No se pudo confirmar la reserva", 500);
+            }
+        }
+
+        public function completarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void{
+            $reserva = $this->repoReserva->obtenerReserva($idReserva);
+
+            if ($reserva === null) {
+                throw new Exception("La reserva no existe", 404);
+            }
+
+            $esAdmin = $tipoUsuario === 'ADMIN';
+            $esBarberoAsignado = $tipoUsuario === 'EMPLEADO'
+                && $reserva->getIdEmpleado() === $idUsuario;
+
+            if (!$esAdmin && !$esBarberoAsignado) {
+                throw new Exception("No tienes permiso para completar esta reserva", 403);
+            }
+
+            if ($reserva->getEstadoReserva() !== EstadoReserva::CONFIRMADA) {
+                throw new Exception("Solo se pueden completar reservas confirmadas", 409);
+            }
+
+            if (!$this->repoReserva->completar($idReserva, $idUsuario, $esAdmin)) {
+                throw new Exception("No se pudo completar la reserva", 500);
             }
         }
 
