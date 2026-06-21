@@ -93,8 +93,18 @@ try {
         exit;
     }
 
-    if ($method === 'PUT' && $route === '/empleados') {
-        UsuarioController::actualizarEmpleado($service);
+    if ($method === 'POST' && $route === '/empleados') {
+        UsuarioController::registrarEmpleado($service);
+        exit;
+    }
+
+    if ($method === 'PUT' && preg_match('#^/empleados/(\d+)$#', $route, $matches)) {
+        UsuarioController::actualizarEmpleado($service, (int)$matches[1]);
+        exit;
+    }
+
+    if ($method === 'PUT' && $route === '/empleados/estado') {
+        UsuarioController::cambiarEstadoEmpleado($service);
         exit;
     }
 

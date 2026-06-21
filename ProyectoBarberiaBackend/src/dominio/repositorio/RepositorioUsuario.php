@@ -30,7 +30,9 @@
 
         public function listarEmpleado(): array;
 
-        public function actualizarEmpleado(Empleado $empleado): bool;
+        public function guardarEmpleado(array $datos): bool;
+
+        public function actualizarEmpleado(int $idEmpleado, array $datos): bool;
 
         public function obtenerEmpleado(string $ci): ?Empleado;
 
