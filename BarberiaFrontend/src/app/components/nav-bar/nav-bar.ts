@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { NgClass } from '@angular/common';
 import { Auth } from '../../services/auth';
@@ -24,23 +24,33 @@ export class NavBar implements OnInit {
 
   authService = inject(Auth);
   router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
 
   modo: string = "Home";
   dropdown: boolean = false;
-  usuarioActual: UsuarioSesion | null = null;
   mostrarIniciales = false;
-  admin: boolean = false;
+
   ngOnInit(): void {
-    this.admin = this.isAdmin();
     this.authService.me().subscribe({
       next: (respuesta) => {
-        this.usuarioActual = respuesta as UsuarioSesion;
+        const usuario = respuesta as UsuarioSesion;
+        this.authService.usuario = usuario.logueado ? usuario : null;
         this.mostrarIniciales = false;
+        this.cd.markForCheck();
       },
       error: () => {
-        this.usuarioActual = null;
+        this.authService.usuario = null;
+        this.cd.markForCheck();
       },
     });
+  }
+
+  get usuarioActual(): UsuarioSesion | null {
+    return this.authService.usuario as UsuarioSesion | null;
+  }
+
+  get admin(): boolean {
+    return this.usuarioActual?.tipo === 'ADMIN';
   }
 
   get fotoPerfilUrl(): string | null {
@@ -67,8 +77,11 @@ export class NavBar implements OnInit {
   }
 
   usarIniciales(): void {
+    // La carga de la imagen ocurre fuera del flujo de datos del componente.
+    // Avisamos a Angular para que muestre las iniciales sin esperar otro clic.
     setTimeout(() => {
       this.mostrarIniciales = true;
+      this.cd.markForCheck();
     }, 0);
   }
 
@@ -92,11 +105,7 @@ export class NavBar implements OnInit {
     });
   }
 
-  isAdmin(){
-    console.log(this.authService.usuario.tipo);
-    if(this.authService.usuario.tipo=="ADMIN"){
-      return true;
-    } 
-    return false;
+  isAdmin(): boolean {
+    return this.admin;
   }
 }

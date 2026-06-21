@@ -196,9 +196,9 @@ class UsuarioController {
             throw new Exception("No hay usuario logueado", 401);
         }
 
-        //esta funcion la uso para leer body de la petición que me hicieron, o sea por ej '{"nombre":"Santiago","apellido":"Guadalupe","celular":"093548866","direccion":"Av. Italia 123"}'
-        $json = file_get_contents("php://input");
-        $data = json_decode($json, true);
+        // El formulario llega como multipart/form-data para poder incluir la foto.
+        $data = $_POST;
+        $foto = $_FILES['foto'] ?? null;
 
         if (!isset($data['nombre']) || !isset($data['apellido']) || !isset($data['celular'])) {
             throw new Exception("Faltan campos", 400);
@@ -213,22 +213,30 @@ class UsuarioController {
             throw new Exception("Los campos nombre, apellido y celular no pueden estar vacios", 400);
         }
 
-        $ok = $servicio->editarUsuario((int)$_SESSION['usuario_id'], $nombre, $apellido, $celular, $direccion);
+        $rutaFotoNueva = $servicio->editarUsuario(
+            (int)$_SESSION['usuario_id'],
+            $nombre,
+            $apellido,
+            $celular,
+            $direccion,
+            $foto
+        );
 
-        if ($ok) {
-            $_SESSION['nombre'] = $nombre;
-            $_SESSION['apellido'] = $apellido;
-            $_SESSION['usuario_celular'] = $celular;
-            $_SESSION['direccion'] = $direccion;
-        }
+        $fotoFinal = $rutaFotoNueva ?? $_SESSION['foto'];
+        $_SESSION['nombre'] = $nombre;
+        $_SESSION['apellido'] = $apellido;
+        $_SESSION['usuario_celular'] = $celular;
+        $_SESSION['direccion'] = $direccion;
+        $_SESSION['foto'] = $fotoFinal;
 
         echo json_encode([
-            "success" => $ok,
+            "success" => true,
             "usuario" => [
                 "nombre" => $nombre,
                 "apellido" => $apellido,
                 "celular" => $celular,
                 "direccion" => $direccion,
+                "foto" => $fotoFinal,
             ]
         ]);
     }

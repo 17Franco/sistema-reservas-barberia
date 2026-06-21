@@ -69,7 +69,7 @@ try {
         exit;
     }
 
-    if ($method === 'PUT' && $route === '/editarPerfil') {
+    if ($method === 'POST' && $route === '/editarPerfil') {
         UsuarioController::editarUsuario($service);
         exit;
     }
@@ -189,6 +189,17 @@ try {
         ReservaController::enviarComprobante($servicioReserva,$idReserva);
         exit;
     }
+    if ($method === 'PUT' && preg_match('#^/reservas/(\d+)/cancelar$#', $route, $matches)) {
+        $idReserva = (int) $matches[1];
+        ReservaController::cancelar($servicioReserva, $idReserva);
+        exit;
+    }
+    if ($method === 'PUT' && preg_match('#^/reservas/(\d+)/confirmar$#', $route, $matches)) {
+        $idReserva = (int) $matches[1];
+        ReservaController::confirmar($servicioReserva, $idReserva);
+        exit;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SI NO ENCUENTRA RUTA

@@ -34,7 +34,9 @@
 
         public function obtenerEmpleado(string $ci): ?Empleado;
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool;
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion, ?string $foto): bool;
+
+        public function obtenerCiPorId(int $idUsuario): ?string;
 
         public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool;
 

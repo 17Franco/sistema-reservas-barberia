@@ -77,5 +77,43 @@ use Symfony\Component\Serializer\Serializer;
             ]); 
 
         }
+
+        public static function cancelar(ServiciosReserva $servicio,int $idReserva): void {
+            session_start();
+
+            if (!isset($_SESSION["usuario_id"])) {
+                throw new Exception("Debes iniciar sesión", 401);
+            }
+
+            $idCliente = (int) $_SESSION["usuario_id"];
+
+            $servicio->cancelarReserva($idReserva, $idCliente);
+
+            http_response_code(200);
+
+            echo json_encode([
+                "success" => true,
+                "mensaje" => "Reserva cancelada correctamente"
+            ]);
+        }
+
+
+        public static function confirmar(ServiciosReserva $servicio, int $idReserva): void {
+            session_start();
+            if (!isset($_SESSION["usuario_id"])) {
+                throw new Exception("Debes iniciar sesión", 401);
+            }
+            $idCliente = (int) $_SESSION["usuario_id"];
+
+            $servicio->confirmarReserva($idReserva, $idCliente);
+
+            http_response_code(200);
+
+            echo json_encode([
+                "success" => true,
+                "mensaje" => "Reserva confirmada correctamente"
+            ]);
+        }
+
     }
 ?>

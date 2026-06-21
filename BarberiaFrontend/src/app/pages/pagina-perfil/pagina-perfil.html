@@ -1,4 +1,5 @@
-<div class="container py-4">
+<div class="profile-page">
+<div class="container profile-content">
 
   @if(cargando){
     <div class="alert alert-info">Cargando perfil...</div>
@@ -17,7 +18,8 @@
       </div>
     </header>
 
-    <section class="profile-card">
+    <!--SECCION DE USUARIO-->
+    <section class="profile-card seccion-destacada seccion-datos">
       <div class="profile-info">
         <div class="avatar">
           @if(fotoPerfilUrl){
@@ -33,20 +35,46 @@
               <div class="row g-2">
                 <!--Nombre-->
                 <div class="col-md-4">
+                  <label class="form-label small fw-semibold text-primary mb-1">Nombre:</label>
                   <input class="form-control form-control-sm" name="nombre" [(ngModel)]="formPerfil.nombre" placeholder="Nombre">
                 </div>
                 <!--Apellido-->
                 <div class="col-md-4">
+                  <label class="form-label small fw-semibold text-primary mb-1">Apellido:</label>
                   <input class="form-control form-control-sm" name="apellido" [(ngModel)]="formPerfil.apellido" placeholder="Apellido">
                 </div>
                 <!--Celular-->
                 <div class="col-md-4">
+                  <label class="form-label small fw-semibold text-primary mb-1">Celular:</label>
                   <input class="form-control form-control-sm" name="celular" [(ngModel)]="formPerfil.celular" placeholder="Celular">
                 </div>
                 <!--Direccion-->
                 <div class="col-md-4">
+                  <label class="form-label small fw-semibold text-primary mb-1">Dirección:</label>
                   <input class="form-control form-control-sm" name="direccion" [(ngModel)]="formPerfil.direccion" placeholder="Direccion">
                 </div>
+                <!--Imagen-->
+                <div class="col-md-4">
+                  <label class="form-label small fw-semibold text-primary mb-1">Imagen:</label>
+                  <!--Recuadro fachero, este lo asocio al input con for porque el input lo tengo oculto con -d, asi que quiero que cuando precione el recuadro invoque el input-->
+                  <label
+                    class="imagen-dropzone"
+                    for="fotoPerfil"
+                    (dragover)="arrastrarSobreImagen($event)"
+                    (drop)="soltarImagen($event)">
+                    @if(vistaPreviaImagen){
+                      <img [src]="vistaPreviaImagen" alt="Vista previa de la nueva imagen">
+                    }
+                    <span>Arrastrá una imagen o hacé clic para seleccionarla</span>
+                    <small>JPG, PNG o WEBP · máximo 5 MB</small>
+                    </label>
+                    <input id="fotoPerfil" class="d-none" type="file" accept="image/jpeg,image/png,image/webp" 
+                          (change)="seleccionarImagen($event)">
+                  @if(errorImagen){
+                    <div class="text-danger small mt-1">{{ errorImagen }}</div>
+                  }
+                </div>
+
               </div>
 
               <div class="d-flex gap-2 mt-2">
@@ -94,16 +122,30 @@
     </section>
   }
 
-  <!--Reservas-->
-  <section class="card shadow-sm border-0">
+  <!-------SECCION DE RESERVAS ------>
+  <section class="card border-0 profile-section seccion-destacada seccion-reservas">
     <div class="card-body">
 
       <h5 class="mb-3">Mis Reservas</h5>
 
+      <!--INFORMACION DE RESERVAS-->
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <span class="badge bg-warning text-dark">
+          Pendientes: {{ cantidadPendientes }}
+        </span>
+
+        <span class="badge bg-success">
+          Confirmadas: {{ cantidadConfirmadas }}
+        </span>
+
+        <span class="badge bg-danger">
+          Canceladas: {{ cantidadCanceladas }}
+        </span>
+      </div>
+
       @if(reservasAsociadas.length > 0){
-        <ul class="list-group">
-          <!--Hago un for para recorrer la lista re reservas Asociadas-->
-          @for(reserva of reservasAsociadas; track reserva.idReserva){
+        <ul class="list-group lista-reservas-fija"> <!--Para que siempre tenga el tamaño que determino en el ts en reservasPorPagina-->
+         @for(reserva of reservasVisibles; track reserva.idReserva) {
             <li class="list-group-item reserva-row">
 
               @if(fotoEmpleadoUrl(reserva)){
@@ -111,28 +153,116 @@
               }
 
               <div class="reserva-info">
-                <!--FECHA -> llamo a la funcion que muestra la fecha reserva en formato que deseo-->
                 <strong>{{ fechaReserva(reserva) }}</strong>
-                <!--Servicio-->
                 <div class="text-muted small fw-semibold">
                   {{ reserva.nombreServicio || 'Servicio sin nombre' }}
                 </div>
                 <div class="text-muted small">
                   {{ reserva.descripcion || 'Servicio sin descripcion' }}
                 </div>
-                <!--Empleado-->
                 <div class="barbero-line">
                   <span>{{ nombreCompletoEmpleado(reserva) }}</span>
                 </div>
               </div>
-              <!--uso la funcion claseEstado para mostrar el span de diferente manera segun el estado de la reserva en ves de tener varios @if-->
-              <span [class]="'badge ' + claseEstado(reserva.estado)">
-                {{ reserva.estado || 'Sin estado' }}
-              </span>
+              <div class="reserva-acciones">
+                <span [class]="'badge ' + claseEstado(reserva.estado, reserva)">
+                  {{ reserva.estado || 'Sin estado' }}
+                </span>
+
+                @if (mostrarOpcionesCancelar && reserva.estado === 'PENDIENTE') {
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    [disabled]="reservaCancelandoId === reserva.idReserva"
+                    (click)="cancelarReserva(reserva)">
+
+                    @if (reservaCancelandoId === reserva.idReserva) {
+                      Cancelando...
+                    } @else {
+                      Cancelar
+                    }
+                  </button>
+                }
+
+                @if (mostrarOpcionesConfirmar && reserva.estado === 'PENDIENTE') {
+                  <button
+                    type="button"
+                    class="btn btn-outline-success btn-sm"
+                    [disabled]="reservaConfirmandoId === reserva.idReserva"
+                    (click)="confirmarReserva(reserva)">
+
+                    @if (reservaConfirmandoId === reserva.idReserva) {
+                      Confirmando...
+                    } @else {
+                      Confirmar
+                    }
+                  </button>
+                }
+              </div>
 
             </li>
           }
         </ul>
+        <!--Movimiento-->
+        @if(totalPaginasReservas > 1){
+          <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              type="button"
+              [disabled]="paginaReservas === 1"
+              (click)="paginaReservas = paginaReservas - 1">
+              Anterior
+            </button>
+
+            <span>
+              Página {{ paginaReservas }} de {{ totalPaginasReservas }}
+            </span>
+
+            <button
+              class="btn btn-outline-primary btn-sm"
+              type="button"
+              [disabled]="paginaReservas === totalPaginasReservas"
+              (click)="paginaReservas = paginaReservas + 1">
+              Siguiente
+            </button>
+          </div>
+        }
+
+        <!--Cancelar Reserva-->
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+            <button
+              class="btn badge bg-danger"
+              type="button"
+             (click)="
+                  mostrarOpcionesCancelar = !mostrarOpcionesCancelar;
+                  mostrarOpcionesConfirmar = false
+                ">
+
+              @if (mostrarOpcionesCancelar) {
+                Ocultar cancelación
+              } @else {
+                Cancelar reserva
+              }
+            </button>
+
+            <button
+              class="btn badge bg-success"
+              type="button"
+              (click)="
+                mostrarOpcionesConfirmar = !mostrarOpcionesConfirmar;
+                mostrarOpcionesCancelar = false
+              ">
+
+              @if (mostrarOpcionesConfirmar) {
+                Ocultar confirmación
+              } @else {
+                Confirmar reserva
+              }
+            </button>
+          </div>
+
+        
+        <!--Este else corresponde al primero no al de arriba suyo-->
       } @else {
         <div class="border rounded p-3 text-muted">
           Todavía no tenés reservas registradas.
@@ -142,4 +272,78 @@
     </div>
   </section>
 
+  <!------- SECCION DE HISTORIAL ------>
+  <section class="card border-0 profile-section seccion-destacada seccion-historial">
+    <div class="card-body">
+
+      <h5 class="mb-3">Historial de reservas</h5>
+       <!--INFORMACION DE RESERVAS-->
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <span class="badge bg-primary">
+          Completadas: {{ cantidadCompletadas }}
+        </span>
+      </div>
+
+      @if(historialReservas.length > 0){
+        <ul class="list-group lista-reservas-fija">
+         @for(reserva of historialVisible; track reserva.idReserva) {
+            <li class="list-group-item reserva-row">
+
+              @if(fotoEmpleadoUrl(reserva)){
+                <img class="reserva-barbero-foto" [src]="fotoEmpleadoUrl(reserva)" alt="Foto del barbero">
+              }
+
+              <div class="reserva-info">
+                <strong>{{ fechaReserva(reserva) }}</strong>
+                <div class="text-muted small fw-semibold">
+                  {{ reserva.nombreServicio || 'Servicio sin nombre' }}
+                </div>
+                <div class="text-muted small">
+                  {{ reserva.descripcion || 'Servicio sin descripcion' }}
+                </div>
+                <div class="barbero-line">
+                  <span>{{ nombreCompletoEmpleado(reserva) }}</span>
+                </div>
+              </div>
+              <span [class]="'badge ' + claseEstado(reserva.estado)">
+                {{ reserva.estado || 'Sin estado' }}
+              </span>
+
+            </li>
+          }
+        </ul>
+        @if(totalPaginasHistorial > 1){
+          <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              type="button"
+              [disabled]="paginaHistorial === 1"
+              (click)="paginaHistorial = paginaHistorial - 1">
+              Anterior
+            </button>
+
+            <span>
+              Página {{ paginaHistorial }} de {{ totalPaginasHistorial }}
+            </span>
+
+            <button
+              class="btn btn-outline-primary btn-sm"
+              type="button"
+              [disabled]="paginaHistorial === totalPaginasHistorial"
+              (click)="paginaHistorial = paginaHistorial + 1">
+              Siguiente
+            </button>
+          </div>
+        }
+        <!--Este else corresponde al primero no al de arriba suyo-->
+      } @else {
+        <div class="border rounded p-3 text-muted">
+          Todavía no tenés reservas registradas.
+        </div>
+      }
+
+    </div>
+  </section>
+
+</div>
 </div>

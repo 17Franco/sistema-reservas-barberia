@@ -1,4 +1,4 @@
-import { Injectable,  inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RegistroUsuario } from '../interfaces/registro-usuario';
 
@@ -44,11 +44,18 @@ export class Auth {
     );
   }
 
-  guardarUsuario(usuario:string, nombre:string, tipo:number){
+  guardarUsuario(usuario:string, nombre:string, tipo:string){
     this.usuario = {
       usuario: usuario,
       nombre: nombre,
       tipo: tipo
+    };
+  }
+
+  actualizarUsuario(datos: Record<string, unknown>): void {
+    this.usuario = {
+      ...(this.usuario || {}),
+      ...datos,
     };
   }
 
@@ -69,8 +76,8 @@ export class Auth {
   };
 
 
-  editarPerfilUsuario(datos: { nombre: string; apellido: string; celular: string, direccion: string}){
-    return this.http.put<any>(
+  editarPerfilUsuario(datos: FormData){
+    return this.http.post<any>(
       `${this.apiUrl}/editarPerfil`,
       datos,
       {
@@ -87,5 +94,25 @@ export class Auth {
     return this.http.get<any>(`${this.apiUrl}/usuarios/validar-ci?ci=${ci}`)
   }
 
+
+  cancelarReserva(idReserva: number) {
+    return this.http.put<any>(
+      `${this.apiUrl}/reservas/${idReserva}/cancelar`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
+
+  confirmarReserva(idReserva: number) {
+    return this.http.put<any>(
+      `${this.apiUrl}/reservas/${idReserva}/confirmar`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
 
 }

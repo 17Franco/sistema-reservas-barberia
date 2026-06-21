@@ -43,13 +43,42 @@ use Exception;
             return $this->repo->guardarCliente($usu); 
         }
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool{
-            return $this->repo->editarUsuario($idUsuario, $nombre, $apellido, $celular, $direccion);
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion, ?array $foto = null): ?string{
+            $rutaFoto = null;
+
+            if ($foto !== null && $foto['error'] !== UPLOAD_ERR_NO_FILE) {
+                $ci = $this->repo->obtenerCiPorId($idUsuario);
+
+                if ($ci === null) {
+                    throw new Exception("El usuario no existe", 404);
+                }
+
+                $rutaFoto = $this->guardarFotoPerfil($ci, $foto);
+            }
+
+            $ok = $this->repo->editarUsuario(
+                $idUsuario,
+                $nombre,
+                $apellido,
+                $celular,
+                $direccion,
+                $rutaFoto
+            );
+
+            if (!$ok) {
+                throw new Exception("No se pudo actualizar el perfil", 500);
+            }
+
+            return $rutaFoto;
         }
 
         public function guardarFotoPerfil(string $ci, array $foto): ?string {
             if (!isset($foto["error"]) || $foto["error"] !== UPLOAD_ERR_OK) {
                 throw new Exception("No se recibió correctamente la foto de perfil", 400);
+            }
+
+            if ($foto["size"] > 5 * 1024 * 1024) {
+                throw new Exception("La foto no puede superar los 5 MB", 400);
             }
 
             $uploads = __DIR__ . "/../../../public/uploads";
@@ -75,19 +104,27 @@ use Exception;
                     throw new Exception("La carpeta del usuario no tiene permisos de escritura", 500);
                 }
 
-                $extension = strtolower(pathinfo($foto["name"], PATHINFO_EXTENSION));
+                $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($foto["tmp_name"]);
+                $formatosPermitidos = [
+                    "image/jpeg" => "jpg",
+                    "image/png" => "png",
+                    "image/webp" => "webp"
+                ];
 
-                if ($extension === "") {
-                    throw new Exception("La foto no tiene extensión válida", 400);
-                }
-
-                $extensionesPermitidas = ["jpg", "jpeg", "png", "webp"];
-
-                if (!in_array($extension, $extensionesPermitidas)) {
+                if (!isset($formatosPermitidos[$mime])) {
                     throw new Exception("Formato de imagen no permitido", 400);
                 }
 
-                $nombreImg = "fotoPerfil." . $extension;
+                $extension = $formatosPermitidos[$mime];
+
+                foreach (glob($carpetaUsuario . "/fotoPerfil*") ?: [] as $fotoAnterior) {
+                    if (is_file($fotoAnterior)) {
+                        unlink($fotoAnterior);
+                    }
+                }
+
+                // El nombre cambia para evitar que el navegador muestre la foto anterior desde caché.
+                $nombreImg = "fotoPerfil_" . time() . "." . $extension;
                 $rutaFinal = $carpetaUsuario . "/" . $nombreImg;
 
                 if (!move_uploaded_file($foto["tmp_name"], $rutaFinal)) {
