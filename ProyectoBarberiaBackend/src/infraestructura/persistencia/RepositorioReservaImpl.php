@@ -1,116 +1,152 @@
 <?php
-    namespace Barberia\Backend\infraestructura\persistencia;
+namespace Barberia\Backend\infraestructura\persistencia;
 
 use Barberia\Backend\dominio\repositorio\RepositorioReserva;
 use Barberia\Backend\dominio\Reserva;
+use Barberia\Backend\dominio\EstadoReserva;
 use Exception;
 use mysqli;
 
-     class RepositorioReservaImpl implements RepositorioReserva{
+class RepositorioReservaImpl implements RepositorioReserva{
+    
+    private mysqli $conn;
+
+    public function __construct(mysqli $conn) {
+        $this->conn = $conn;
+    }
+
+    public function save(Reserva $reserva):int{
+        $sql = "INSERT INTO reservas(idCliente, idEmpleado, idServicio, fecha, horaInicio, horaFin, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $idCliente = $reserva->getIdCliente();
+        $idEmpleado = $reserva->getIdEmpleado();
+        $idServicio = $reserva->getIdServicio();
+        $fecha = $reserva->getFecha();
+        $horaInicio = $reserva->getHoraIni();
+        $horaFin = $reserva->getHoraFin();
+        $estado = "PENDIENTE";
         
-        private mysqli $conn;
+        $stmt->bind_param(
+            "iiissss",
+            $idCliente,
+            $idEmpleado,
+            $idServicio,
+            $fecha,
+            $horaInicio,
+            $horaFin,
+            $estado
+        );
 
-        public function __construct(mysqli $conn) {
-            $this->conn = $conn;
+        $stmt->execute();
+
+        // Verifico que realmente insertó una fila
+        if ($stmt->affected_rows !== 1) {
+            throw new Exception("No se pudo guardar la reserva", 500);
         }
 
-        public function save(Reserva $reserva):int{
-            $sql = "INSERT INTO reservas(idCliente, idEmpleado, idServicio, fecha, horaInicio, horaFin, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Obtengo el id 
+        $idReserva = $stmt->insert_id;
 
-            $stmt = $this->conn->prepare($sql);
+        return $idReserva;
+    }
+    
+    public function existeReserva(int $IdEmpleado, string $fecha, string $horaIni, string $horaFin):bool{
+        $sql = "SELECT 1 FROM reservas WHERE idEmpleado = ? AND fecha = ? AND estado = 'PENDIENTE' AND horaInicio < ? AND horaFin > ? LIMIT 1";
 
-            $idCliente = $reserva->getIdCliente();
-            $idEmpleado = $reserva->getIdEmpleado();
-            $idServicio = $reserva->getIdServicio();
-            $fecha = $reserva->getFecha();
-            $horaInicio = $reserva->getHoraIni();
-            $horaFin = $reserva->getHoraFin();
-            $estado = "PENDIENTE";
-            
-            $stmt->bind_param(
-                "iiissss",
-                $idCliente,
-                $idEmpleado,
-                $idServicio,
-                $fecha,
-                $horaInicio,
-                $horaFin,
-                $estado
-            );
+        $stmt = $this->conn->prepare($sql);
 
-            $stmt->execute();
+        $stmt->bind_param("isss", $IdEmpleado,$fecha,$horaFin,$horaIni);
 
-            // Verifico que realmente insertó una fila
-            if ($stmt->affected_rows !== 1) {
-                throw new Exception("No se pudo guardar la reserva", 500);
-            }
+        $stmt->execute();
 
-            // Obtengo el id 
-            $idReserva = $stmt->insert_id;
+        $result = $stmt->get_result();
 
-            return $idReserva;
-        }
+        return $result->num_rows > 0;
+
+    }
+    public function estaEnHorarioLaboralEmpleado(int $idEmpleado,string $horaInicio,string $horaFin):bool{
+        // $sql = "SELECT 1 FROM horario_empleado WHERE idEmpleado = ? AND ? >= horaIni AND ? <= horaFin LIMIT 1";
+        $sql = "SELECT 1 FROM horario_empleado WHERE idEmpleado = ? AND ? >= horaIni AND ? <= horaFin AND (horaDescansoIni = '00:00:00' OR NOT (? < horaDescansoFin AND ? > horaDescansoIni)) LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bind_param("issss", $idEmpleado,$horaInicio,$horaFin,$horaInicio,$horaFin);
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        return $result->num_rows > 0;
+    }
+
+    public function obtenerReserva(int $idReserva):?Reserva{
+        $reserva= null;
+
+        $sql = "SELECT * FROM reservas where idReserva = ?";
         
-        public function existeReserva(int $IdEmpleado, string $fecha, string $horaIni, string $horaFin):bool{
-            $sql = "SELECT 1 FROM reservas WHERE idEmpleado = ? AND fecha = ? AND estado = 'PENDIENTE' AND horaInicio < ? AND horaFin > ? LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
 
-            $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $idReserva);
 
-            $stmt->bind_param("isss", $IdEmpleado,$fecha,$horaFin,$horaIni);
+        $stmt->execute();
 
-            $stmt->execute();
+        $result = $stmt->get_result();
 
-            $result = $stmt->get_result();
+        $rowReserva = $result->fetch_assoc();
 
-            return $result->num_rows > 0;
-
+        if (!$rowReserva) {
+            return null;
         }
-        public function estaEnHorarioLaboralEmpleado(int $idEmpleado,string $horaInicio,string $horaFin):bool{
-           // $sql = "SELECT 1 FROM horario_empleado WHERE idEmpleado = ? AND ? >= horaIni AND ? <= horaFin LIMIT 1";
-            $sql = "SELECT 1 FROM horario_empleado WHERE idEmpleado = ? AND ? >= horaIni AND ? <= horaFin AND (horaDescansoIni = '00:00:00' OR NOT (? < horaDescansoFin AND ? > horaDescansoIni)) LIMIT 1";
+        $reserva = new Reserva(
+            $rowReserva['idServicio'],
+            $rowReserva['idEmpleado'],
+            $rowReserva['fecha'],
+            $rowReserva['horaInicio']);
 
-            $stmt = $this->conn->prepare($sql);
+        $reserva->setIdReserva($rowReserva['idReserva']);
+        $reserva->setHoraFin($rowReserva['horaFin']);
+        $reserva->setIdCliente($rowReserva['idCliente']);
+        
+        $reserva->setEstadoReserva(
+            EstadoReserva::from($rowReserva['estado'])
+        );
+        return $reserva;
+    }
 
-            $stmt->bind_param("issss", $idEmpleado,$horaInicio,$horaFin,$horaInicio,$horaFin);
 
-            $stmt->execute();
 
-            $result = $stmt->get_result();
 
-            return $result->num_rows > 0;
-        }
+    public function cancelar(int $idReserva, int $idCliente): bool{
+        $sql = "UPDATE reservas
+                SET estado = 'CANCELADA'
+                WHERE idReserva = ?
+                AND idCliente = ?
+                AND estado = 'PENDIENTE'";
 
-        public function obtenerReserva(int $idReserva):?Reserva{
-            $reserva= null;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $idReserva, $idCliente);
+        $stmt->execute();
 
-            $sql = "SELECT * FROM reservas where idReserva = ?";
-            
-            $stmt = $this->conn->prepare($sql);
+        return $stmt->affected_rows === 1;
+    }
 
-            $stmt->bind_param("i", $idReserva);
 
-            $stmt->execute();
 
-            $result = $stmt->get_result();
+    public function confirmar(int $idReserva, int $idCliente): bool{
+        $sql = "UPDATE reservas
+                SET estado = 'CONFIRMADA'
+                WHERE idReserva = ?
+                AND idCliente = ?
+                AND estado = 'PENDIENTE'";
 
-            $rowReserva = $result->fetch_assoc();
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $idReserva, $idCliente);
+        $stmt->execute();
 
-            if (!$rowReserva) {
-                return null;
-            }
-            $reserva = new Reserva(
-                $rowReserva['idServicio'],
-                $rowReserva['idEmpleado'],
-                $rowReserva['fecha'],
-                $rowReserva['horaInicio']);
+        return $stmt->affected_rows === 1;
+    }
 
-            $reserva->setIdReserva($rowReserva['idReserva']);
-            $reserva->setHoraFin($rowReserva['horaFin']);
-            $reserva->setIdCliente($rowReserva['idCliente']);
-           
-
-            return $reserva;
-        }
-
-     }
+}
 ?>

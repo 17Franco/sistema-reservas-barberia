@@ -269,13 +269,23 @@ use mysqli;
 
         public function listar(): array{return [];}
 
-        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion): bool{
-            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, direccion = ? WHERE id = ?";
+        public function editarUsuario(int $idUsuario, string $nombre, string $apellido, string $celular, ?string $direccion, ?string $foto): bool{
+            $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, direccion = ?, foto = COALESCE(?, foto) WHERE id = ?";
 
             $consultaPreparada = $this->conn->prepare($sql);
-            $consultaPreparada->bind_param("ssssi", $nombre, $apellido, $celular, $direccion, $idUsuario);
+            $consultaPreparada->bind_param("sssssi", $nombre, $apellido, $celular, $direccion, $foto, $idUsuario);
 
             return $consultaPreparada->execute();
+        }
+
+        public function obtenerCiPorId(int $idUsuario): ?string{
+            $sql = "SELECT ci FROM usuarios WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $idUsuario);
+            $stmt->execute();
+            $fila = $stmt->get_result()->fetch_assoc();
+
+            return $fila ? $fila['ci'] : null;
         }
     }
 ?>

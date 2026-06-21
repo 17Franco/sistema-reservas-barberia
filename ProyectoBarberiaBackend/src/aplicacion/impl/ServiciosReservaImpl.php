@@ -8,11 +8,12 @@ use Barberia\Backend\dominio\repositorio\RepositorioReserva;
 use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
 use Barberia\Backend\dominio\Reserva;
 use Barberia\Backend\infraestructura\persistencia\ServicioRepositorioImpl;
+use Barberia\Backend\dominio\EstadoReserva;
 use DateInterval;
 use DateTime;
 use Exception;
 
-     class ServiciosReservaImpl implements ServiciosReserva {
+class ServiciosReservaImpl implements ServiciosReserva {
         //variable donde guardo la interfaz repo
         private RepositorioUsuario $repoUsuario;
         private ServicioRepositorioImpl $repoServicio;
@@ -170,6 +171,64 @@ use Exception;
             $this->servicioEmail->enviar($emailCliente,"Comprobante Reserva",$body);
 
         }
+
+
+
+
+
+        public function cancelarReserva(int $idReserva, int $idCliente): void{
+            $reserva = $this->repoReserva->obtenerReserva($idReserva);
+
+            if ($reserva === null) {
+                throw new Exception("La reserva no existe", 404);
+            }
+
+            if ($reserva->getIdCliente() !== $idCliente) {
+                throw new Exception("No tienes permiso para cancelar esta reserva", 403);
+            }
+
+            if ($reserva->getEstadoReserva() !== EstadoReserva::PENDIENTE) {
+                throw new Exception(
+                    "Solo se pueden cancelar reservas pendientes",
+                    409
+                );
+            }
+
+            if (!$this->repoReserva->cancelar($idReserva, $idCliente)) {
+                throw new Exception("No se pudo cancelar la reserva", 500);
+            }
+        }
+
+
+
+        public function confirmarReserva(int $idReserva, int $idCliente): void{
+            $reserva = $this->repoReserva->obtenerReserva($idReserva);
+
+            if ($reserva === null) {
+                throw new Exception("La reserva no existe", 404);
+            }
+
+            if ($reserva->getIdCliente() !== $idCliente) {
+                throw new Exception(
+                    "No tienes permiso para confirmar esta reserva",
+                    403
+                );
+            }
+
+            if ($reserva->getEstadoReserva() !== EstadoReserva::PENDIENTE) {
+                throw new Exception(
+                    "Solo se pueden confirmar reservas pendientes",
+                    409
+                );
+            }
+
+            if (!$this->repoReserva->confirmar($idReserva, $idCliente)) {
+                throw new Exception("No se pudo confirmar la reserva", 500);
+            }
+        }
+
+
+
 
      }
 ?>
