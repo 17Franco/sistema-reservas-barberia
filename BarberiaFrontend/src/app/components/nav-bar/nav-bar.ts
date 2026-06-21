@@ -53,6 +53,10 @@ export class NavBar implements OnInit {
     return this.usuarioActual?.tipo === 'ADMIN';
   }
 
+   get empleado(): boolean {
+    return this.usuarioActual?.tipo === 'EMPLEADO';
+  }
+
   get fotoPerfilUrl(): string | null {
     if (!this.usuarioActual?.foto || this.mostrarIniciales) {
       return null;

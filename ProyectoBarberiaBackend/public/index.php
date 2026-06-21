@@ -141,10 +141,6 @@ try {
     }
 
 
-
-
-
-
     // POST /servicios
     if ($method === 'POST' && $route === '/servicios') {
         ServicioController::crearServicio($servicioServicios);
