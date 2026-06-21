@@ -14,7 +14,7 @@ import { GestionBarberos } from './pages/admin/gestion-barberos/gestion-barberos
 import { GestionReserva } from './pages/admin/gestion-reserva/gestion-reserva';
 import { Reserva } from './pages/reserva/reserva';
 import { tipoUserGuard } from './guards/tipo-user-guard';
-import { isEmpleadoGuard } from './guards/is-empleado-guard';
+
 
 //aca agregamos el path para que si en el navegador busca home redirija a page home o login etc
 //cada pagina debe tener una ruta
@@ -26,45 +26,75 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: PantallaPrincipal
+        component: PantallaPrincipal,
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['CLIENTE']
+        }
       },
       {
         path: 'servicios',
-        component: Servicios
+        component: Servicios,
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['CLIENTE']
+        }
       },
       {
         path: 'MiPerfil',
-        component: PaginaPerfil
+        component: PaginaPerfil,
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['CLIENTE','EMPLEADO']
+        }
       },
       {
         path: 'perfilBarbero',
         component: PerfilBarbero,
-        canActivate: [isEmpleadoGuard]
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['EMPLEADO']
+        }
       },
       {
         path: 'admin',
         component: AdminDashboard,
-        canActivate: [tipoUserGuard]
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['ADMIN']
+        }
       },
       {
         path: 'admin/servicios',
         component: GestionServicios,
-        canActivate: [tipoUserGuard]
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['ADMIN']
+        }
       },
       {
         path: 'admin/barberos',
         component: GestionBarberos,
-        canActivate: [tipoUserGuard]
+        canActivate: [tipoUserGuard],
+         data: {
+          roles: ['ADMIN']
+        }
       },
       {
         path: 'admin/reservas',
         component: GestionReserva,
-        canActivate: [tipoUserGuard] 
+        canActivate: [tipoUserGuard],
+         data: {
+          roles: ['ADMIN']
+        }
       },
       {
         path: 'reservar',
         component: Reserva,
-        canActivate: [] 
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['CLIENTE']
+        }
       }
     ]
   },
