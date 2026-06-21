@@ -123,11 +123,11 @@ export class PerfilBarbero implements OnInit{
         ).length;
 
         this.reservasAsociadas = reservas.filter(
-          (reserva: ReservaInterface) => reserva.estado !== 'COMPLETADA',
+          (reserva: ReservaInterface) => reserva.estado == 'PENDIENTE' || reserva.estado == 'CONFIRMADA',
         );
 
         this.historialReservas = reservas.filter(
-          (reserva: ReservaInterface) => reserva.estado === 'COMPLETADA',
+          (reserva: ReservaInterface) => reserva.estado === 'COMPLETADA' || reserva.estado == 'CANCELADA',
         );
       }
     } catch (error) {
