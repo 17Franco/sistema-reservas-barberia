@@ -144,6 +144,7 @@
             //recorro
             foreach ($servicios as $servicio) {
              $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+             
                 foreach ($empleados as $empleado) {
                     if ($this->disponibilidadEmpleadoDia($dia->getFecha(),$servicio->getDuracion(),(int)$empleado)) {
                         return true;
@@ -193,10 +194,15 @@
             $servicios = $this->repo->listarServicios();
 
             foreach ($servicios as $servicio) {
-             $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+                $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
+                $disponible = false;
                 foreach ($empleados as $empleado) {
-                    $servicio->setDisponible($this->disponibilidadEmpleadoDia($dia,$servicio->getDuracion(),(int)$empleado));
+                    if ($this->disponibilidadEmpleadoDia($dia, $servicio->getDuracion(), (int)$empleado)) {
+                        $disponible = true;
+                        break;
+                    }
                 }  
+                $servicio->setDisponible($disponible);
             } 
             return $servicios;
         }
