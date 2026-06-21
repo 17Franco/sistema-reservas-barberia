@@ -52,6 +52,9 @@ export class Login {
             } else if(res.tipo === 'CLIENTE') {
                 this.router.navigate(['/']);
             }
+            else if (res.tipo === 'EMPLEADO') {
+              this.router.navigate(['/perfilBarbero']);
+            }
            // this.router.navigateByUrl('/')
           }
         },

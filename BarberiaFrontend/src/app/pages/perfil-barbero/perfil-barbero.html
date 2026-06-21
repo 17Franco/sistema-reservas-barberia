@@ -12,9 +12,9 @@
   @if(usuarioActual && !cargando){
     <header class="profile-hero">
       <div>
-        <span class="eyebrow">Panel de usuario</span>
-        <h1>Administración de Usuario</h1>
-        <p>Visualizá un resumen de tus reservas y edita tus datos personales.</p>
+        <span class="eyebrow">Panel de barberos</span>
+        <h1>Administración de Barbero</h1>
+        <p>Visualiza un resumen de tus reservas, confirmalas o cancelalas y edita tus datos personales.</p>
       </div>
     </header>
 
@@ -148,8 +148,8 @@
          @for(reserva of reservasVisibles; track reserva.idReserva) {
             <li class="list-group-item reserva-row">
 
-              @if(fotoEmpleadoUrl(reserva)){
-                <img class="reserva-barbero-foto" [src]="fotoEmpleadoUrl(reserva)" alt="Foto del barbero">
+              @if(fotoClienteUrl(reserva)){
+                <img class="reserva-barbero-foto" [src]="fotoClienteUrl(reserva)" alt="Foto del barbero">
               }
 
               <div class="reserva-info">
@@ -161,7 +161,7 @@
                   {{ reserva.descripcion || 'Servicio sin descripcion' }}
                 </div>
                 <div class="barbero-line">
-                  <span>{{ nombreCompletoEmpleado(reserva) }}</span>
+                  <span>{{ nombreCompletoCliente(reserva) }}</span>
                 </div>
               </div>
               <div class="reserva-acciones">
@@ -244,8 +244,7 @@
                 Cancelar reserva
               }
             </button>
-            <!--Le quito al usuario la posibilidad de confirmar reservas, eso solo lo pueden hacer el admin y barbero por decisión de diseño-->
-            <!--
+
             <button
               class="btn badge bg-success"
               type="button"
@@ -260,7 +259,6 @@
                 Confirmar reserva
               }
             </button>
-            -->
           </div>
 
         
@@ -291,8 +289,8 @@
          @for(reserva of historialVisible; track reserva.idReserva) {
             <li class="list-group-item reserva-row">
 
-              @if(fotoEmpleadoUrl(reserva)){
-                <img class="reserva-barbero-foto" [src]="fotoEmpleadoUrl(reserva)" alt="Foto del barbero">
+              @if(fotoClienteUrl(reserva)){
+                <img class="reserva-barbero-foto" [src]="fotoClienteUrl(reserva)" alt="Foto del barbero">
               }
 
               <div class="reserva-info">
@@ -304,7 +302,7 @@
                   {{ reserva.descripcion || 'Servicio sin descripcion' }}
                 </div>
                 <div class="barbero-line">
-                  <span>{{ nombreCompletoEmpleado(reserva) }}</span>
+                  <span>{{ nombreCompletoCliente(reserva) }}</span>
                 </div>
               </div>
               <span [class]="'badge ' + claseEstado(reserva.estado)">
