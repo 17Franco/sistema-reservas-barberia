@@ -171,8 +171,6 @@ export class Registro {
         return 'Debe ser menor de 100';
       }
       
-
-
       return '';
   } 
 

@@ -14,6 +14,7 @@ import { GestionBarberos } from './pages/admin/gestion-barberos/gestion-barberos
 import { GestionReserva } from './pages/admin/gestion-reserva/gestion-reserva';
 import { Reserva } from './pages/reserva/reserva';
 import { tipoUserGuard } from './guards/tipo-user-guard';
+import { isEmpleadoGuard } from './guards/is-empleado-guard';
 
 //aca agregamos el path para que si en el navegador busca home redirija a page home o login etc
 //cada pagina debe tener una ruta
@@ -37,7 +38,8 @@ export const routes: Routes = [
       },
       {
         path: 'perfilBarbero',
-        component: PerfilBarbero
+        component: PerfilBarbero,
+        canActivate: [isEmpleadoGuard]
       },
       {
         path: 'admin',
