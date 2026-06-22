@@ -150,3 +150,56 @@
   background: #f7f7fb;
   color: #555;
 }
+
+
+//nuevo disenio
+
+.col-imagen-barbero {
+  min-height: 500px;
+  background-image: linear-gradient(to right, #ffffff 10%, rgba(255, 255, 255, 0) 80%), url('/img/fondoInicio.png');//agrego imagen
+  background-repeat: no-repeat;//no repite la img
+  background-position: center;
+  background-size: cover; //cubra todo el espacio
+
+}
+.barra{
+  width: 4%; 
+}
+
+.pie {
+  background-color: #1c1c1c;
+}
+
+.iconos-pasos{
+  width: 60px;
+  height: 60px;
+  background-color: #1c1c1c;
+}
+
+
+
+
+.contenedor-steps {
+  
+}
+.step{
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  position: relative;
+  z-index: 2;//queda por arriba de la linea
+  
+}
+.ultimo{
+  //es para que la linea que conecta los icono en la ultima no se vea
+}
+.contenedor-steps::before {
+  content: "";
+  position: absolute;
+  top: 30px; 
+  left: 5%;
+  right: 15%;
+  height: 2px;
+  background-color: #0D6EFD; 
+  z-index: 1;
+}

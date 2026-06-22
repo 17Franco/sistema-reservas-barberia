@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { NgClass } from '@angular/common';
-import {FormGroup,FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormGroup,FormControl, ReactiveFormsModule, Validators, AbstractControl} from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { RegistroUsuario } from '../../interfaces/registro-usuario';
 import Swal from 'sweetalert2';
@@ -64,8 +64,7 @@ export class Registro {
     email: new FormControl('',
       
       [Validators.required,
-      ]
-    
+        validarEmail]
     ),
     pass: new FormControl('',
       
@@ -77,9 +76,13 @@ export class Registro {
     ),
     repetirPass: new FormControl('',
       
-      [Validators.required]
+      [Validators.required
+      ]
     
     )
+  },
+  {
+     validators: passwordIguales
   });
 
   registro(){
@@ -122,7 +125,11 @@ export class Registro {
         },
         error: (err) => {
             console.error(err);
-
+            Swal.fire({
+              title: 'Cliente No Registrado',
+              text: 'No se pudo Crear la cuenta Intente de nuevo',
+              icon: 'success'
+            })
           }
       });
     };
@@ -161,11 +168,19 @@ export class Registro {
       if(control?.hasError('emailExistente')){
         return 'Ya existe cuenta asociada a este email';
       }
+      if(control?.hasError('emailInvalido')){
+        return 'No es un correo valido';
+      }
        if(control?.hasError('ciExistente')){
         return 'Ya existe cuenta asociada';
       }
       if(control?.hasError('edadMinima')){
         return 'Debe ser mayor a 12';
+      }
+      
+      //aca como es un validador a nivel de grupo se maneja distinto no miro si tiene el error en el control
+      if (campo == 'repetirPass'  && this.formRegistro.hasError('passwordNoIguales')) {
+        return 'Contraseñas distintas';
       }
       if(control?.hasError('edadMaxima')){
         return 'Debe ser menor de 100';
@@ -182,6 +197,10 @@ export class Registro {
     campoInvalido(nombre:string){
         const campo = this.formRegistro.get(nombre);
 
+        //igual como no es error de camoo debo mirar si tiene a nivel de grupo
+        if (nombre === 'repetirPass' && this.formRegistro.hasError('passwordNoIguales')) {
+          return campo?.dirty;
+        }
         return (campo?.invalid && (campo?.touched ||  campo?.dirty)) ;
         
     }
@@ -277,7 +296,32 @@ function validadFecha(control:any){
   return null;
 }
 
-function validarEmail(usado:boolean){
+function validarEmail(control:any){
+  let valor = control.value;
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //const ciRegex = /^\d{7,8}$/;
   
-  
+  if (!valor) {
+    return null;
+  }
+
+  //si no hay problema devuelvo null
+  if(emailValido.test(valor)){
+    return null;
+  }
+
+  //si hay probblema devulvo true el usuarioInvalido es el nombre que se guarda en errors 
+  return { emailInvalido:true };
+
+}
+
+function passwordIguales(form: AbstractControl) {
+  const password = form.get('pass')?.value;
+  const confirmPassword = form.get('repetirPass')?.value;
+  //console.log(password,confirmPassword);
+  if (password === confirmPassword) {
+    return null; // válido
+  }
+
+  return { passwordNoIguales: true }; // error del grupo
 }
