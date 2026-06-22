@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ApiResponse, Dia, EmpleadoD, Horario, ResponseEmpleado, ResponseHorarios, ResponseServicioDisponible, Servicio } from '../../interfaces/disponibilidad-interfaces';
+import { environment } from '../../../environments/environment';
 
 export interface Reserva {
   idEmpleado: number;
@@ -16,7 +17,7 @@ export interface Reserva {
 })
 export class Disponibilidad {
   private http = inject(HttpClient);
-  private apiUrl='http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  private apiUrl = environment.apiUrl;
 
   calendario():Observable<Dia[]>{
     return this.http.get<ApiResponse>(`${this.apiUrl }/disponibilidad`,

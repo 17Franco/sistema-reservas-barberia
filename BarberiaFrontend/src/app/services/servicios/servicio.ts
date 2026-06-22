@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 export interface Servicio {
   idServicio?: number;
@@ -16,7 +17,7 @@ export class ServiciosService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  private apiUrl = environment.apiUrl;
 
   getServicios() {
     return this.http.get<any>(`${this.apiUrl}/servicios`, {

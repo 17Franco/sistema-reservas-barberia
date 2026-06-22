@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RegistroUsuario } from '../interfaces/registro-usuario';
 
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +11,7 @@ export class Auth {
   usuario:any=null;       //uso esta para comunicar nav-bar con pagina-perfil
   
 
-  private apiUrl='http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  private apiUrl = environment.apiUrl;
 
   me(){
     return this.http.get(
