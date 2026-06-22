@@ -1,0 +1,73 @@
+<div class="conteiner bg-white rounded-4 pb-5 ps-5 pe-5 pt-4 d-flex flex-column gap-4">
+    <!--titulo-->
+    <div>
+        <span class="text-primary fs-5 fw-bold ">FILTROS</span>
+    </div>
+    <!--filtro barbero-->
+    <div class="d-flex flex-column gap-2">
+        <div>
+            <label for="empleado" class="fw-bold">Barbero</label>
+        </div>
+        <div>
+            <select id="empleado" class="form-select p-2" name="barbero" [(ngModel)]="filtros.empleado" (change)="cambio()" >
+                <option [ngValue]="null">Todos los barberos</option>
+                @for (barbero of barberos; track barbero.id) { <option [ngValue]="barbero.id">{{ barbero.nombre }}</option> }
+            </select>
+        </div>
+    </div>
+    <!-- filtro servicio-->
+    <div class="d-flex flex-column gap-2">
+        <div>
+            <label for="servicio" class="fw-bold">Servicio</label>
+        </div>
+        <div>
+            <select id="servicio" class="form-select p-2" name="especialidad" [(ngModel)]="filtros.servicio" (change)="cambio()" >
+                <option [ngValue]="null">Todos los Servicios</option>
+                @for (servicio of servicios; track servicio.idServicio) { <option [ngValue]="servicio.idServicio">{{ servicio.nombre }}</option> }
+            </select>
+        </div>
+    </div>
+    <!-- Filtro estado-->
+    <div class="d-flex flex-column gap-2">
+        <div>
+            <label for="estado" class="fw-bold">Estados</label>
+        </div>
+        <div>
+            <select id="estado" class="form-select p-2" name="estado" [(ngModel)]="filtros.estado" (change)="cambio()" >
+                <option [ngValue]="null">Todos los Estados</option>
+                @for (estado of estados; track estado.nombre) { <option [ngValue]="estado.nombre">{{ estado.nombre }}</option> }
+            </select>
+        </div>
+    </div>
+    <!--filtro fecha-->
+    <div class="d-flex flex-column gap-4">
+        <!--desde-->
+        <div class="d-flex flex-column gap-2">
+            <div>
+                <label for="estado" class="fw-bold" >Fecha Desde</label>
+            </div>
+            <div>
+                <input type="date" class="form-control p-2">
+            </div>
+        </div>
+        <!--hasta-->
+        <div class="d-flex flex-column gap-2">
+            <div>
+                <label for="estado" class="fw-bold">Fecha Hasta</label>
+            </div>
+            <div>
+                <input type="date" class="form-control p-2">
+            </div>
+        </div>
+    </div>
+    
+    <!--botones-->
+    <div class="d-flex flex-column gap-2 mt-3">
+        <div>
+            <button class="btn bg-dark rounded-2 text-white col-12 fw-bold pt-2 pb-2 btn-hover-grow"><i class="bi bi-funnel ml-"></i>Filtrar</button>
+        </div>
+        <div>
+            <button class="btn bg-white border border-danger rounded-2 text-danger col-12 fw-bold pt-2 pb-2 btn-hover-grow "><i class="bi bi-arrow-clockwise"></i>Limpiar filtros</button>
+        </div>
+    </div>
+</div>
