@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light ">
 
-  <div class="container-fluid ">
+  <div class="" [ngClass]="admin ? 'container-fluid' : 'container'">
 
     <div class="">
 
@@ -28,11 +28,9 @@
 
     </div>
 
-
-
     <div class="gap-5 d-flex">
 
-      <a class="link fw-bold" [class.d-none]="!admin" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo=== 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
+      <a class="link fw-bold" [class.d-none]="!admin" (click)="cambiarModo('admin')" routerLink="/admin" [ngClass]="modo === 'admin' ? 'text-primary' : 'text-secondary'">PANEL ADMINISTRATIVO</a> <!--BOTON SOLO PARA ADMINS.-->
 
       <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('Home')" [routerLink]="empleado ? '/perfilBarbero' : '/'" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
 
@@ -59,12 +57,10 @@
       <button class="btn btn-sm btn-outline-danger" type="button" (click)="logOut()">
 
         Cerrar sesión
-
+        <i class="ms-1 bi bi-box-arrow-right"></i>
       </button>
 
     </div>
-
-  
 
   </div>
 

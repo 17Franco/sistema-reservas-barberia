@@ -1,28 +1,145 @@
-<div class="container-fluid">
+<section class="container p-4 ">
+  <div class="row  align-items-center  ">
+      <div class="col-5 col-ms-6 col-lg-6">
+        <span class="bg-dark rounded-pill text-white fw-bold p-2 d-inline-flex align-items-center gap-2"><i class="bi bi-star-fill text-warning"></i>BARBERÍA PREMIUM</span>
+        <h1 class="display-3 text-dark fw-bold lh-1 mt-2">Tu <span class="text-primary">estilo</span> perfecto comienza aquí</h1>
+        <p>Reserva tu turno, conoce nuestros servicios y mantente impecable con los mejores barberos de la ciudad.</p>
+        <div class="d-flex gap-3">
+          <a routerLink="/reservar" class="btn btn-lg btn-primary rounded-pill"> <i class="bi bi-calendar-event me-2"></i> RESERVAR TURNO</a>
+          
+          <a routerLink="/servicios" class="btn btn-lg btn-outline-secondary rounded-pill"><i class="bi bi-scissors me-2"></i>VER SERVICIOS</a>
+        </div>
+      </div>
 
+      <div class="col-7 col-ms-6 col-lg-6 col-imagen-barbero  rounded-2 ">
+         <!-- <img src="img/fondoInicio.png" class="img-fluid" alt="">-->
+      </div>
+
+  </div>
+
+    <section class=" mt-3" id="servicios">
+      <div class="d-flex flex-column align-items-center">
+        <span class="text-primary fw-bold ">NUESTROS SERVICIOS</span>
+        <h2 class="fw-bold">Servicios destacados</h2>
+        <hr class=" barra border border-primary border-1 opacity-75">
+      </div>
+      <div class="d-flex gap-5">
+        <div *ngIf="cargando" class="loading">Cargando servicios destacados...</div>
+        <div *ngIf="error" class="error">{{ error }}</div>
+        <article *ngFor="let servicio of serviciosDestacados" class="d-flex align-items-center p-3 mb-3 bg-white border rounded-4 shadow-sm ">
+          <div class=" d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary me-3" style="width: 50px; height: 50px; font-size: 20px;">
+            <span><i class="bi bi-scissors"></i></span>
+          </div>
+          <div class="flex-grow-1">
+
+            <h3 class="h6 fw-bold mb-1">
+              {{ servicio.nombre }}
+            </h3>
+
+            <p class="text-muted small mb-2 lh-sm">
+              {{ servicio.descripcion }}
+            </p>
+
+            <div class="fw-bold text-primary">
+              ${{ servicio.precio }}
+            </div>
+
+          </div>
+        </article>
+        <div *ngIf="!cargando && serviciosDestacados.length === 0" class="empty-state">
+          No hay servicios destacados disponibles.
+        </div>
+      </div>
+    </section>
+
+    <section class="shadow pie rounded-3 mt-4 p-4 ">
+        <div class="row align-items-center">
+          <div class="col-lg-3 mb-4 mb-lg-0">
+            <span class="text-primary fw-bold small">ASI DE FACIL</span>
+            <h3 class="text-white fw-bold">Reserva en 5 simples pasos</h3>
+            <span class="text-white-50">Rapido,Facil y sin complicaciones</span>
+          </div>
+          <div class="col-lg-9">
+              <div class="d-flex justify-content-center gap-3 flex-nowrap position-relative contenedor-steps">
+                <div class="step">
+                  <div class="iconos-pasos d-flex justify-content-center align-items-center text-white rounded-circle fs-2 mb-2 border border-secondary">
+                    <i class="bi bi-calendar"></i>
+                  </div>
+                  <div>
+                    <p class="text-white fs-6 fw-bold">Elige Fecha</p>
+                    <p class="text-white-50">Selecciona el dia que mas te convenga</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="iconos-pasos d-flex justify-content-center align-items-center text-white rounded-circle text-primary fs-2 mb-2 border border-secondary">
+                    <i class="bi bi-scissors"></i>
+                  </div>
+                  <div>
+                    <p class="text-white fs-6 fw-bold">Elige tu Servicio</p>
+                    <p class="text-white-50">Selecciona el servicio que mas te guste</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="iconos-pasos d-flex justify-content-center align-items-center text-white rounded-circle text-primary fs-2 mb-2 border border-secondary">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                  <div>
+                    <p class="text-white fs-6 fw-bold">Elige tu barbero</p>
+                    <p class="text-white-50">Selecciona al que sea mejor</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="iconos-pasos d-flex justify-content-center align-items-center text-white rounded-circle text-primary fs-2 mb-2 border border-secondary">
+                    <i class="bi bi-hourglass-split"></i>
+                  </div>
+                  <div>
+                    <p class="text-white fs-6 fw-bold">Elige tu horario</p>
+                    <p class="text-white-50">Selecciona el horario que mas te convenga</p>
+                  </div>
+                </div>
+                
+                <div class="step ultimo ">
+                  <div class="iconos-pasos d-flex justify-content-center align-items-center text-white rounded-circle text-primary fs-2 mb-2 border border-secondary">
+                    <i class="bi bi-check-circle"></i>
+                  </div>
+                  <div>
+                    <p class="text-white fs-6 fw-bold">Confirma tu turno</p>
+                    <p class="text-white-50">Recibe la confirmacion y listo </p>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+    </section>
+
+    
+    <!--<router-outlet></router-outlet>-->
+</section>
+  
+
+<!--
+disenio anterior
+<div class="container-fluid">
   <main class="home-page ">
     <section class="hero">
       <div class="hero-copy">
         <span class="eyebrow">Barbería Premium</span>
-        <h1>Tu estilo perfecto comienza aquí</h1>
+        <h1 class="display-3 fw-bold lh-1 ">Tu <span class="text-primary">estilo</span> perfecto comienza aquí</h1>
         <p>Reserva tu turno, conoce nuestros servicios y mantente impecable con los mejores barberos de la ciudad.</p>
-        <div class="hero-actions">
-          
-          <a routerLink="/servicios" class="btn btn-secondary">VER SERVICIOS</a>
-          <a routerLink="/reservar" class="btn btn-primary">RESERVAR</a>
+        <div class="hero-actions  gap-3 ">
+          <a routerLink="/servicios" class="btn btn-lg btn-secondary rounded-pill ">VER SERVICIOS</a>
+          <a routerLink="/reservar" class="btn btn-lg btn-primary rounded-pill ">RESERVAR</a>
         </div>
       </div>
+      <div>
 
-      <div class="hero-cards">
-        <article class="hero-card">
-          <h2>Reserva rápido</h2>
-          <p>Selecciona tu servicio, fecha y hora en pocos pasos.</p>
-        </article>
-        <article class="hero-card">
-          <h2>Estilo profesional</h2>
-          <p>Cortes, afeitados y diseños con barberos expertos.</p>
-        </article>
       </div>
+      
     </section>
 
     <section class="services" id="servicios">
@@ -44,5 +161,7 @@
     </section>
   </main>
 
-  <router-outlet></router-outlet>
+  
 </div>
+
+-->
