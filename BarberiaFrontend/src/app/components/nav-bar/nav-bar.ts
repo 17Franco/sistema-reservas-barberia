@@ -29,8 +29,9 @@ export class NavBar implements OnInit {
   modo: string = "Home";
   dropdown: boolean = false;
   mostrarIniciales = false;
-
+  
   ngOnInit(): void {
+     
     this.authService.me().subscribe({
       next: (respuesta) => {
         const usuario = respuesta as UsuarioSesion;
