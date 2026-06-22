@@ -1,0 +1,7 @@
+.btn-hover-grow {
+    transition: transform 0.2s ease;
+}
+
+.btn-hover-grow:hover {
+    transform: scale(1.05);
+}
