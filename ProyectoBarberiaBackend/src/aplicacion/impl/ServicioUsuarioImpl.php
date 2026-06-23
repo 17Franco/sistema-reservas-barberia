@@ -176,6 +176,28 @@ use Exception;
             }
             return false;
         }
+
+        public function listarServiciosEmpleado(int $idEmpleado): array {
+            if (!$this->repo->existeEmpleado($idEmpleado)) {
+                throw new Exception("El barbero no existe", 404);
+            }
+
+            return $this->repo->listarServiciosEmpleado($idEmpleado);
+        }
+
+        public function actualizarServiciosEmpleado(int $idEmpleado, array $servicios): bool {
+            if (!$this->repo->existeEmpleado($idEmpleado)) {
+                throw new Exception("El barbero no existe", 404);
+            }
+
+            foreach ($servicios as $idServicio) {
+                if (!is_numeric($idServicio) || (int)$idServicio <= 0) {
+                    throw new Exception("Lista de servicios inválida", 400);
+                }
+            }
+
+            return $this->repo->actualizarServiciosEmpleado($idEmpleado, array_map('intval', $servicios));
+        }
     }
 
 

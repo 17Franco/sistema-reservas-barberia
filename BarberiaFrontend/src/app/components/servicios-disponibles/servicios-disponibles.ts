@@ -13,6 +13,7 @@ export class ServiciosDisponibles {
   constructor(private disponibilidad: Disponibilidad) {}
 
   startIndex = 0;
+  readonly pageSize = 3;
 
   servicios = signal<Servicio[]>([]);
 
@@ -26,6 +27,7 @@ export class ServiciosDisponibles {
 
   ngOnChanges() {
     this.ServicioSeleccionado=null;
+    this.startIndex = 0;
     if (this.dia?.fecha) {
     console.log(this.dia.fecha);
     this.disponibilidad.disponibilidadServicioDia(this.dia.fecha).subscribe({
@@ -42,17 +44,25 @@ export class ServiciosDisponibles {
   }
 
   serviciosVisbles() {
-   return this.servicios().slice(this.startIndex, this.startIndex + 3);
+   return this.servicios().slice(this.startIndex, this.startIndex + this.pageSize);
   }
    next() {
-    if (this.startIndex + 3 < this.servicios().length) {
-      this.startIndex++;
+    if (this.startIndex + this.pageSize < this.servicios().length) {
+      this.startIndex += this.pageSize;
     }
   }
   prev() {
     if (this.startIndex > 0) {
-      this.startIndex--;
+      this.startIndex = Math.max(0, this.startIndex - this.pageSize);
     }
+  }
+
+  paginaActual(): number {
+    return Math.floor(this.startIndex / this.pageSize) + 1;
+  }
+
+  totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.servicios().length / this.pageSize));
   }
 
   seleccionarServicio(servicio: Servicio) {

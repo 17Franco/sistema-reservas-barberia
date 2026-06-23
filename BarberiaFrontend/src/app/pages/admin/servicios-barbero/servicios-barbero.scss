@@ -1,0 +1,37 @@
+.barber-services-page { min-height: 100vh; padding: 32px; color: #241711; background: linear-gradient(135deg, #f8f3ed, #eee2d5); }
+.hero { display: flex; justify-content: space-between; align-items: center; padding: 38px; margin-bottom: 26px; color: #fff; border-radius: 28px; background: linear-gradient(135deg, #1d1612, #633721); box-shadow: 0 20px 45px #4c2b1c30;
+  small { color: #e5b971; font-weight: 800; letter-spacing: .14em; } h1 { margin: 8px 0; font-size: clamp(2.1rem, 4vw, 3.6rem); } p { margin: 0; opacity: .75; }
+  strong { min-width: 150px; padding: 22px; text-align: center; font-size: 3rem; border: 1px solid #ffffff22; border-radius: 20px; background: #ffffff0e; } strong span { display: block; font-size: .85rem; }
+}
+.layout { display: grid; grid-template-columns: minmax(340px, 360px) minmax(0, 1fr); gap: 22px; align-items: start; }
+.panel { padding: 24px; border-radius: 24px; background: #fffcf9; box-shadow: 0 14px 35px #4c2b1c18; }
+.panel-heading small, .selected-barber small { color: #ad6335; font-weight: 800; letter-spacing: .12em; }
+.panel-heading h2, .selected-barber h2 { margin: 6px 0 0; }
+.barber-panel { position: sticky; top: 95px; min-width: 0; }
+.search-input { width: 100%; margin: 18px 0; padding: 12px 14px; border: 1px solid #6b3c221f; border-radius: 14px; color: #241711; background: #faf7f3; outline: none;
+  &:focus { border-color: #ad6335; box-shadow: 0 0 0 3px #ad633522; }
+}
+.barber-list { display: grid; gap: 12px; max-height: 620px; overflow-y: auto; overflow-x: hidden; padding-right: 4px; }
+.barber-card { display: grid; grid-template-columns: 50px minmax(0, 1fr) 28px; align-items: center; gap: 12px; width: 100%; min-width: 0; padding: 12px; text-align: left; border: 1px solid #6b3c2215; border-radius: 18px; background: #faf7f3; transition: .2s; cursor: pointer;
+  img { width: 50px; height: 50px; border-radius: 14px; object-fit: cover; background: #eee; } span { min-width: 0; } b { display: block; overflow: hidden; color: #241711; text-overflow: ellipsis; white-space: nowrap; } small { display: block; overflow: hidden; margin-top: 3px; color: #786b64; text-overflow: ellipsis; white-space: nowrap; } strong { min-width: 28px; height: 28px; display: grid; place-items: center; color: #874822; border-radius: 99px; background: #f4e4d7; }
+  &:hover, &.selected { border-color: #ad633566; transform: translateY(-1px); box-shadow: 0 10px 24px #4c2b1c14; } &.selected { background: #fff7ed; } &.inactive { opacity: .58; }
+}
+.selected-barber { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid #6b3c2215;
+  img { width: 72px; height: 72px; border-radius: 20px; object-fit: cover; background: #eee; } p { margin: 6px 0 0; color: #874822; font-weight: 700; } b { padding: 6px 10px; color: #08734f; font-size: .72rem; border-radius: 99px; background: #d9f8e9; &.off { color: #9f1239; background: #ffe4e6; } }
+}
+.summary { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 0;
+  span { padding: 7px 11px; color: #874822; font-size: .82rem; font-weight: 800; border-radius: 99px; background: #f4e4d7; } .muted { color: #786b64; background: #eee7e1; }
+}
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.service-card { display: flex; justify-content: space-between; gap: 14px; min-height: 150px; padding: 18px; border: 1px solid #6b3c2215; border-radius: 20px; background: #faf7f3; transition: .2s; cursor: pointer;
+  h3 { margin: 0 0 8px; font-size: 1.05rem; } p { margin: 0 0 12px; color: #786b64; line-height: 1.35; } small { color: #874822; font-weight: 800; } &:hover { transform: translateY(-2px); box-shadow: 0 10px 25px #4c2b1c16; } &.enabled { border-color: #ad633566; background: #fff7ed; }
+  button { flex: 0 0 auto; width: 48px; height: 28px; padding: 3px; border: 0; border-radius: 99px; background: #ddd3ca; cursor: pointer; transition: .2s; span { display: block; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px #24171126; transition: .2s; } }
+  &.enabled button { background: #ad6335; } &.enabled button span { transform: translateX(20px); }
+}
+.actions-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 22px; padding-top: 18px; border-top: 1px solid #6b3c2215;
+  p { margin: 0; color: #786b64; font-weight: 700; } button { padding: 11px 18px; color: #fff; border: 0; border-radius: 99px; background: #ad6335; font-weight: 800; &:disabled { color: #8a7a70; background: #eee7e1; cursor: not-allowed; } }
+}
+.empty, .empty-state { padding: 28px; text-align: center; color: #786b64; }
+.empty-state h2 { color: #241711; }
+@media (max-width: 980px) { .layout { grid-template-columns: 1fr; } .barber-panel { position: static; } }
+@media (max-width: 650px) { .barber-services-page { padding: 16px; } .hero { padding: 25px; } .hero strong { display: none; } .selected-barber { grid-template-columns: 58px 1fr; } .selected-barber b { grid-column: 1 / -1; width: max-content; } .actions-row { align-items: stretch; flex-direction: column; } }
