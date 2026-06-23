@@ -48,8 +48,9 @@ interface FormularioPerfil {
 })
 export class PerfilBarbero implements OnInit{
   // Dependencias y configuración
+  
   private readonly backendPublicUrl =
-    'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public';
+    'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public'; 
   private readonly cd = inject(ChangeDetectorRef);
   private readonly auth = inject(Auth);
 

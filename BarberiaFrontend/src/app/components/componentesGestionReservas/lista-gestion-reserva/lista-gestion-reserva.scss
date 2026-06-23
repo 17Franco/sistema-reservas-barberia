@@ -1,0 +1,52 @@
+.avatar {
+    min-width: 45px;
+    height: 45px;
+    object-fit: cover;
+}
+
+.estado-confirmada {
+  background-color: #d1e7dd; /* verde suave */
+  color: #2D8B51 !important;
+}
+
+.estado-cancelada {
+  background-color: #f8d7da; /* rojo suave */
+  color: #842029 !important;
+}
+
+.estado-pendiente {
+  background-color: #fff3cd; /* amarillo suave */
+  color: #C96B0F !important;
+}
+
+
+.badge-estado {
+    font-size: 0.72rem !important; 
+    padding: 0.25rem 0.6rem !important; 
+    letter-spacing: 0.5px; 
+}
+
+.badge-estado i {
+    font-size: 0.7rem;
+}
+
+
+.col-botones-reserva {
+    min-width: 140px;
+}
+
+.badge-cantidad {
+    font-size: 0.85rem !important; 
+    padding: 0.30rem 0.8rem !important; 
+    letter-spacing: 0.7px; 
+    background-color: #EBDCD2;
+    color: #613523;
+}
+
+.iconos{
+    font-size: 1.5rem;
+}
+
+.info-Cliente i{
+    font-size: 0.8rem;
+}

@@ -1,1 +1,130 @@
-<p>lista-gestion-reserva works!</p>
+<div class="container-fluid bg-white p-4 rounded-4">
+    <!--bloque de reserva por fecha-->
+    @for (dia of reservasVisibles; track dia.fecha) {
+    <div class="mb-4 bg-light p-3 rounded-3">
+        <div class="d-flex justify-content-between align-items-center gap-3 mt-3 mb-2">
+            <h5 class="fw-bold ">
+                <i class="bi bi-calendar-event me-2"></i>
+                {{ dia.fecha }}
+                <span class=" rounded-pill badge-cantidad ms-2">{{ dia.cantidadReservas }} reservas</span>
+            </h5>
+            @if(obtenerTotalPaginas(dia) > 1){
+                <div class="">
+                    <button
+                    class="btn btn-outline-primary btn-sm"
+                    type="button"
+                    [disabled]="paginasPorFecha[dia.fecha] === 1"
+                    (click)="paginasPorFecha[dia.fecha] = paginasPorFecha[dia.fecha] - 1">
+                    Anterior
+                    </button>
+
+                    <span>
+                    Página {{ paginasPorFecha[dia.fecha] }} de {{ obtenerTotalPaginas(dia) }}
+                    </span>
+
+                    <button
+                    class="btn btn-outline-primary btn-sm"
+                    type="button"
+                    [disabled]="paginasPorFecha[dia.fecha]=== obtenerTotalPaginas(dia)"
+                    (click)="paginasPorFecha[dia.fecha] = paginasPorFecha[dia.fecha] + 1">
+                    Siguiente
+                    </button>
+                </div>
+            }
+        </div>
+        <!--bloque de info de cada reserva-->
+        
+        @for(reserva of obtenerReservasPagina(dia); track reserva.idReserva){
+            <div class="card shadow-sm mb-3 ">
+                <div class="card-body row align-items-center ">
+                    <div class="col-2 d-flex align-items-center gap-3 ">
+                        <div class="iconos">
+                            <img class="img-fluid rounded-circle avatar" [src]="reserva.cliente.imagen" alt="">
+                        </div>
+                        <div class="info-Cliente">
+                             <p class="mb-1 fw-bold">{{ reserva.cliente.nombre }}</p>
+                             <p class="mb-1"><i class="bi bi-telephone-fill"></i> {{ reserva.cliente.telefono }}</p>
+                             <p class="mb-0">{{ reserva.cliente.email }}</p>     
+                        </div> 
+                    </div>
+                    <div class="col-2 d-flex align-items-center gap-3">
+                        <div class="iconos">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="">
+                             <p class="mb-1">Barbero</p>
+                             <p class="mb-1 fw-bold">{{ reserva.empleado.nombre }}</p>  
+                        </div> 
+                    </div>
+                    <div class="col-3 d-flex align-items-center gap-3">
+                        <div class="iconos">
+                             <i class="bi bi-scissors"></i>
+                        </div>
+                        <div class="">
+                             <p class="mb-1">Servicio</p>
+                             <p class="mb-1 fw-bold">{{ reserva.servicio.nombre}}</p>  
+                        </div> 
+                        
+                    </div>
+                    <div class="col-2 d-flex align-items-center gap-3   ">
+                        <div class="iconos">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div class="">
+                            <div><p class="mb-0 fw-bold">{{ reserva.horaInicio }} - {{reserva.horaFin}}</p></div>
+                            <div><p class="mb-0">Duracion: {{reserva.duracion}} min</p></div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="col-1 d-flex align-items-center">
+                        <div class="badge-estado d-inline-flex align-items-center gap-1 rounded-pill text-nowrap fw-bold shadow-sm" [ngClass]="getEstadoClass(reserva.estado)">
+                            @if(reserva.estado === 'PENDIENTE'){
+                                <i class="bi bi-clock-fill"></i>
+                            }
+                            @if(reserva.estado === 'CONFIRMADA'){
+                                <i class="bi bi-check-circle-fill"></i>
+                            }
+                            @if(reserva.estado === 'CANCELADA'){
+                                <i class="bi bi-x-circle-fill"></i>
+                            }
+                            <span>{{ reserva.estado }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-2 d-flex flex-column align-items-end gap-2">
+                        <button class="btn btn-primary w-75 text-nowrap fw-bold" [class.d-none]="reserva.estado !== 'PENDIENTE'">Confirmar</button>
+                        <button class="btn btn-primary bg-white text-primary w-75 text-nowrap fw-bold" [class.d-none]="reserva.estado !== 'CONFIRMADA'">Completar</button>
+                        <button class="btn btn-danger bg-white text-danger w-75 text-nowrap fw-bold" [class.d-none]="reserva.estado !== 'PENDIENTE'">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        }
+        
+       
+    </div>
+    }
+    @if(totalPaginasDias > 1){
+          <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              type="button"
+              [disabled]="paginaDias === 1"
+              (click)="paginaDias = paginaDias - 1">
+              Anterior
+            </button>
+
+            <span>
+              Página {{ paginaDias }} de {{ totalPaginasDias }}
+            </span>
+
+            <button
+              class="btn btn-outline-primary btn-sm"
+              type="button"
+              [disabled]="paginaDias === totalPaginasDias"
+              (click)="paginaDias = paginaDias + 1">
+              Siguiente
+            </button>
+          </div>
+        }
+</div>

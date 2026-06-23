@@ -1,73 +1,73 @@
-<div class="conteiner bg-white rounded-4 pb-5 ps-5 pe-5 pt-4 d-flex flex-column gap-4">
-    <!--titulo-->
-    <div>
+<div class="conteiner bg-white rounded-4 pb-4 ps-4 pe-4 pt-4 d-flex flex-row flex-xxl-column flex-wrap gap-3 align-items-end align-items-xxl-stretch">
+    
+    <div class="w-100 mb-2">
         <span class="text-primary fs-5 fw-bold ">FILTROS</span>
     </div>
-    <!--filtro barbero-->
-    <div class="d-flex flex-column gap-2">
+
+    <div class="d-flex flex-column gap-2 flex-grow-1 w-xxl-100">
         <div>
             <label for="empleado" class="fw-bold">Barbero</label>
         </div>
         <div>
-            <select id="empleado" class="form-select p-2" name="barbero" [(ngModel)]="filtros.empleado" (change)="cambio()" >
+            <select id="empleado" class="form-select p-2" name="barbero" [(ngModel)]="filtros.empleado" (change)="cambio()">
                 <option [ngValue]="null">Todos los barberos</option>
-                @for (barbero of barberos; track barbero.id) { <option [ngValue]="barbero.id">{{ barbero.nombre }}</option> }
+                @for (barbero of barberos(); track barbero.id) { <option [ngValue]="barbero.id">{{ barbero.nombre }}</option> }
             </select>
         </div>
     </div>
-    <!-- filtro servicio-->
-    <div class="d-flex flex-column gap-2">
+
+    <div class="d-flex flex-column gap-2 flex-grow-1 w-xxl-100">
         <div>
             <label for="servicio" class="fw-bold">Servicio</label>
         </div>
         <div>
-            <select id="servicio" class="form-select p-2" name="especialidad" [(ngModel)]="filtros.servicio" (change)="cambio()" >
+            <select id="servicio" class="form-select p-2" name="especialidad" [(ngModel)]="filtros.servicio" (change)="cambio()">
                 <option [ngValue]="null">Todos los Servicios</option>
-                @for (servicio of servicios; track servicio.idServicio) { <option [ngValue]="servicio.idServicio">{{ servicio.nombre }}</option> }
+                @for (servicio of servicios(); track servicio.idServicio) { <option [ngValue]="servicio.idServicio">{{ servicio.nombre }}</option> }
             </select>
         </div>
     </div>
-    <!-- Filtro estado-->
-    <div class="d-flex flex-column gap-2">
+
+    <div class="d-flex flex-column gap-2 flex-grow-1 w-xxl-100">
         <div>
             <label for="estado" class="fw-bold">Estados</label>
         </div>
         <div>
-            <select id="estado" class="form-select p-2" name="estado" [(ngModel)]="filtros.estado" (change)="cambio()" >
+            <select id="estado" class="form-select p-2" name="estado" [(ngModel)]="filtros.estado" (change)="cambio()">
                 <option [ngValue]="null">Todos los Estados</option>
                 @for (estado of estados; track estado.nombre) { <option [ngValue]="estado.nombre">{{ estado.nombre }}</option> }
             </select>
         </div>
     </div>
-    <!--filtro fecha-->
-    <div class="d-flex flex-column gap-4">
-        <!--desde-->
-        <div class="d-flex flex-column gap-2">
-            <div>
-                <label for="estado" class="fw-bold" >Fecha Desde</label>
-            </div>
-            <div>
-                <input type="date" class="form-control p-2">
-            </div>
+
+    <div class="d-flex flex-column gap-2 flex-grow-1 w-xxl-100">
+        <div>
+            <label for="fechaDesde" class="fw-bold">Fecha Desde</label>
         </div>
-        <!--hasta-->
-        <div class="d-flex flex-column gap-2">
-            <div>
-                <label for="estado" class="fw-bold">Fecha Hasta</label>
-            </div>
-            <div>
-                <input type="date" class="form-control p-2">
-            </div>
+        <div>
+            <input type="date" id="fechaDesde" class="form-control p-2" [(ngModel)]="filtros.fechaDesde">
+        </div>
+    </div>
+
+    <div class="d-flex flex-column gap-2 flex-grow-1 w-xxl-100">
+        <div>
+            <label for="fechaHasta" class="fw-bold">Fecha Hasta</label>
+        </div>
+        <div>
+            <input type="date" id="fechaHasta" class="form-control p-2" [(ngModel)]="filtros.fechaHasta">
         </div>
     </div>
     
-    <!--botones-->
-    <div class="d-flex flex-column gap-2 mt-3">
-        <div>
-            <button class="btn bg-dark rounded-2 text-white col-12 fw-bold pt-2 pb-2 btn-hover-grow"><i class="bi bi-funnel ml-"></i>Filtrar</button>
+    <div class="d-flex flex-row gap-2 flex-grow-1 w-xxl-100 mt-xxl-3">
+        <div class="flex-grow-1">
+            <button class="btn bg-dark rounded-2 text-white col-12 fw-bold pt-2 pb-2 text-nowrap btn-hover-grow">
+                <i class="bi bi-funnel"></i> Filtrar
+            </button>
         </div>
-        <div>
-            <button class="btn bg-white border border-danger rounded-2 text-danger col-12 fw-bold pt-2 pb-2 btn-hover-grow "><i class="bi bi-arrow-clockwise"></i>Limpiar filtros</button>
+        <div class="flex-grow-1">
+            <button class="btn bg-white border border-danger rounded-2 text-danger col-12 fw-bold pt-2 pb-2 text-nowrap btn-hover-grow" (click)="limpiar()">
+                <i class="bi bi-arrow-clockwise"></i> Limpiar
+            </button>
         </div>
     </div>
 </div>

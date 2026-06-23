@@ -1,5 +1,7 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,inject,OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ServiciosService } from '../../../services/servicios/servicio';
+import { Auth } from '../../../services/auth';
 interface Barbero {
   id?: number;
   ci: string;
@@ -23,6 +25,8 @@ export interface Servicio {
   precio: number;
 } 
 
+
+
 @Component({
   selector: 'app-menu-filtros-gestion-reservas',
   imports: [FormsModule],
@@ -33,9 +37,17 @@ export interface Servicio {
 
 
 export class MenuFiltrosGestionReservas {
+  private serviciosService = inject(ServiciosService);
+  private authSer = inject(Auth);
+  cargando = false;
+  error: string | null = null;
+  mensaje: string | null = null;
 
-  barberos: Barbero[] = [];
-  servicios: Servicio[] = [];
+  servicios = signal<Servicio[]>([]);
+  //servicios: Servicio[] = [];
+  barberos = signal<Barbero[]>([]);
+
+
   estados = [
     { nombre: 'Pendiente' },
     { nombre: 'Confirmada' },
@@ -52,48 +64,60 @@ export class MenuFiltrosGestionReservas {
   };
 
   ngOnInit(){
-    
-      this.servicios = [
-    {
-      idServicio: 1,
-      nombre: 'Corte clásico',
-      descripcion: 'Corte tradicional con tijera y máquina',
-      duracion: 30,
-      precio: 500
-    },
-    {
-      idServicio: 2,
-      nombre: 'Degradado',
-      descripcion: 'Corte con fade bajo, medio o alto',
-      duracion: 45,
-      precio: 700
-    },
-    {
-      idServicio: 3,
-      nombre: 'Arreglo de barba',
-      descripcion: 'Perfilado y arreglo completo de barba',
-      duracion: 20,
-      precio: 350
-    },
-    {
-      idServicio: 4,
-      nombre: 'Corte + barba',
-      descripcion: 'Servicio completo de corte y barba',
-      duracion: 60,
-      precio: 900
-    },
-    {
-      idServicio: 5,
-      nombre: 'Tratamiento capilar',
-      descripcion: 'Lavado, hidratación y cuidado del cabello',
-      duracion: 40,
-      precio: 800
-    }
-  ];
+     this.cargarServicios();
+     this.cargarBarberos();
+     this.cargarReservas();
+  }
+  cargarReservas(){
     
   }
+  cargarBarberos(){
+    this.error = null;
+    this.authSer.getBarberos().subscribe({
+      next: (res)=>{
+        this.barberos.set(res.empleados || res);
+      },
+      error: (err)=>{
+        console.error(err);
+        this.error = 'No se pudieron cargar los Barberos.';
+      }
+    })
+  }
+  cargarServicios() {
+    //this.cargando = true;
+    //this.error = null;
 
+    this.serviciosService.getServicios().subscribe({
+      next: (res) => {
+        this.servicios.set(res.servicios || res);
+        //this.cargando = false;
+        
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'No se pudieron cargar los servicios.';
+        //this.cargando = false;
+      }
+    });
+  }
   cambio() {
-      console.log('Servicio seleccionado:', this.filtros.servicio);
+      /*console.log('Servicio seleccionado:', this.filtros.servicio);
+      console.log('Servicio seleccionado:', this.filtros.empleado);
+      console.log('Servicio seleccionado:', this.filtros.estado);
+      console.log('Servicio seleccionado:', this.filtros.fechaDesde);
+      console.log('Servicio seleccionado:', this.filtros.fechaHasta);*/
     }
+
+    limpiar(){
+      this.filtros = {
+          servicio: null,
+          estado: null,
+          empleado: null,
+          fechaDesde: null,
+          fechaHasta: null
+        };
+
+     // this.cargarDatos(); // o tu función que vuelve a listar sin filtros
+    }
+    
 }
