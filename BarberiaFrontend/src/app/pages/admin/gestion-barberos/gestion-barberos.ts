@@ -86,9 +86,18 @@ export class GestionBarberos implements OnInit {
       : this.auth.crearBarbero(this.form);
 
     peticion.subscribe({
-      next: () => {
+      next: async () => {
         this.mensaje = this.idEditando ? 'Barbero actualizado.' : 'Barbero agregado.';
-        this.cancelar();
+        if (!this.idEditando) {
+          await Swal.fire({
+            title: 'Barbero agregado',
+            text: `${this.form.nombre} ${this.form.apellido} ya forma parte del equipo.`,
+            icon: 'success',
+            confirmButtonColor: '#ad6335',
+            confirmButtonText: 'Aceptar',
+          });
+        }
+        this.cancelar(formulario);
         this.cargar();
       },
       error: err => {
@@ -139,10 +148,12 @@ export class GestionBarberos implements OnInit {
     }
   }
 
-  cancelar(): void {
+  cancelar(formulario?: NgForm): void {
     this.idEditando = null;
-    this.form = this.vacio();
-    this.form.idEspecialidad = this.servicios[0]?.idServicio || 0;
+    const formVacio = this.vacio();
+    formVacio.idEspecialidad = this.servicios[0]?.idServicio || 0;
+    this.form = formVacio;
+    formulario?.resetForm(formVacio);
   }
 
   private vacio(): Barbero {
