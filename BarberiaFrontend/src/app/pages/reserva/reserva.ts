@@ -32,6 +32,13 @@ export class Reserva {
   reset = false;
 
   resetPantalla() {
+    this.reservaIniciada = false;
+    this.servicioInicido = false;
+    this.HorarioInicido = false;
+    this.diaSeleccionado = null;
+    this.ServicioSeleccionado = null;
+    this.EmpleadoSeleccionado = null;
+    this.horarioSeleccionado = null;
     this.reset = !this.reset;
   }
 

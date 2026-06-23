@@ -1,1 +1,101 @@
-<p>servicios-barbero works!</p>
+<section class="barber-services-page">
+  <header class="hero">
+    <div>
+      <small>Panel administrativo</small>
+      <h1>Servicios por barbero</h1>
+      <p>Asigná los servicios que cada barbero está autorizado a realizar.</p>
+    </div>
+    <strong>{{ serviciosAsignados().length }}<span>Asignados</span></strong>
+  </header>
+
+  <div class="layout">
+    <aside class="panel barber-panel">
+      <div class="panel-heading">
+        <small>BARBEROS</small>
+        <h2>Equipo</h2>
+      </div>
+
+      <input
+        class="search-input"
+        type="search"
+        name="filtroBarbero"
+        [(ngModel)]="filtroBarbero"
+        placeholder="Buscar barbero"
+      >
+
+      <div class="barber-list">
+        @for (barbero of barberosFiltrados; track barbero.id) {
+          <button
+            type="button"
+            class="barber-card"
+            [class.selected]="barbero.id === idBarberoSeleccionado"
+            [class.inactive]="barbero.estado === 'INACTIVO'"
+            (click)="seleccionarBarbero(barbero)"
+          >
+            <img [src]="'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
+            <span>
+              <b>{{ barbero.nombre }} {{ barbero.apellido }}</b>
+              <small>{{ barbero.email }}</small>
+            </span>
+            <strong>{{ asignaciones[barbero.id || 0]?.length || 0 }}</strong>
+          </button>
+        } @empty {
+          <p class="empty">No hay barberos para mostrar.</p>
+        }
+      </div>
+    </aside>
+
+    <section class="panel assignment-panel">
+      @if (barberoSeleccionado) {
+        <div class="selected-barber">
+          <img [src]="'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + (barberoSeleccionado.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barberoSeleccionado.nombre">
+          <div>
+            <small>BARBERO SELECCIONADO</small>
+            <h2>{{ barberoSeleccionado.nombre }} {{ barberoSeleccionado.apellido }}</h2>
+            <p>{{ barberoSeleccionado.especialidad || 'Sin especialidad principal' }}</p>
+          </div>
+          <b [class.off]="barberoSeleccionado.estado === 'INACTIVO'">{{ barberoSeleccionado.estado }}</b>
+        </div>
+
+        <div class="summary">
+          @for (servicio of serviciosAsignados(); track servicio.idServicio) {
+            <span>{{ servicio.nombre }}</span>
+          } @empty {
+            <span class="muted">Sin servicios habilitados</span>
+          }
+        </div>
+
+        <div class="services-grid">
+          @for (servicio of servicios; track servicio.idServicio) {
+            <article class="service-card" [class.enabled]="estaAsignado(servicio)" (click)="alternarServicio(servicio)">
+              <div>
+                <h3>{{ servicio.nombre }}</h3>
+                <p>{{ servicio.descripcion }}</p>
+                <small>{{ servicio.duracion }} min · ${{ servicio.precio }}</small>
+              </div>
+              <button type="button" [attr.aria-label]="estaAsignado(servicio) ? 'Desvincular servicio' : 'Vincular servicio'">
+                <span></span>
+              </button>
+            </article>
+          } @empty {
+            <p class="empty">No hay servicios cargados.</p>
+          }
+        </div>
+
+        <footer class="actions-row">
+          <p>{{ cambiosPendientes ? 'Hay cambios sin guardar.' : 'Sin cambios pendientes.' }}</p>
+          <button type="button" [disabled]="!cambiosPendientes" (click)="guardarCambios()">Guardar cambios</button>
+        </footer>
+      } @else {
+        <div class="empty-state">
+          <h2>Seleccioná un barbero</h2>
+          <p>Cuando haya un barbero seleccionado vas a ver sus servicios habilitados.</p>
+        </div>
+      }
+
+      @if (error) {
+        <div class="alert alert-danger py-2">{{ error }}</div>
+      }
+    </section>
+  </div>
+</section>

@@ -2,8 +2,13 @@
 
     <div class="row ">
         <div class="col-8   p-4">
+            <div class="d-flex justify-content-end mb-3">
+                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="resetPantalla()">
+                    Limpiar selección
+                </button>
+            </div>
             <div class="opciones mb-4">
-                <app-calendario (diaSeleccionadoChange)="onDia($event)" ></app-calendario>
+                <app-calendario [reset]="reset" (diaSeleccionadoChange)="onDia($event)" ></app-calendario>
             </div>
             <div class="opciones mb-4">
                 @if(reservaIniciada){

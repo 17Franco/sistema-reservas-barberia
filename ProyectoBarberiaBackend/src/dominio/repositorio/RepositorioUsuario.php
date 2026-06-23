@@ -42,6 +42,10 @@
 
         public function cambiarEstadoEmpleado(string $ci, string $nuevoEstado): bool;
 
+        public function listarServiciosEmpleado(int $idEmpleado): array;
+
+        public function actualizarServiciosEmpleado(int $idEmpleado, array $servicios): bool;
+
           
     }
 ?>

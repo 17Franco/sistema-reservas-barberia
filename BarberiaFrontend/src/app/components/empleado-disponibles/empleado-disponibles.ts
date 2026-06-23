@@ -16,12 +16,14 @@ export class EmpleadoDisponibles {
 
   constructor(private disponibilidad: Disponibilidad) {}
   startIndex = 0;
+  readonly pageSize = 4;
   empleado = signal<EmpleadoD[]>([]);
   @Output() EmpleadoSeleccionadoChange= new EventEmitter<EmpleadoD>();
   EmpleadoSeleccionado: number| null = null;
 
    ngOnChanges() {
     this.EmpleadoSeleccionado=null;
+    this.startIndex = 0;
     if (this.dia?.fecha && this.servicio?.idServicio) {
     console.log(this.dia.fecha && this.servicio.idServicio);
     this.disponibilidad.disponibilidadEmpleadoDia(this.dia.fecha,this.servicio.idServicio).subscribe({
@@ -38,17 +40,25 @@ export class EmpleadoDisponibles {
   }
 
   empleadoVisbles() {
-   return this.empleado().slice(this.startIndex, this.startIndex + 4);
+   return this.empleado().slice(this.startIndex, this.startIndex + this.pageSize);
   }
    next() {
-    if (this.startIndex + 4 < this.empleado().length) {
-      this.startIndex++;
+    if (this.startIndex + this.pageSize < this.empleado().length) {
+      this.startIndex += this.pageSize;
     }
   }
   prev() {
     if (this.startIndex > 0) {
-      this.startIndex--;
+      this.startIndex = Math.max(0, this.startIndex - this.pageSize);
     }
+  }
+
+  paginaActual(): number {
+    return Math.floor(this.startIndex / this.pageSize) + 1;
+  }
+
+  totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.empleado().length / this.pageSize));
   }
 
   seleccionarEmpleado(empleado: EmpleadoD) {

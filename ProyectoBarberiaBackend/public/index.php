@@ -98,6 +98,18 @@ try {
         exit;
     }
 
+    if (preg_match('#^/empleados/(\d+)/servicios$#', $route, $matches)) {
+        if ($method === 'GET') {
+            UsuarioController::listarServiciosEmpleado($service, (int)$matches[1]);
+            exit;
+        }
+
+        if ($method === 'PUT') {
+            UsuarioController::actualizarServiciosEmpleado($service, (int)$matches[1]);
+            exit;
+        }
+    }
+
     if ($method === 'PUT' && preg_match('#^/empleados/(\d+)$#', $route, $matches)) {
         UsuarioController::actualizarEmpleado($service, (int)$matches[1]);
         exit;

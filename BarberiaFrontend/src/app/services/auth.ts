@@ -101,6 +101,14 @@ export class Auth {
     return this.http.put<any>(`${this.apiUrl}/empleados/estado`, { ci, estado }, { withCredentials: true });
   }
 
+  getServiciosBarbero(id: number){
+    return this.http.get<any>(`${this.apiUrl}/empleados/${id}/servicios`, { withCredentials: true });
+  }
+
+  actualizarServiciosBarbero(id: number, servicios: number[]){
+    return this.http.put<any>(`${this.apiUrl}/empleados/${id}/servicios`, { servicios }, { withCredentials: true });
+  }
+
 
   editarPerfilUsuario(datos: FormData){
     return this.http.post<any>(

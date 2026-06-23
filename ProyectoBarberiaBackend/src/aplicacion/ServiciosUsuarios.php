@@ -29,6 +29,10 @@
 
         public function validarEmail(string $email):bool;
         public function validarCi(string $ci):bool;
+
+        public function listarServiciosEmpleado(int $idEmpleado): array;
+
+        public function actualizarServiciosEmpleado(int $idEmpleado, array $servicios): bool;
     }
         
 ?>

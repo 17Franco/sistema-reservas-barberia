@@ -16,7 +16,7 @@ export class Calendario implements OnInit {
   //variable donde guardo  el dia que selecciona el usuario que emito al padre (reserva)
   @Output() diaSeleccionadoChange= new EventEmitter<Dia>();
 
-  //@Input() reset: boolean | null = null;
+  @Input() reset: boolean | null = null;
 
   //variable donde guardo los dias que traigo de la bd
   dias = signal<Dia[]>([]);
@@ -40,6 +40,11 @@ export class Calendario implements OnInit {
         console.error('Error al traer los turnos', err);
       }
     })
+  }
+
+  ngOnChanges(): void {
+    this.diaSeleccionado = null;
+    this.startIndex = 0;
   }
 
   //mue devuelve 7 dias visibles (acorto el array)

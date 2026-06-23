@@ -14,6 +14,7 @@ export class HorarioDisponibles {
   @Output() HorarioSeleccionadoChange= new EventEmitter<Horario>();
   HorarioSeleccionado: string| null = null;
   startIndex = 0;
+  readonly pageSize = 7;
 
   @Input() dia: Dia | null = null;
   @Input() servicio: Servicio | null = null;
@@ -23,6 +24,7 @@ export class HorarioDisponibles {
 
   ngOnChanges() {
     this.HorarioSeleccionado=null;
+    this.startIndex = 0;
     if (this.dia?.fecha && this.servicio?.idServicio && this.empleado?.id) {
     console.log(this.dia.fecha);
     this.disponibilidad.disponibilidadHorario(this.dia.fecha,this.servicio.idServicio,this.empleado.id).subscribe({
@@ -40,17 +42,25 @@ export class HorarioDisponibles {
 
 
   horarioVisbles() {
-   return this.horarios().slice(this.startIndex, this.startIndex + 7);
+   return this.horarios().slice(this.startIndex, this.startIndex + this.pageSize);
   }
    next() {
-    if (this.startIndex + 7 < this.horarios().length) {
-      this.startIndex++;
+    if (this.startIndex + this.pageSize < this.horarios().length) {
+      this.startIndex += this.pageSize;
     }
   }
   prev() {
     if (this.startIndex > 0) {
-      this.startIndex--;
+      this.startIndex = Math.max(0, this.startIndex - this.pageSize);
     }
+  }
+
+  paginaActual(): number {
+    return Math.floor(this.startIndex / this.pageSize) + 1;
+  }
+
+  totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.horarios().length / this.pageSize));
   }
 
   seleccionarHorario(horario: Horario) {
