@@ -49,6 +49,12 @@ export class AdminDashboard {
       descripcion: 'Visualizar reservas realizadas y cambiar su estado.',
       boton: 'Ir a reservas',
       ruta: '/admin/reservas'
+    },
+    {
+      titulo: 'Gestionar servicios-barbero',
+      descripcion: 'Administrar los servicios asociados a los barberos.',
+      boton: 'Ir a servicios-barbero',
+      ruta: '/admin/servicios-barbero'
     }
   ];
 }

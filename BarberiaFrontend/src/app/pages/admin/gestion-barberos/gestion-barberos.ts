@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Auth } from '../../../services/auth';
 import { Servicio, ServiciosService } from '../../../services/servicios/servicio';
@@ -15,6 +15,10 @@ interface Barbero {
   password: string;
   email: string;
   celular: string;
+  horaIni: string;
+  horaFin: string;
+  horaDescansoIni: string;
+  horaDescansoFin: string;
   estado: 'ACTIVO' | 'INACTIVO';
   idEspecialidad: number;
   especialidad?: string;
@@ -32,12 +36,13 @@ export class GestionBarberos implements OnInit {
   private serviciosService = inject(ServiciosService);
   private cdr = inject(ChangeDetectorRef);
 
-  barberos: Barbero[] = [];
-  servicios: Servicio[] = [];
-  form: Barbero = this.vacio();
-  idEditando: number | null = null;
-  mensaje = '';
-  error = '';
+  public barberos: Barbero[] = [];
+  public servicios: Servicio[] = [];
+  public form: Barbero = this.vacio();
+  public idEditando: number | null = null;
+  public mensaje = '';
+  public error = '';
+  public fechaMaximaNacimiento = this.calcularFechaMaximaNacimiento();
 
   ngOnInit(): void {
     this.cargar();
@@ -58,11 +63,22 @@ export class GestionBarberos implements OnInit {
     });
   }
 
-  guardar(): void {
+  guardar(formulario: NgForm): void {
     this.error = '';
     this.mensaje = '';
+
+    if (formulario.invalid || (!this.idEditando && this.fechaNacimientoInvalida())) {
+      formulario.form.markAllAsTouched();
+      this.error = 'Completá los campos marcados para registrar el barbero.';
+      return;
+    }
+
     if (!this.idEditando && !/^\d{8}$/.test(this.form.ci)) {
       this.error = 'La cédula debe tener exactamente 8 números.';
+      return;
+    }
+    if (!this.idEditando && this.form.fechaNac > this.fechaMaximaNacimiento) {
+      this.error = 'El barbero debe tener al menos 18 años.';
       return;
     }
     const peticion = this.idEditando
@@ -70,12 +86,26 @@ export class GestionBarberos implements OnInit {
       : this.auth.crearBarbero(this.form);
 
     peticion.subscribe({
-      next: () => {
+      next: async () => {
         this.mensaje = this.idEditando ? 'Barbero actualizado.' : 'Barbero agregado.';
-        this.cancelar();
+        if (!this.idEditando) {
+          await Swal.fire({
+            title: 'Barbero agregado',
+            text: `${this.form.nombre} ${this.form.apellido} ya forma parte del equipo.`,
+            icon: 'success',
+            confirmButtonColor: '#ad6335',
+            confirmButtonText: 'Aceptar',
+          });
+        }
+        this.cancelar(formulario);
         this.cargar();
       },
-      error: err => this.error = err.error?.error || 'No se pudo guardar.'
+      error: err => {
+        const mensaje = err.error?.error || '';
+        this.error = mensaje.includes('cédula') || mensaje.includes('email')
+          ? 'La cédula o el email ya están registrados.'
+          : mensaje || 'No se pudo guardar.';
+      }
     });
   }
 
@@ -118,16 +148,70 @@ export class GestionBarberos implements OnInit {
     }
   }
 
-  cancelar(): void {
+  cancelar(formulario?: NgForm): void {
     this.idEditando = null;
-    this.form = this.vacio();
-    this.form.idEspecialidad = this.servicios[0]?.idServicio || 0;
+    const formVacio = this.vacio();
+    formVacio.idEspecialidad = this.servicios[0]?.idServicio || 0;
+    this.form = formVacio;
+    formulario?.resetForm(formVacio);
   }
 
   private vacio(): Barbero {
     return {
-      ci: '', nombre: '', apellido: '', fechaNac: '', password: '',
-      email: '', celular: '', estado: 'ACTIVO', idEspecialidad: 0
+      ci: '',
+      nombre: '',
+      apellido: '',
+      fechaNac: '',
+      password: '',
+      email: '',
+      celular: '',
+      estado: 'ACTIVO',
+      idEspecialidad: 0,
+      horaIni: '09:00',
+      horaFin: '17:00',
+      horaDescansoIni: '00:00',
+      horaDescansoFin: '00:00'
     };
   }
+
+  private calcularFechaMaximaNacimiento(): string {
+    const fecha = new Date();
+    fecha.setFullYear(fecha.getFullYear() - 18);
+    return fecha.toISOString().split('T')[0];
+  }
+
+  fechaNacimientoInvalida(): boolean {
+    if (!this.form.fechaNac) {
+      return true;
+    }
+
+    const fechaIngresada = new Date(`${this.form.fechaNac}T00:00:00`);
+    const hoy = new Date();
+    const fechaMayorEdad = new Date(`${this.fechaMaximaNacimiento}T00:00:00`);
+
+    hoy.setHours(0, 0, 0, 0);
+
+    return fechaIngresada > hoy || fechaIngresada > fechaMayorEdad;
+  }
+
+  mensajeErrorFecha(): string {
+  if (!this.form.fechaNac) {
+    return 'Ingresá la fecha de nacimiento.';
+  }
+  //Le pido la fecha al formulario
+  const fechaIngresada = new Date(this.form.fechaNac);
+  const hoy = new Date();   //saco la fecha de hoy
+  const fechaMayorEdad = new Date(this.fechaMaximaNacimiento);
+
+  if (fechaIngresada > hoy) {
+    return 'O viajaste en el tiempo o estás metiendo cualquier dato che.';
+  }
+
+  if (fechaIngresada > fechaMayorEdad) {
+    return 'El barbero debe tener al menos 18 años, acá no explotamos menores.';
+  }
+
+  return 'Ingresá una fecha válida dale.';
+}
+
 }

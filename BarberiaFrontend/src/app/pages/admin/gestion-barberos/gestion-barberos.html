@@ -5,20 +5,49 @@
   </header>
 
   <div class="layout">
-    <form class="panel barber-form" (ngSubmit)="guardar()">
+    <form #barberoForm="ngForm" class="panel barber-form" [class.submitted]="barberoForm.submitted" (ngSubmit)="guardar(barberoForm)">
       <small>{{ idEditando ? 'EDITAR BARBERO' : 'NUEVO BARBERO' }}</small>
       <h2>{{ idEditando ? 'Actualizar datos' : 'Agregar barbero' }}</h2>
+      <label class="specialty-heading">Datos personales</label>
       <input class="form-control" name="nombre" [(ngModel)]="form.nombre" placeholder="Nombre" required>
       <input class="form-control" name="apellido" [(ngModel)]="form.apellido" placeholder="Apellido" required>
 
       @if (!idEditando) {
-        <input class="form-control" name="ci" [(ngModel)]="form.ci" placeholder="Cédula (8 números)" inputmode="numeric" maxlength="8" pattern="[0-9]{8}" required>
-        <input class="form-control" type="date" name="fechaNac" [(ngModel)]="form.fechaNac" required>
+        <input #ci="ngModel" class="form-control" name="ci" [(ngModel)]="form.ci" placeholder="Cédula (8 números)" inputmode="numeric" maxlength="8" pattern="[0-9]{8}" required>
+        @if (ci.invalid && (ci.touched || barberoForm.submitted)) {
+          <small class="field-error">Debe ingresar 8 dígitos sin puntos ni guiones.</small>
+        }
+        <!--Fecha Nacimiento-->
+        <div class="date-field">
+          <span>Fecha nacimiento</span>
+          <input
+            #fechaNac="ngModel"
+            class="form-control"
+            [class.manual-invalid]="fechaNacimientoInvalida() && (fechaNac.touched || barberoForm.submitted)"
+            type="date"
+            name="fechaNac"
+            [(ngModel)]="form.fechaNac"
+            [max]="fechaMaximaNacimiento"
+            required
+          >
+        </div>
+
+        @if ((fechaNac.invalid || fechaNacimientoInvalida()) && (fechaNac.touched || barberoForm.submitted)) {
+          <small class="field-error">{{ mensajeErrorFecha() }}</small>
+        }
+        
         <input class="form-control" type="password" name="password" [(ngModel)]="form.password" placeholder="Contraseña" required>
       }
 
-      <input class="form-control" type="email" name="email" [(ngModel)]="form.email" placeholder="Email" required>
+      <input #email="ngModel" class="form-control" type="email" name="email" [(ngModel)]="form.email" placeholder="Email" required email>
+      @if (email.invalid && (email.touched || barberoForm.submitted)) {
+        <small class="field-error">Ingresá un email válido.</small>
+      }
       <input class="form-control" name="celular" [(ngModel)]="form.celular" placeholder="Celular" required>
+      
+      <label class="specialty-heading">Horario</label>
+      <input class="form-control" type = "time" name="horaIni" [(ngModel)]="form.horaIni" required>      
+      <input class="form-control" type = "time" name="horaFin" [(ngModel)]="form.horaFin" required>
 
       <div class="specialty-heading">
         <label for="especialidad">Especialidad</label>
