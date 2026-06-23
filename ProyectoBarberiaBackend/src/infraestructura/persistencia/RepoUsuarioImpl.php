@@ -197,6 +197,17 @@ use mysqli;
                 $stmt->bind_param("ii", $id, $d['idEspecialidad']);
                 $stmt->execute();
 
+                $descansoIni = $d['horaDescansoIni'] ?? '00:00';
+                $descansoFin = $d['horaDescansoFin'] ?? '00:00';
+
+                $stmt = $this->conn->prepare("
+                    INSERT INTO horario_empleado
+                    (idEmpleado, horaIni, horaFin, horaDescansoIni, horaDescansoFin)
+                    VALUES (?, ?, ?, ?, ?)
+                ");
+                $stmt->bind_param("issss", $id, $d['horaIni'], $d['horaFin'], $descansoIni, $descansoFin);
+                $stmt->execute();
+
                 $stmt = $this->conn->prepare("INSERT INTO empleado_servicios (idEmpleado,idServicio) VALUES (?,?)");
                 $stmt->bind_param("ii", $id, $d['idEspecialidad']);
                 $stmt->execute();

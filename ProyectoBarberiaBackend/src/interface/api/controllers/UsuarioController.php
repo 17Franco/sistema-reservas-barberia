@@ -167,9 +167,13 @@ class UsuarioController {
 
     private static function datosEmpleado(bool $alta): array {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
-        $requeridos = $alta
-            ? ['ci','nombre','apellido','fechaNac','password','email','celular','idEspecialidad']
-            : ['nombre','apellido','email','celular','idEspecialidad'];
+
+        if ($alta) {
+            $requeridos = ['ci','nombre','apellido','fechaNac','password','email','celular','idEspecialidad','horaIni','horaFin'];
+        } else {
+            $requeridos = ['nombre','apellido','email','celular','idEspecialidad'];
+        }
+
         foreach ($requeridos as $campo) {
             if (empty($data[$campo])) throw new Exception("Falta el campo $campo", 400);
         }

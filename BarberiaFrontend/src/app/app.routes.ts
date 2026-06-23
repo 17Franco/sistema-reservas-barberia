@@ -6,6 +6,7 @@ import { Servicios } from './pages/servicios/servicios';
 import { PaginaPerfil } from './pages/pagina-perfil/pagina-perfil';
 import { PantallaPrincipal } from './pages/pantalla-principal/pantalla-principal'; // importamos la pantalla principal para agregarla a las rutas.
 import { PerfilBarbero } from './pages/perfil-barbero/perfil-barbero';
+import { ServiciosBarbero } from './pages/admin/servicios-barbero/servicios-barbero';
 
 //nuevos imports para las rutas de admin.
 import { AdminDashboard } from './pages/admin/admin-dashboard/admin-dashboard';
@@ -67,6 +68,14 @@ export const routes: Routes = [
       {
         path: 'admin/servicios',
         component: GestionServicios,
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['ADMIN']
+        }
+      },
+      {
+        path: 'admin/servicios-barbero',
+        component: ServiciosBarbero,
         canActivate: [tipoUserGuard],
         data: {
           roles: ['ADMIN']
