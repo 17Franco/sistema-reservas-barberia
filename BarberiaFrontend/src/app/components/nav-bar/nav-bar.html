@@ -34,7 +34,7 @@
 
       <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('Home')" [routerLink]="empleado ? '/perfilBarbero' : '/'" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
 
-      <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
+      <a class="link fw-bold" [class.d-none]="admin || empleado"  (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
 
     </div>
 
