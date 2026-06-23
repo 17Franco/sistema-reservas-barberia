@@ -26,26 +26,28 @@
       <div class="d-flex gap-5">
         <div *ngIf="cargando" class="loading">Cargando servicios destacados...</div>
         <div *ngIf="error" class="error">{{ error }}</div>
-        <article *ngFor="let servicio of serviciosDestacados" class="d-flex align-items-center p-3 mb-3 bg-white border rounded-4 shadow-sm ">
-          <div class=" d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary me-3" style="width: 50px; height: 50px; font-size: 20px;">
-            <span><i class="bi bi-scissors"></i></span>
+        <div class="servicios-carousel">
+          <!--CARUSEL DE SERVICIOS-->
+          <div class="servicios-track">
+            <ng-container *ngFor="let vuelta of [1, 2]">
+              <article
+                *ngFor="let servicio of serviciosDestacados"
+                class="service-slide d-flex align-items-center p-3 mb-3 bg-white border rounded-4 shadow-sm"
+              >
+                <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary me-3"
+                  style="width: 50px; height: 50px; font-size: 20px;">
+                  <span><i class="bi bi-scissors"></i></span>
+                </div>
+
+                <div class="flex-grow-1">
+                  <h3 class="h6 fw-bold mb-1">{{ servicio.nombre }}</h3>
+                  <p class="text-muted small mb-2 lh-sm">{{ servicio.descripcion }}</p>
+                  <div class="fw-bold text-primary">${{ servicio.precio }}</div>
+                </div>
+              </article>
+            </ng-container>
           </div>
-          <div class="flex-grow-1">
-
-            <h3 class="h6 fw-bold mb-1">
-              {{ servicio.nombre }}
-            </h3>
-
-            <p class="text-muted small mb-2 lh-sm">
-              {{ servicio.descripcion }}
-            </p>
-
-            <div class="fw-bold text-primary">
-              ${{ servicio.precio }}
-            </div>
-
-          </div>
-        </article>
+        </div>
         <div *ngIf="!cargando && serviciosDestacados.length === 0" class="empty-state">
           No hay servicios destacados disponibles.
         </div>
