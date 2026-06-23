@@ -177,29 +177,58 @@
 }
 
 
-
-
-.contenedor-steps {
-  
+//Implementación de Carrusel
+.servicios-carousel {
+  width: 100%;
+  overflow: hidden;
 }
-.step{
+
+.servicios-track {
   display: flex;
-  flex-direction: column;
-  min-width: 150px;
-  position: relative;
-  z-index: 2;//queda por arriba de la linea
-  
+  gap: 1rem;
+  width: max-content;
+  // Cambia este valor para ajustar la velocidad: mas segundos = mas lento.
+  animation: moverServicios 30s linear infinite;
+
+  &:hover {
+    animation-play-state: paused;
+  }
 }
-.ultimo{
-  //es para que la linea que conecta los icono en la ultima no se vea
+
+.service-slide {
+  flex: 0 0 clamp(340px, 32vw, 390px);
+  min-height: 150px;
+  margin-bottom: 0 !important;
+
+  .rounded-circle {
+    flex: 0 0 50px;
+  }
+
+  .flex-grow-1 {
+    min-width: 0;
+  }
+
+  h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+  }
 }
-.contenedor-steps::before {
-  content: "";
-  position: absolute;
-  top: 30px; 
-  left: 5%;
-  right: 15%;
-  height: 2px;
-  background-color: #0D6EFD; 
-  z-index: 1;
+
+@keyframes moverServicios {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - .5rem));
+  }
 }
