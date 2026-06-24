@@ -169,5 +169,71 @@ class RepositorioReservaImpl implements RepositorioReserva{
         return $stmt->affected_rows === 1;
     }
 
+    /*
+     $filters = [
+        'servicio' => $servicio,
+        'estado' => $estado,
+        'empleado' => $empleado,
+        'fechaDesde' => $fechaDesde,
+        'fechaHasta' => $fechaHasta,
+    ];
+    */
+    public function buscarConFiltros(array $filtros):array{
+        $reservas = [];
+        $sql = "SELECT r.idReserva,r.fecha,r.horaInicio,r.horaFin,r.estado,u.id AS cliente_id,u.nombre AS cliente_nombre,u.celular AS cliente_celular,
+        u.email AS cliente_email,u.foto AS cliente_foto,e.id AS empleado_id,e.nombre AS empleado_nombre,s.idServicio AS servicio_id,
+        s.nombre AS servicio_nombre,s.duracion AS servicio_duracion FROM reservas r INNER JOIN usuarios u ON r.idCliente = u.id
+        INNER JOIN usuarios e ON r.idEmpleado = e.id INNER JOIN servicios s ON r.idServicio = s.idServicio WHERE r.fecha >= ?" ;
+        
+        $params = [];
+        $tipos = "";
+        $params[] = $filtros['fechaDesde'];
+        $tipos .= "s";
+
+        //agrego filtro si viene y no es null
+        if ($filtros['fechaHasta']) {
+            $sql .= " AND r.fecha <= ?";
+            $params[] = $filtros['fechaHasta'];
+            $tipos .= "s";
+        }
+
+         if ($filtros['servicio']) {
+            $sql .= " AND r.idServicio = ?";
+            $params[] = $filtros['servicio'];
+            $tipos .= "i";
+        }
+
+        if ($filtros['empleado']) {
+            $sql .= " AND r.idEmpleado = ?";
+            $params[] = $filtros['empleado'];
+            $tipos .= "i";
+        }
+
+        if ($filtros['estado']) {
+            $sql .= " AND r.estado = ?";
+            $params[] = $filtros['estado'];
+            $tipos .= "s";
+        }
+
+        //agrego despues de agregar los filtros 
+        $sql .= " ORDER BY r.fecha ASC, r.horaInicio ASC";
+        
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception($this->conn->error);
+        }
+
+        $stmt->bind_param($tipos, ...$params);
+
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $reservas[] = $fila;
+        }
+        $stmt->close();
+        return $reservas;
+
+    }
 }
 ?>

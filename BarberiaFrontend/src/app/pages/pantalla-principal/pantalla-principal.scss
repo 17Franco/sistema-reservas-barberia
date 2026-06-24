@@ -176,6 +176,25 @@
   background-color: #1c1c1c;
 }
 
+.step{
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  position: relative;
+  z-index: 2;//queda por arriba de la linea
+  
+}
+
+.contenedor-steps::before {
+  content: "";
+  position: absolute;
+  top: 30px; 
+  left: 5%;
+  right: 15%;
+  height: 2px;
+  background-color: #0D6EFD; 
+  z-index: 1;
+}
 
 //Implementación de Carrusel
 .servicios-carousel {
