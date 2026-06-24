@@ -101,7 +101,7 @@ export class ListaGestionReserva {
 }
 
 getImagen(url: string) {
-  return `${environment.apiUrlImg}${url}`;
+  return `${environment.backendPublicUrl}${url}`;
 }
 
 
