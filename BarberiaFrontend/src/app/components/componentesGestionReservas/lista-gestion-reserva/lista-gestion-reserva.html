@@ -93,9 +93,21 @@
                     </div>
 
                     <div class="col-2 d-flex flex-column align-items-end gap-2">
-                        <button class="btn btn-primary w-75 text-nowrap fw-bold" [class.d-none]="reserva.estado !== 'PENDIENTE'">Confirmar</button>
-                        <button class="btn btn-primary bg-white text-primary w-75 text-nowrap fw-bold" [class.d-none]="reserva.estado !== 'CONFIRMADA'">Completar</button>
-                        <button class="btn btn-danger bg-white text-danger w-75 text-nowrap fw-bold" [class.d-none]="reserva.estado !== 'PENDIENTE'">Cancelar</button>
+                       @if (reserva.estado === 'PENDIENTE') {
+                            <button class="btn btn-primary w-75 text-nowrap fw-bold" (click)="cambiarEstado(reserva.idReserva, 'CONFIRMADA')">
+                                Confirmar
+                            </button>
+
+                            <button class="btn btn-danger bg-white text-danger w-75 text-nowrap fw-bold" (click)="cambiarEstado(reserva.idReserva, 'CANCELADA')">
+                                Cancelar
+                            </button>
+                        }
+
+                        @if (reserva.estado === 'CONFIRMADA') {
+                            <button class="btn btn-primary bg-white text-primary w-75 text-nowrap fw-bold" (click)="cambiarEstado(reserva.idReserva, 'COMPLETADA')">
+                                Completar
+                            </button>
+                        }
                     </div>
                 </div>
             </div>

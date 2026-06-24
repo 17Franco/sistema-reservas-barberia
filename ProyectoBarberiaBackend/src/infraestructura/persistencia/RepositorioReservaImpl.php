@@ -118,16 +118,28 @@ class RepositorioReservaImpl implements RepositorioReserva{
 
 
 
-    public function cancelar(int $idReserva, int $idUsuario, bool $esEmpleado): bool{
-        $columnaUsuario = $esEmpleado ? 'idEmpleado' : 'idCliente';
+    public function cancelar(int $idReserva, ?int $idUsuario, string $tipoUsuario): bool {
         $sql = "UPDATE reservas
                 SET estado = 'CANCELADA'
                 WHERE idReserva = ?
-                AND {$columnaUsuario} = ?
                 AND estado = 'PENDIENTE'";
 
+        if ($tipoUsuario === 'EMPLEADO') {
+            $sql .= " AND idEmpleado = ?";
+        }
+
+        if ($tipoUsuario === 'CLIENTE') {
+            $sql .= " AND idCliente = ?";
+        }
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idReserva, $idUsuario);
+
+        if ($tipoUsuario === 'ADMIN') {
+            $stmt->bind_param("i", $idReserva);
+        } else {
+            $stmt->bind_param("ii", $idReserva, $idUsuario);
+        }
+
         $stmt->execute();
 
         return $stmt->affected_rows === 1;
@@ -135,23 +147,31 @@ class RepositorioReservaImpl implements RepositorioReserva{
 
 
 
-    public function confirmar(int $idReserva, int $idUsuario, bool $esEmpleado): bool{
-        $columnaUsuario = $esEmpleado ? 'idEmpleado' : 'idCliente';
+   public function confirmar(int $idReserva, ?int $idUsuario, bool $esAdmin): bool {
+        $filtroUsuario = $esAdmin ? '' : 'AND idEmpleado = ?';
+
         $sql = "UPDATE reservas
                 SET estado = 'CONFIRMADA'
                 WHERE idReserva = ?
-                AND {$columnaUsuario} = ?
+                {$filtroUsuario}
                 AND estado = 'PENDIENTE'";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idReserva, $idUsuario);
+
+        if ($esAdmin) {
+            $stmt->bind_param("i", $idReserva);
+        } else {
+            $stmt->bind_param("ii", $idReserva, $idUsuario);
+        }
+
         $stmt->execute();
 
         return $stmt->affected_rows === 1;
     }
 
-    public function completar(int $idReserva, int $idUsuario, bool $esAdmin): bool{
+    public function completar(int $idReserva, ?int $idUsuario, bool $esAdmin): bool {
         $filtroUsuario = $esAdmin ? '' : 'AND idEmpleado = ?';
+
         $sql = "UPDATE reservas
                 SET estado = 'COMPLETADA'
                 WHERE idReserva = ?
@@ -159,11 +179,13 @@ class RepositorioReservaImpl implements RepositorioReserva{
                 AND estado = 'CONFIRMADA'";
 
         $stmt = $this->conn->prepare($sql);
+
         if ($esAdmin) {
             $stmt->bind_param("i", $idReserva);
         } else {
             $stmt->bind_param("ii", $idReserva, $idUsuario);
         }
+
         $stmt->execute();
 
         return $stmt->affected_rows === 1;

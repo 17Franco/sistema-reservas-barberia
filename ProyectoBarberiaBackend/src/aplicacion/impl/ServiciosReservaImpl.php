@@ -178,22 +178,19 @@ class ServiciosReservaImpl implements ServiciosReserva {
         }
 
 
-
-
-
         public function cancelarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void{
             $reserva = $this->repoReserva->obtenerReserva($idReserva);
 
             if ($reserva === null) {
                 throw new Exception("La reserva no existe", 404);
             }
-
+            $esAdmin = $tipoUsuario === 'ADMIN';    
             $esEmpleado = $tipoUsuario === 'EMPLEADO';
             $esPropietario = $esEmpleado
                 ? $reserva->getIdEmpleado() === $idUsuario
                 : $tipoUsuario === 'CLIENTE' && $reserva->getIdCliente() === $idUsuario;
 
-            if (!$esPropietario) {
+            if (!$esAdmin && !$esPropietario) {
                 throw new Exception("No tienes permiso para cancelar esta reserva", 403);
             }
 
@@ -204,7 +201,7 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 );
             }
 
-            if (!$this->repoReserva->cancelar($idReserva, $idUsuario, $esEmpleado)) {
+            if (!$this->repoReserva->cancelar($idReserva, $idUsuario, $tipoUsuario)) {
                 throw new Exception("No se pudo cancelar la reserva", 500);
             }
         }
@@ -217,13 +214,13 @@ class ServiciosReservaImpl implements ServiciosReserva {
             if ($reserva === null) {
                 throw new Exception("La reserva no existe", 404);
             }
-
+            $esAdmin = $tipoUsuario === 'ADMIN'; 
             $esEmpleado = $tipoUsuario === 'EMPLEADO';
             $esPropietario = $esEmpleado
                 ? $reserva->getIdEmpleado() === $idUsuario
                 : $tipoUsuario === 'CLIENTE' && $reserva->getIdCliente() === $idUsuario;
 
-            if (!$esPropietario) {
+            if (!$esAdmin && !$esPropietario) {
                 throw new Exception(
                     "No tienes permiso para confirmar esta reserva",
                     403
@@ -237,7 +234,7 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 );
             }
 
-            if (!$this->repoReserva->confirmar($idReserva, $idUsuario, $esEmpleado)) {
+            if (!$this->repoReserva->confirmar($idReserva, $idUsuario, $esAdmin)) {
                 throw new Exception("No se pudo confirmar la reserva", 500);
             }
         }
