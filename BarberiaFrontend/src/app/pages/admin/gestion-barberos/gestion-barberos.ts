@@ -6,6 +6,7 @@ import { Servicio, ServiciosService } from '../../../services/servicios/servicio
 import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 import { environment } from '../../../../environments/environment';
+import { Filtros } from '../../../services/filtros';
 
 interface Barbero {
   id?: number;
@@ -36,7 +37,7 @@ export class GestionBarberos implements OnInit {
   private auth = inject(Auth);
   private serviciosService = inject(ServiciosService);
   private cdr = inject(ChangeDetectorRef);
-
+  filtrosService = inject(Filtros);
   public barberos: Barbero[] = [];
   public servicios: Servicio[] = [];
   public form: Barbero = this.vacio();
@@ -59,6 +60,7 @@ export class GestionBarberos implements OnInit {
     this.auth.getBarberos().subscribe({
       next: res => {
         this.barberos = res.empleados || [];
+        
         this.cdr.detectChanges();
       },
       error: () => this.error = 'No se pudieron cargar los barberos.'

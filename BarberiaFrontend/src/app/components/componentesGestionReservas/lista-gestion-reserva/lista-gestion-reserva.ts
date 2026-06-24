@@ -5,6 +5,7 @@ import { Reserva, ReservasPorFecha } from '../../../interfaces/filtro-reservas';
 import { Auth } from '../../../services/auth';
 import { Filtros } from '../../../services/filtros';
 import { environment } from '../../../../environments/environment';
+import Swal from 'sweetalert2';
 
 
 
@@ -24,9 +25,10 @@ export class ListaGestionReserva {
   public reservasPorDia = 4; //aca la cantidad de reserva que muestro por cada dia
   reservaPorFecha = signal<ReservasPorFecha[]>([]);
   //@Output() totalChange = new EventEmitter<number>();//para pasarle el total a el padre y de ahi mandarlo a barra gestion reserva
-
-  constructor() {
+  refresh = signal(0);
+constructor() {
   effect(() => {
+    this.refresh();
     this.paginaDias=1;//por cada effecvuelvo a pagina 1 
     const filtros = this.filtrosService.filtros();
 
@@ -95,11 +97,59 @@ export class ListaGestionReserva {
     case 'PENDIENTE':
       return 'estado-pendiente';
 
+    case 'COMPLETADA':
+      return 'estado-completado';
+
     default:
       return '';
   }
 }
 
+
+async cambiarEstado(id: number, estado: string) {
+
+  const ok = await Swal.fire({
+        title: '¿Seguro que quieres actualizar el estado de la reserva?',
+        text: 'Esta acción no se puede revertir.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, Actualizar',
+        cancelButtonText: 'Volver',
+    });
+
+  if (!ok.isConfirmed) return;
+
+  let request$;
+
+  if (estado === 'CANCELADA') {
+    request$ = this.authService.cancelarReserva(id);
+  }
+
+  if (estado === 'CONFIRMADA') {
+    request$ = this.authService.confirmarReserva(id);
+  }
+
+  if (estado === 'COMPLETADA') {
+    request$ = this.authService.completarReserva(id);
+  }
+
+  request$?.subscribe({
+    next: () => {
+      Swal.fire('OK', 'Estado actualizado', 'success');
+      this.recargar(); 
+    },
+    error: () => {
+      Swal.fire('Error', 'No se pudo actualizar', 'error');
+    }
+  });
+}
+
+private recargar() {
+  const filtros = this.filtrosService.filtros();
+  this.cargarReservas(filtros);
+}
 getImagen(url: string) {
   return `${environment.backendPublicUrl}${url}`;
 }

@@ -5,18 +5,23 @@
 }
 
 .estado-confirmada {
-  background-color: #d1e7dd; /* verde suave */
-  color: #2D8B51 !important;
+  background-color: #A8CCFF;
+  color: #0D6EFD !important;
 }
 
 .estado-cancelada {
-  background-color: #f8d7da; /* rojo suave */
+  background-color: #f8d7da;
   color: #842029 !important;
 }
 
 .estado-pendiente {
-  background-color: #fff3cd; /* amarillo suave */
+  background-color: #fff3cd; 
   color: #C96B0F !important;
+}
+
+.estado-completado {
+  background-color: #d1e7dd; 
+  color: #2D8B51 !important;
 }
 
 

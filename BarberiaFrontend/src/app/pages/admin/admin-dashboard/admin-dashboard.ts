@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgFor } from '@angular/common';
+
+import { Auth } from '../../../services/auth';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -8,8 +10,9 @@ import { NgFor } from '@angular/common';
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.scss'
 })
-export class AdminDashboard {
 
+export class AdminDashboard {
+  filtrosService = inject(Auth);
   resumen = [
     {
       titulo: 'Reservas',
@@ -25,7 +28,7 @@ export class AdminDashboard {
     },
     {
       titulo: 'Barberos',
-      valor: '5',
+      valor:  '5',
       descripcion: 'Barberos activos registrados',
       ruta: '/admin/barberos'
     }
