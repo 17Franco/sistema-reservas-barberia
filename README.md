@@ -43,3 +43,42 @@ Este comando instala las dependencias definidas en package.json y genera la carp
 Ejecutar el servidor de desarrollo:
 
     ng serve -o
+
+## Entornos del frontend
+
+El frontend usa archivos de entorno distintos segun el comando que se ejecute.
+
+Al trabajar localmente con:
+
+    ng serve -o
+
+Angular usa:
+
+    BarberiaFrontend/src/environments/environment.development.ts
+
+Ese archivo apunta al backend local de XAMPP/Apache:
+
+    http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php
+
+Al generar la version para subir al hosting con:
+
+    ng build
+
+Angular usa:
+
+    BarberiaFrontend/src/environments/environment.ts
+
+Ese archivo apunta al backend publicado:
+
+    https://barbershop.site.je/ProyectoBarberiaBackend/public/index.php
+
+Resumen:
+
+    ng serve  -> environment.development.ts -> backend local
+    ng build  -> environment.ts             -> backend publicado
+
+Para publicar el frontend, subir al hosting el contenido de:
+
+    BarberiaFrontend/dist/BarberiaFrontend/browser/
+
+Los archivos deben quedar directamente dentro de `htdocs`, no dentro de una carpeta `browser`.

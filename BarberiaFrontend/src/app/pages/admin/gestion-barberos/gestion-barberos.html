@@ -68,7 +68,7 @@
       <div class="barbers-list">
         @for (barbero of barberos; track barbero.id) {
           <article class="barber-item" [class.inactive]="barbero.estado === 'INACTIVO'">
-            <img [src]="'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
+            <img [src]="backendPublicUrl + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
             <div class="barber-data">
               <h3>{{ barbero.nombre }} {{ barbero.apellido }}</h3>
               <p>{{ barbero.email }}</p>

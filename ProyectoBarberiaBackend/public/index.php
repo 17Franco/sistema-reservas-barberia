@@ -1,6 +1,17 @@
 <?php
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigins = [
+    'http://localhost:4200',
+    'http://localhost',
+    'https://barbershop.site.je',
+    'http://barbershop.site.je',
+];
+
+if (in_array($origin, $allowedOrigins, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
+
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -30,7 +41,7 @@ try {
 
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    $base = '/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+    $base = $_SERVER['SCRIPT_NAME'];
 
     $route = str_replace($base, '', $path);
 

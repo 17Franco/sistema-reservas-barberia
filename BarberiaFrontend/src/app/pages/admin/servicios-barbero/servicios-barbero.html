@@ -32,7 +32,7 @@
             [class.inactive]="barbero.estado === 'INACTIVO'"
             (click)="seleccionarBarbero(barbero)"
           >
-            <img [src]="'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
+            <img [src]="backendPublicUrl + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
             <span>
               <b>{{ barbero.nombre }} {{ barbero.apellido }}</b>
               <small>{{ barbero.email }}</small>
@@ -48,7 +48,7 @@
     <section class="panel assignment-panel">
       @if (barberoSeleccionado) {
         <div class="selected-barber">
-          <img [src]="'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public' + (barberoSeleccionado.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barberoSeleccionado.nombre">
+          <img [src]="backendPublicUrl + (barberoSeleccionado.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barberoSeleccionado.nombre">
           <div>
             <small>BARBERO SELECCIONADO</small>
             <h2>{{ barberoSeleccionado.nombre }} {{ barberoSeleccionado.apellido }}</h2>

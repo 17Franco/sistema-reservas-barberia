@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Dia, EmpleadoD, Horario, Servicio } from '../../interfaces/disponibilidad-interfaces';
 import { Disponibilidad, Reserva } from '../../services/disponibilidad/disponibilidad';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class ResumenReserva {
   constructor(private disponibilidad: Disponibilidad) {}
 
   obtenerFoto(item?:string): string {
-    return 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/' + item;
+    return `${environment.backendPublicUrl}/${item}`;
   }
 
   reservar(){

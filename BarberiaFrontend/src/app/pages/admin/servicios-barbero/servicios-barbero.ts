@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Auth } from '../../../services/auth';
 import { Servicio, ServiciosService } from '../../../services/servicios/servicio';
+import { environment } from '../../../../environments/environment';
 
 interface Barbero {
   id?: number;
@@ -25,6 +26,7 @@ export class ServiciosBarbero implements OnInit {
   private auth = inject(Auth);
   private serviciosService = inject(ServiciosService);
   private cdr = inject(ChangeDetectorRef);
+  public backendPublicUrl = environment.backendPublicUrl;
 
   barberos: Barbero[] = [];
   servicios: Servicio[] = [];
