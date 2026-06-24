@@ -136,5 +136,39 @@ use Symfony\Component\Serializer\Serializer;
             ]);
         }
 
+        public static function obtenerReserva(ServiciosReserva $servicioReservas):void{
+            $serializer = new Serializer([new DateTimeNormalizer(),new BackedEnumNormalizer(),new ObjectNormalizer()],[new JsonEncoder()]);
+
+            $servicio = $_GET['servicio'] ?? null;
+            $estado = $_GET['estado'] ?? null;
+            $empleado = $_GET['empleado'] ?? null;
+            $fechaDesde = $_GET['fechaDesde'] ?? null;
+            $fechaHasta = $_GET['fechaHasta'] ?? null;
+
+            if (!$fechaDesde) {
+                $fechaDesde = date('Y-m-d');//si no tiene filtro agrego fecha dia actual porque solo listare las reservas de dia actual en adelante como caso general
+            }
+
+            //agrupo
+            $filters = [
+                'servicio' => $servicio,
+                'estado' => $estado,
+                'empleado' => $empleado,
+                'fechaDesde' => $fechaDesde,
+                'fechaHasta' => $fechaHasta,
+            ];
+
+            $reservas = $servicioReservas->obtenerReservas($filters);
+
+           
+            http_response_code(200);
+
+            echo $serializer->serialize([
+                "success" => true,
+                "totalReservas" => $reservas['totalReservas'],
+                "data" => $reservas['data']
+            ], 'json');
+        }   
+
     }
 ?>

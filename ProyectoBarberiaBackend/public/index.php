@@ -212,6 +212,10 @@ try {
         ReservaController::reservar($servicioReserva);
         exit;
     }
+    if ($method === 'GET' && $route === '/reservas') {
+        ReservaController::obtenerReserva($servicioReserva);
+        exit;
+    }
     if ($method === 'POST' && preg_match('#^/reservas/(\d+)/enviar-comprobante$#', $route, $matches)) {
         $idReserva = (int)$matches[1];
         ReservaController::enviarComprobante($servicioReserva,$idReserva);

@@ -2,6 +2,7 @@ import { Component,inject,OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ServiciosService } from '../../../services/servicios/servicio';
 import { Auth } from '../../../services/auth';
+import { Filtros } from '../../../services/filtros';
 interface Barbero {
   id?: number;
   ci: string;
@@ -39,10 +40,11 @@ export interface Servicio {
 export class MenuFiltrosGestionReservas {
   private serviciosService = inject(ServiciosService);
   private authSer = inject(Auth);
+  private servicioFiltro = inject(Filtros);//no es de consultas es para pasar el objeto filtro a otro lado
   cargando = false;
   error: string | null = null;
   mensaje: string | null = null;
-
+  filtros = this.servicioFiltro.filtros;
   servicios = signal<Servicio[]>([]);
   //servicios: Servicio[] = [];
   barberos = signal<Barbero[]>([]);
@@ -55,13 +57,15 @@ export class MenuFiltrosGestionReservas {
     { nombre: 'Completada' }
   ];
 
-  filtros = {
+  localFiltros = {
     servicio: null,
     estado: null,
     empleado: null,
-    fechaDesde:null,
-    fechaHasta:null
-  };
+    fechaDesde: null,
+    fechaHasta: null
+  }
+  
+  
 
   ngOnInit(){
      this.cargarServicios();
@@ -108,16 +112,24 @@ export class MenuFiltrosGestionReservas {
       console.log('Servicio seleccionado:', this.filtros.fechaHasta);*/
     }
 
-    limpiar(){
-      this.filtros = {
-          servicio: null,
-          estado: null,
-          empleado: null,
-          fechaDesde: null,
-          fechaHasta: null
-        };
-
-     // this.cargarDatos(); // o tu función que vuelve a listar sin filtros
+   filtrar() {
+      this.servicioFiltro.filtros.set({
+        ...this.localFiltros
+      });
     }
+   
+    limpiar() {
+      this.localFiltros = {
+        servicio: null,
+        estado: null,
+        empleado: null,
+        fechaDesde: null,
+        fechaHasta: null
+      };
+
+      this.servicioFiltro.filtros.set({
+        ...this.localFiltros
+      });
+  }
     
 }

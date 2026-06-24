@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+import { ResponseReservas } from '../interfaces/filtro-reservas';
 @Injectable({
   providedIn: 'root',
 })
@@ -157,6 +159,33 @@ export class Auth {
         withCredentials: true,
       }
     );
+  }
+
+  filtrarReservas(filtro: any): Observable<ResponseReservas>{
+    let params = new HttpParams();
+
+    if (filtro.servicio) {
+      params = params.set('servicio', filtro.servicio);
+    }
+
+    if (filtro.estado) {
+      params = params.set('estado', filtro.estado);
+    }
+
+    if (filtro.empleado) {
+      params = params.set('empleado', filtro.empleado);
+    }
+
+    if (filtro.fechaDesde) {
+      params = params.set('fechaDesde', filtro.fechaDesde);
+    }
+
+    if (filtro.fechaHasta) {
+      params = params.set('fechaHasta', filtro.fechaHasta);
+    }
+
+    return this.http.get<ResponseReservas>(`${this.apiUrl}/reservas`, { params });
+
   }
 
 }

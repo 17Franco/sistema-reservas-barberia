@@ -11,5 +11,6 @@ use Barberia\Backend\dominio\Reserva;
         public function cancelar(int $idReserva, int $idUsuario, bool $esEmpleado): bool;
         public function confirmar(int $idReserva, int $idUsuario, bool $esEmpleado): bool;
         public function completar(int $idReserva, int $idUsuario, bool $esAdmin): bool;
-        }
+        public function buscarConFiltros(array $filtros):array;
+    }
 ?>
