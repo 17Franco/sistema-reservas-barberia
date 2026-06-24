@@ -9,3 +9,16 @@
     define('EMAIL','ALGO.GMAI.COM');
     define('EMAIL_PASS','PASS');
 ?>
+
+<!--
+Los del servidor de InifityFree son los siguientes:
+
+define('SERVIDOR','sql309.infinityfree.com');
+define('USUARIO','if0_42255858 ');
+define('CONTRASEÑA','BarberiaPass');
+define('BASEDATOS','if0_42255858_barberia');
+define('EMAIL','barberia.reservas2026@gmail.com');
+define('EMAIL_PASS','igeg jwgr lzra fpol');
+
+
+--> 

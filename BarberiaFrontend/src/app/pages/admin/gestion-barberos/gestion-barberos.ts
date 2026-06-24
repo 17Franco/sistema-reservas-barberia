@@ -5,6 +5,7 @@ import { Auth } from '../../../services/auth';
 import { Servicio, ServiciosService } from '../../../services/servicios/servicio';
 import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../environments/environment';
 
 interface Barbero {
   id?: number;
@@ -43,6 +44,7 @@ export class GestionBarberos implements OnInit {
   public mensaje = '';
   public error = '';
   public fechaMaximaNacimiento = this.calcularFechaMaximaNacimiento();
+  public backendPublicUrl = environment.backendPublicUrl;
 
   ngOnInit(): void {
     this.cargar();

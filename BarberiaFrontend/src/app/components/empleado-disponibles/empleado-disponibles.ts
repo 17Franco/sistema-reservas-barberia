@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { Disponibilidad } from '../../services/disponibilidad/disponibilidad';
 import { Dia, EmpleadoD, Servicio } from '../../interfaces/disponibilidad-interfaces';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -68,6 +69,6 @@ export class EmpleadoDisponibles {
   }
 
   obtenerFoto(item:string): string {
-  return 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/' + item;
+  return `${environment.backendPublicUrl}/${item}`;
   }
 }
