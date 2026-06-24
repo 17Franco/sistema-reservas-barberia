@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "public": true,
+  "framework": "angular",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
