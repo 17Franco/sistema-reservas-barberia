@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-06-2026 a las 04:50:18
+-- Tiempo de generación: 25-06-2026 a las 03:18:45
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -41,8 +41,10 @@ INSERT INTO `cliente` (`id_Usuario`) VALUES
 (8),
 (9),
 (10),
-(26),
-(27);
+(29),
+(31),
+(32),
+(34);
 
 -- --------------------------------------------------------
 
@@ -65,7 +67,10 @@ INSERT INTO `empleado` (`id_usuario`, `estado`, `especialidad`) VALUES
 (2, 'ACTIVO', 2),
 (3, 'ACTIVO', 3),
 (4, 'ACTIVO', 1),
-(5, 'ACTIVO', 5);
+(5, 'ACTIVO', 5),
+(30, 'ACTIVO', 1),
+(33, 'INACTIVO', 1),
+(35, 'ACTIVO', 1);
 
 -- --------------------------------------------------------
 
@@ -94,7 +99,10 @@ INSERT INTO `empleado_servicios` (`idEmpleado`, `idServicio`) VALUES
 (4, 1),
 (4, 4),
 (5, 1),
-(5, 5);
+(5, 5),
+(30, 1),
+(33, 1),
+(35, 1);
 
 -- --------------------------------------------------------
 
@@ -122,7 +130,8 @@ INSERT INTO `horario_empleado` (`idHorario`, `idEmpleado`, `horaIni`, `horaFin`,
 (4, 2, '17:00:00', '21:00:00', '00:00:00', '00:00:00'),
 (5, 3, '09:00:00', '17:00:00', '12:30:00', '13:00:00'),
 (6, 4, '11:00:00', '19:00:00', '14:30:00', '15:00:00'),
-(7, 5, '13:00:00', '21:00:00', '16:30:00', '17:00:00');
+(7, 5, '13:00:00', '21:00:00', '16:30:00', '17:00:00'),
+(8, 35, '09:00:00', '17:00:00', '00:00:00', '00:00:00');
 
 -- --------------------------------------------------------
 
@@ -146,11 +155,11 @@ CREATE TABLE `reservas` (
 --
 
 INSERT INTO `reservas` (`idReserva`, `idCliente`, `idEmpleado`, `idServicio`, `fecha`, `horaInicio`, `horaFin`, `estado`) VALUES
-(141, 6, 1, 1, '2026-06-20', '09:00:00', '09:30:00', 'PENDIENTE'),
-(142, 7, 1, 2, '2026-06-20', '09:30:00', '10:15:00', 'PENDIENTE'),
+(141, 6, 1, 1, '2026-06-20', '09:00:00', '09:30:00', 'CANCELADA'),
+(142, 7, 1, 2, '2026-06-20', '09:30:00', '10:15:00', 'COMPLETADA'),
 (143, 8, 1, 4, '2026-06-20', '10:15:00', '10:35:00', 'PENDIENTE'),
 (144, 9, 1, 1, '2026-06-20', '10:35:00', '11:05:00', 'PENDIENTE'),
-(145, 10, 1, 2, '2026-06-20', '11:05:00', '11:50:00', 'PENDIENTE'),
+(145, 10, 1, 2, '2026-06-20', '11:05:00', '11:50:00', 'COMPLETADA'),
 (146, 6, 1, 4, '2026-06-20', '11:50:00', '12:10:00', 'PENDIENTE'),
 (147, 7, 1, 1, '2026-06-20', '12:10:00', '12:40:00', 'PENDIENTE'),
 (148, 8, 1, 4, '2026-06-20', '12:40:00', '13:00:00', 'PENDIENTE'),
@@ -162,7 +171,7 @@ INSERT INTO `reservas` (`idReserva`, `idCliente`, `idEmpleado`, `idServicio`, `f
 (154, 9, 1, 4, '2026-06-20', '18:50:00', '19:10:00', 'PENDIENTE'),
 (155, 10, 1, 1, '2026-06-20', '19:10:00', '19:40:00', 'PENDIENTE'),
 (156, 6, 1, 4, '2026-06-20', '19:40:00', '20:00:00', 'PENDIENTE'),
-(157, 7, 2, 2, '2026-06-20', '10:00:00', '10:45:00', 'PENDIENTE'),
+(157, 7, 2, 2, '2026-06-20', '10:00:00', '10:45:00', 'CANCELADA'),
 (158, 8, 2, 4, '2026-06-20', '10:45:00', '11:05:00', 'PENDIENTE'),
 (159, 9, 2, 2, '2026-06-20', '11:05:00', '11:50:00', 'PENDIENTE'),
 (160, 10, 2, 4, '2026-06-20', '11:50:00', '12:10:00', 'PENDIENTE'),
@@ -176,16 +185,16 @@ INSERT INTO `reservas` (`idReserva`, `idCliente`, `idEmpleado`, `idServicio`, `f
 (168, 8, 2, 2, '2026-06-20', '19:10:00', '19:55:00', 'PENDIENTE'),
 (169, 9, 2, 4, '2026-06-20', '19:55:00', '20:15:00', 'PENDIENTE'),
 (170, 10, 2, 2, '2026-06-20', '20:15:00', '21:00:00', 'PENDIENTE'),
-(171, 6, 3, 3, '2026-06-20', '09:00:00', '10:00:00', 'PENDIENTE'),
-(172, 7, 3, 2, '2026-06-20', '10:00:00', '10:45:00', 'PENDIENTE'),
+(171, 6, 3, 3, '2026-06-20', '09:00:00', '10:00:00', 'CANCELADA'),
+(172, 7, 3, 2, '2026-06-20', '10:00:00', '10:45:00', 'CANCELADA'),
 (173, 8, 3, 1, '2026-06-20', '10:45:00', '11:15:00', 'PENDIENTE'),
-(174, 9, 3, 3, '2026-06-20', '11:15:00', '12:15:00', 'PENDIENTE'),
-(175, 10, 3, 1, '2026-06-20', '12:00:00', '12:30:00', 'PENDIENTE'),
-(176, 6, 3, 3, '2026-06-20', '13:00:00', '14:00:00', 'PENDIENTE'),
-(177, 7, 3, 2, '2026-06-20', '14:00:00', '14:45:00', 'PENDIENTE'),
-(178, 8, 3, 3, '2026-06-20', '14:45:00', '15:45:00', 'PENDIENTE'),
-(179, 9, 3, 2, '2026-06-20', '15:45:00', '16:30:00', 'PENDIENTE'),
-(180, 10, 3, 1, '2026-06-20', '16:30:00', '17:00:00', 'PENDIENTE'),
+(174, 9, 3, 3, '2026-06-20', '11:15:00', '12:15:00', 'COMPLETADA'),
+(175, 10, 3, 1, '2026-06-20', '12:00:00', '12:30:00', 'COMPLETADA'),
+(176, 6, 3, 3, '2026-06-20', '13:00:00', '14:00:00', 'COMPLETADA'),
+(177, 7, 3, 2, '2026-06-20', '14:00:00', '14:45:00', 'CONFIRMADA'),
+(178, 8, 3, 3, '2026-06-20', '14:45:00', '15:45:00', 'CONFIRMADA'),
+(179, 9, 3, 2, '2026-06-20', '15:45:00', '16:30:00', 'COMPLETADA'),
+(180, 10, 3, 1, '2026-06-20', '16:30:00', '17:00:00', 'COMPLETADA'),
 (181, 6, 4, 1, '2026-06-20', '11:00:00', '11:30:00', 'PENDIENTE'),
 (182, 7, 4, 4, '2026-06-20', '11:30:00', '11:50:00', 'PENDIENTE'),
 (183, 8, 4, 1, '2026-06-20', '11:50:00', '12:20:00', 'PENDIENTE'),
@@ -215,7 +224,24 @@ INSERT INTO `reservas` (`idReserva`, `idCliente`, `idEmpleado`, `idServicio`, `f
 (207, 7, 5, 1, '2026-06-20', '18:50:00', '19:20:00', 'PENDIENTE'),
 (208, 8, 5, 5, '2026-06-20', '19:20:00', '20:00:00', 'PENDIENTE'),
 (209, 9, 5, 1, '2026-06-20', '20:00:00', '20:30:00', 'PENDIENTE'),
-(210, 10, 5, 1, '2026-06-20', '20:30:00', '21:00:00', 'PENDIENTE');
+(210, 10, 5, 1, '2026-06-20', '20:30:00', '21:00:00', 'PENDIENTE'),
+(235, 32, 3, 1, '2026-06-22', '13:00:00', '13:30:00', 'COMPLETADA'),
+(236, 32, 1, 1, '2026-06-22', '16:30:00', '17:00:00', 'CANCELADA'),
+(237, 32, 3, 2, '2026-06-22', '14:15:00', '15:00:00', 'CANCELADA'),
+(238, 32, 4, 1, '2026-06-23', '12:30:00', '13:00:00', 'PENDIENTE'),
+(239, 32, 35, 1, '2026-06-24', '10:30:00', '11:00:00', 'CANCELADA'),
+(240, 32, 4, 1, '2026-06-25', '12:30:00', '13:00:00', 'CANCELADA'),
+(241, 32, 3, 1, '2026-06-24', '15:50:00', '16:20:00', 'CANCELADA'),
+(242, 32, 1, 1, '2026-06-25', '09:30:00', '10:00:00', 'COMPLETADA'),
+(243, 32, 2, 2, '2026-06-25', '12:15:00', '13:00:00', 'CANCELADA'),
+(244, 32, 3, 2, '2026-06-26', '11:15:00', '12:00:00', 'CANCELADA'),
+(245, 32, 2, 2, '2026-06-27', '13:00:00', '13:45:00', 'CANCELADA'),
+(246, 32, 2, 2, '2026-06-25', '13:00:00', '13:45:00', 'PENDIENTE'),
+(247, 32, 3, 2, '2026-06-26', '13:45:00', '14:30:00', 'COMPLETADA'),
+(248, 32, 2, 2, '2026-06-27', '17:00:00', '17:45:00', 'PENDIENTE'),
+(249, 32, 4, 1, '2026-06-25', '11:30:00', '12:00:00', 'CANCELADA'),
+(250, 32, 1, 1, '2026-06-25', '09:00:00', '09:30:00', 'CANCELADA'),
+(251, 32, 1, 1, '2026-06-25', '09:00:00', '09:30:00', 'PENDIENTE');
 
 -- --------------------------------------------------------
 
@@ -240,8 +266,7 @@ INSERT INTO `servicios` (`idServicio`, `nombre`, `descripcion`, `duracion`, `pre
 (2, 'Perfilado de Barba', 'Arreglo de barba con toalla premium y navaja.', 45, 350),
 (3, 'Corte + Barba Combo', 'Servicio completo de corte de cabello y diseño de barba.', 60, 700),
 (4, 'Lavado y Peinado', 'Lavado con productos premium y peinado con cera o pomada.', 20, 200),
-(5, 'Coloración / Tintura', 'Tinte completo para cabello o barba.', 40, 600),
-(6, 'Corte Premium', 'Servicio completo que incluye corte personalizado, lavado, perfilado de contornos y peinado profesional para un acabado impecable.', 60, 750);
+(5, 'Coloración / Tintura', 'Tinte completo para cabello o barba.', 40, 600);
 
 -- --------------------------------------------------------
 
@@ -279,8 +304,14 @@ INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_
 (8, '41122334', 'Roberto', 'Pereira', '2000-11-05', '1234', 'nico@gmail.com', '/uploads/PerfilPorDefecto.png', '092777888', 'CLIENTE', '2026-06-14', NULL),
 (9, '38527419', 'Santiago', 'Acosta', '1985-05-19', '1234', 'santi@gmail.com', '/uploads/PerfilPorDefecto.png', '091999000', 'CLIENTE', '2026-06-14', NULL),
 (10, '52341234', 'Mathias', 'Díaz', '1996-09-11', '1234', 'mathi@gmail.com', '/uploads/PerfilPorDefecto.png', '095222333', 'CLIENTE', '2026-06-14', NULL),
-(26, '53507227', 'Franco', 'Echaide', '2026-06-18', '1234', 'franco@gmail.com', '/uploads/53507227/fotoPerfil.png', '099123456', 'CLIENTE', '2026-06-18', NULL),
-(27, '53507226', 'Franco', 'Echaide', '2026-06-18', '1234', 'echaidefranco@gmail.com', '/uploads/53507226/fotoPerfil.png', '099123456', 'CLIENTE', '2026-06-18', NULL);
+(28, '12345678', 'Admin', 'Principal', '1990-01-01', 'admin', 'admin@barberia.com', NULL, '099123456', 'ADMIN', '2026-06-19', 'Barbería Central'),
+(29, '12121212', 'german', 'Echaide', '2026-06-20', '123', 'germanechaide@gmail.com', NULL, '098267299', 'CLIENTE', '2026-06-20', NULL),
+(30, '99999999', 'Federico', 'asdsad', '0000-00-00', 'empleado', 'federico@gmail.com', '/uploads/PerfilPorDefecto.png', '098267299', 'EMPLEADO', '2026-06-21', NULL),
+(31, '11111111', 'Franco', 'Echaide', '2026-06-22', 'fra02nicol97', 'germanechaide2@gmail.com', '/uploads/11111111/fotoPerfil_1782100667.png', '098282892', 'CLIENTE', '2026-06-22', NULL),
+(32, '53507227', 'Franco', 'Echaide', '2026-06-22', '12345', 'echaidefranco@gmail.com', '/uploads/53507227/fotoPerfil_1782131382.png', '098267299', 'CLIENTE', '2026-06-22', 'Playa hermosa'),
+(33, '12111111', 'Carlitos', 'Portuano', '1997-05-17', '12345', 'carlitos@gmail.com', '/uploads/PerfilPorDefecto.png', '098267299', 'EMPLEADO', '2026-06-22', NULL),
+(34, '88888888', 'Franco', 'asdsad', '2026-06-22', '1234', 'germ2anechaide@gmail.com', '/uploads/88888888/fotoPerfil_1782137833.png', '092726272', 'CLIENTE', '2026-06-22', NULL),
+(35, '53507332', 'Juanma', 'Juanderson', '2002-05-17', '12345', 'jaunderson@gmail.com', '/uploads/PerfilPorDefecto.png', '098267299', 'EMPLEADO', '2026-06-23', NULL);
 
 -- --------------------------------------------------------
 
@@ -330,7 +361,6 @@ ALTER TABLE `horario_empleado`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`idReserva`),
-  ADD UNIQUE KEY `idEmpleado` (`idEmpleado`,`fecha`,`horaInicio`,`horaFin`) USING BTREE,
   ADD KEY `idCliente` (`idCliente`),
   ADD KEY `idServicio` (`idServicio`);
 
@@ -362,25 +392,25 @@ ALTER TABLE `verificacion_usuario`
 -- AUTO_INCREMENT de la tabla `horario_empleado`
 --
 ALTER TABLE `horario_empleado`
-  MODIFY `idHorario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idHorario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `idReserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
+  MODIFY `idReserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
 --
 ALTER TABLE `servicios`
-  MODIFY `idServicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idServicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Restricciones para tablas volcadas
