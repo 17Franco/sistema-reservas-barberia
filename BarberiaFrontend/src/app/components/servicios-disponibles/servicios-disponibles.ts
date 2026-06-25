@@ -25,7 +25,12 @@ export class ServiciosDisponibles {
   
   @Input() reset: boolean | null = null;
 
+  loadingServicios = signal<boolean>(false);
+
   ngOnChanges() {
+    if (!this.servicios() || this.servicios().length === 0) {
+      this.loadingServicios.set(true);
+    }
     this.ServicioSeleccionado=null;
     this.startIndex = 0;
     if (this.dia?.fecha) {
@@ -34,10 +39,12 @@ export class ServiciosDisponibles {
       next:(res)=>{
       
         this.servicios.set(res);
+        this.loadingServicios.set(false);
         console.log('Servicios SETEADOS:', this.servicios());
       },
       error:(err)=>{
         console.error('Error al traer los turnos', err);
+        this.loadingServicios.set(false);
       }
     })
     }

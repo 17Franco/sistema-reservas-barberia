@@ -24,20 +24,23 @@ export class Calendario implements OnInit {
   //guardo fecha
   diaSeleccionado: string | null = null;
 
+  loadingDias = signal<boolean>(false);
   //guardo un index para saber desde donde empiezo a mostrar el arreglo de dias en el front
   startIndex = 0;
   //carga al inicio
   ngOnInit(): void {
+    this.loadingDias.set(true);
     //peticion
     this.disponibilidad.calendario().subscribe({
       next:(res)=>{
-        
         //cargo los dias en dias con signal detecta que cambio y actualiza
         this.dias.set(res);
+        this.loadingDias.set(false);
         //console.log('DIAS SETEADOS:', this.dias);
       },
       error:(err)=>{
         console.error('Error al traer los turnos', err);
+        this.loadingDias.set(false);
       }
     })
   }

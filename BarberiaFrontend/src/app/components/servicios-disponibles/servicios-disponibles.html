@@ -1,26 +1,34 @@
 <div class="row">
     <div class="col-12 mb-4 fs-5 text fw-bold"><i class="bi bi-scissors me-2"></i>Servicio</div>
     <div class="col-12 d-flex align-items-center gap-2">
-        <!--for que replica otro contenedor con -->
-        @for (item of serviciosVisbles(); track item.idServicio){
-            <div class="card text-center p-3 servicio" style="width: 200px;" [class.selected]="item.idServicio === ServicioSeleccionado" [class.disabled]="!item.disponible" (click)="item.disponible && seleccionarServicio(item)">
-                <span class="text-muted small">{{item.nombre}}</span>
-                <span class="fs-4 fw-bold text-primary">${{item.precio}}</span>
-                <span class="text-muted small"></span>
-            </div>
-        }@empty {
-            <div class="text-muted small">A ocurrio un error vuelva a intentar en otra vida</div>
-        }
-        
-        <div class="d-flex flex-column align-items-center gap-2">
-            <button class="btn border btnHover ms-2" [disabled]="paginaActual() === totalPaginas()" (click)="next()">
-                <i class="bi bi-chevron-right text-primary fs-4"></i>
-            </button>
-            <span class="page-indicator">{{ paginaActual() }}/{{ totalPaginas() }}</span>
-            <button class="btn border btnHover ms-2 " [disabled]="paginaActual() === 1" (click)="prev()">
-                <i class="bi bi-chevron-left text-primary fs-4"></i>
-            </button>
+        @if (loadingServicios()) {
+        <div class="d-flex justify-content-center w-100 py-4">
+            <div class="spinner-border text-primary"></div>
         </div>
-        
+        } @else if (serviciosVisbles().length === 0) {
+            <!-- Se muestra si ya cargó pero no hay datos -->
+            <div class="text-muted small">
+                No hay servicio disponibles
+            </div>
+        }@else{
+            <!--for que replica otro contenedor con -->
+            @for (item of serviciosVisbles(); track item.idServicio){
+                <div class="card text-center p-3 servicio" style="width: 200px;" [class.selected]="item.idServicio === ServicioSeleccionado" [class.disabled]="!item.disponible" (click)="item.disponible && seleccionarServicio(item)">
+                    <span class="text-muted small">{{item.nombre}}</span>
+                    <span class="fs-4 fw-bold text-primary">${{item.precio}}</span>
+                    <span class="text-muted small"></span>
+                </div>
+            }
+            
+            <div class="d-flex flex-column align-items-center gap-2">
+                <button class="btn border btnHover ms-2" [disabled]="paginaActual() === totalPaginas()" (click)="next()">
+                    <i class="bi bi-chevron-right text-primary fs-4"></i>
+                </button>
+                <span class="page-indicator">{{ paginaActual() }}/{{ totalPaginas() }}</span>
+                <button class="btn border btnHover ms-2 " [disabled]="paginaActual() === 1" (click)="prev()">
+                    <i class="bi bi-chevron-left text-primary fs-4"></i>
+                </button>
+            </div>
+        }
     </div>
 </div>
