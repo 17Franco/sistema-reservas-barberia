@@ -36,6 +36,8 @@
 
       <a class="link fw-bold" [class.d-none]="admin || empleado"  (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
 
+      <a class="link fw-bold" [class.d-none]="admin || empleado"  (click)="cambiarModo('resenas')" routerLink="/resenas" [ngClass]="modo=== 'resenas' ? 'text-primary' : 'text-secondary'">RESEÑAS</a>
+
     </div>
 
 

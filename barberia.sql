@@ -455,6 +455,23 @@ ALTER TABLE `reservas`
 --
 ALTER TABLE `verificacion_usuario`
   ADD CONSTRAINT `verificacion_usuario_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`id`);
+
+
+-- 
+-- Implementacion de resenas 
+--
+DROP TABLE IF EXISTS resenas;
+
+CREATE TABLE resenas (
+  idResena INT NOT NULL AUTO_INCREMENT,
+  idCliente INT NOT NULL,
+  idEmpleado INT NOT NULL,
+  puntuacion INT NOT NULL,
+  comentario VARCHAR(255) DEFAULT NULL,
+  fechaCreacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (idResena)
+);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

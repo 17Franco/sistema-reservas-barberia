@@ -28,6 +28,10 @@ use Barberia\Backend\interface\api\controllers\EmpleadoController;
 use Barberia\Backend\aplicacion\ServiciosServicios;
 use Barberia\Backend\interface\api\controllers\ReservaController;
 
+use Barberia\Backend\aplicacion\impl\ServicioResenaImpl;
+use Barberia\Backend\interface\api\controllers\ResenaController;
+
+
 date_default_timezone_set('America/Montevideo');
 
 try {
@@ -54,6 +58,7 @@ try {
     $disponibilidadService = Fabrica::crearDisponinilidadServicios();
     $servicioServicios = new ServiciosServicios();// la fabrica de adorno
     $servicioReserva = Fabrica::crearReservaServicios();
+
     /*
     |--------------------------------------------------------------------------
     | USUARIOS / AUTH
@@ -247,6 +252,58 @@ try {
         ReservaController::completar($servicioReserva, $idReserva);
         exit;
     }
+
+    /*
+|--------------------------------------------------------------------------
+| RESEÑAS
+|--------------------------------------------------------------------------
+*/
+
+if ($method === 'GET' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::listarResenas($servicioResenas);
+    exit;
+}
+
+if ($method === 'POST' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::crearResena($servicioResenas);
+    exit;
+}
+
+if (preg_match('#^/resenas/(\d+)$#', $route, $matches)) {
+    $idResena = (int)$matches[1];
+
+    if ($method === 'DELETE') {
+        $servicioResenas = new ServicioResenaImpl();
+        ResenaController::eliminarResena($servicioResenas, $idResena);
+        exit;
+    }
+}
+
+
+if ($method === 'GET' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::listarResenas($servicioResenas);
+    exit;
+}
+
+if ($method === 'POST' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::crearResena($servicioResenas);
+    exit;
+}
+
+if (preg_match('#^/resenas/(\d+)$#', $route, $matches)) {
+    $idResena = (int)$matches[1];
+
+    if ($method === 'DELETE') {
+        $servicioResenas = new ServicioResenaImpl();
+        ResenaController::eliminarResena($servicioResenas, $idResena);
+        exit;
+    }
+}
+
 
     /*
     |--------------------------------------------------------------------------

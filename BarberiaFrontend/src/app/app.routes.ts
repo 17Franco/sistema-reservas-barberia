@@ -16,6 +16,8 @@ import { GestionReserva } from './pages/admin/gestion-reserva/gestion-reserva';
 import { Reserva } from './pages/reserva/reserva';
 import { tipoUserGuard } from './guards/tipo-user-guard';
 
+import { GestionResenas } from './pages/admin/gestion-resenas/gestion-resenas';
+
 
 //aca agregamos el path para que si en el navegador busca home redirija a page home o login etc
 //cada pagina debe tener una ruta
@@ -103,6 +105,22 @@ export const routes: Routes = [
         canActivate: [tipoUserGuard],
         data: {
           roles: ['CLIENTE']
+        }
+      },
+      {
+        path: 'admin/resenas',
+        component: GestionResenas,
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['ADMIN']
+        }
+      },
+      {
+        path: 'resenas',
+        component: GestionResenas,
+        canActivate: [tipoUserGuard],
+        data: {
+          roles: ['CLIENTE', 'ADMIN']
         }
       }
     ]

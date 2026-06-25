@@ -45,6 +45,7 @@ export class NavBar implements OnInit {
         this.cd.markForCheck();
       },
     });
+    
   }
 
   get usuarioActual(): UsuarioSesion | null {
