@@ -129,10 +129,23 @@ Ese archivo apunta al backend publicado:
 
     https://barbershop.site.je/ProyectoBarberiaBackend/public/index.php
 
+Al generar la version para subir al hosting backup con:
+
+    ng build --configuration backup
+
+Angular usa:
+
+    BarberiaFrontend/src/environments/environment.backup.ts
+
+Ese archivo apunta al backend publicado del backup:
+
+    https://barbershop-backup.site.je/ProyectoBarberiaBackend/public/index.php
+
 Resumen:
 
-    ng serve  -> environment.development.ts -> backend local
-    ng build  -> environment.ts             -> backend publicado
+    ng serve                         -> environment.development.ts -> backend local
+    ng build                         -> environment.ts             -> backend publicado principal
+    ng build --configuration backup  -> environment.backup.ts      -> backend publicado backup
 
 Para publicar el frontend, subir al hosting el contenido de:
 

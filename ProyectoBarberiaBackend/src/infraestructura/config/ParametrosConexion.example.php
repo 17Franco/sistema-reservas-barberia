@@ -20,5 +20,14 @@ define('BASEDATOS','if0_42255858_barberia');
 define('EMAIL','barberia.reservas2026@gmail.com');
 define('EMAIL_PASS','igeg jwgr lzra fpol');
 
+Servidor Backup:
+//Constantes Servidor Backup
+    define('SERVIDOR','sql207.infinityfree.com');
+    define('USUARIO','if0_42272072');
+    define('CONTRASEÑA','barberiaPass');
+    define('BASEDATOS','if0_42272072_barberia');
+    define('EMAIL','barberia.reservas2026@gmail.com');
+    define('EMAIL_PASS','igeg jwgr lzra fpol');
+
 
 --> 
