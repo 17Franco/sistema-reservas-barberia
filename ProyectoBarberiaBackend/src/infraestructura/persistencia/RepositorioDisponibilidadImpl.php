@@ -76,7 +76,7 @@ use mysqli;
        }
 
        public function reservasPorFechaAEmpleado(string $fecha,int $empleado):array{
-            $sql = "SELECT * FROM reservas r where r.idEmpleado= ? and r.fecha= ? ORDER BY horainicio";
+            $sql = "SELECT * FROM reservas r WHERE r.idEmpleado = ? AND r.fecha = ? AND r.estado IN ('PENDIENTE', 'CONFIRMADA') ORDER BY r.horainicio";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("is",$empleado,$fecha);
 
