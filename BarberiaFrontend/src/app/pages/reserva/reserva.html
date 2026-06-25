@@ -10,22 +10,21 @@
             <div class="opciones mb-4">
                 <app-calendario [reset]="reset" (diaSeleccionadoChange)="onDia($event)" ></app-calendario>
             </div>
-            <div class="opciones mb-4">
-                @if(reservaIniciada){
-                <app-servicios-disponibles [dia]="diaSeleccionado" [reset]="reset" (ServicioSeleccionadoChange)="onServicio($event)"></app-servicios-disponibles>
-                }
-                
-            </div> 
-            <div class="opciones mb-4">
-                @if(reservaIniciada && servicioInicido){
+             @if (hasOpenedServicio) {
+                <div class="opciones mb-4 " [class.disabled-step]="pasoActivo === 'dia'">
+                    <app-servicios-disponibles [dia]="diaSeleccionado" [reset]="reset" (ServicioSeleccionadoChange)="onServicio($event)"></app-servicios-disponibles>
+                </div> 
+             }  
+             @if (hasOpenedEmpleado) {
+                <div class="opciones mb-4" [class.disabled-step]="pasoActivo !== 'empleado' && pasoActivo !== 'horario'">   
                     <app-empleado-disponibles [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" [reset]="reset" (EmpleadoSeleccionadoChange)="onEmpleado($event)"></app-empleado-disponibles>
-                }
-            </div>
-            <div class="opciones mb-4">
-                @if(reservaIniciada && servicioInicido && HorarioInicido){
+                </div>
+            }
+            @if (hasOpenedHorario) {
+                <div class="opciones mb-4" [class.disabled-step]="pasoActivo !== 'horario'">
                     <app-horario-disponibles [dia]="diaSeleccionado" [servicio]="ServicioSeleccionado" [reset]="reset" [empleado]="EmpleadoSeleccionado" (HorarioSeleccionadoChange)="onHorario($event)" ></app-horario-disponibles>
-                }
-            </div>
+                </div>
+            }
         </div>
         <div class="col-4 ">
             <div class="resumen">

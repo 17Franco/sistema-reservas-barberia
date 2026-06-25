@@ -14,7 +14,7 @@ export class EmpleadoDisponibles {
   @Input() dia: Dia | null = null;
   @Input() servicio: Servicio | null = null;
   @Input() reset: boolean | null = null;
-
+  loadingBarberos = signal<boolean>(false);
   constructor(private disponibilidad: Disponibilidad) {}
   startIndex = 0;
   readonly pageSize = 4;
@@ -23,6 +23,9 @@ export class EmpleadoDisponibles {
   EmpleadoSeleccionado: number| null = null;
 
    ngOnChanges() {
+    if (!this.empleado() || this.empleado().length === 0) {
+      this.loadingBarberos.set(true);
+    }
     this.EmpleadoSeleccionado=null;
     this.startIndex = 0;
     if (this.dia?.fecha && this.servicio?.idServicio) {
@@ -31,10 +34,12 @@ export class EmpleadoDisponibles {
       next:(res)=>{
       
         this.empleado.set(res);
+        this.loadingBarberos.set(false);
         console.log('Servicios SETEADOS:', this.empleado());
       },
       error:(err)=>{
         console.error('Error al traer los turnos', err);
+        this.loadingBarberos.set(false);
       }
     })
     }

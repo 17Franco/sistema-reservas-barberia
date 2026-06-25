@@ -20,9 +20,12 @@ export class HorarioDisponibles {
   @Input() servicio: Servicio | null = null;
   @Input() empleado: EmpleadoD | null = null;
   @Input() reset: boolean | null = null;
-
+  loadingHorario = signal<boolean>(false);
 
   ngOnChanges() {
+    if (!this.horarios() || this.horarios().length === 0) {
+      this.loadingHorario.set(true);
+    }
     this.HorarioSeleccionado=null;
     this.startIndex = 0;
     if (this.dia?.fecha && this.servicio?.idServicio && this.empleado?.id) {
@@ -31,10 +34,12 @@ export class HorarioDisponibles {
       next:(res)=>{
       
         this.horarios.set(res);
+        this.loadingHorario.set(false);
         console.log('Servicios SETEADOS:', this.horarios());
       },
       error:(err)=>{
         console.error('Error al traer los turnos', err);
+        this.loadingHorario.set(false);
       }
     })
     }
