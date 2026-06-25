@@ -32,6 +32,55 @@ Este comando instala las dependencias definidas en composer.json y genera la car
 
 Luego configurar los datos de conexión a la base de datos si corresponde.
 
+### Posible error al ejecutar `composer install` por primera vez
+
+Si al ejecutar:
+
+    composer install
+
+aparece un error similar a:
+
+    requires ext-dom * -> it is missing from your system
+
+significa que falta instalar o habilitar la extensión XML/DOM de PHP.
+
+En Linux, para PHP 8.3, se puede solucionar instalando:
+
+    sudo apt update
+    sudo apt install php8.3-xml
+
+Después verificar que la extensión `dom` esté activa:
+
+    php -m | grep dom
+
+Si devuelve algo como:
+
+    dom
+    random
+
+está correcto. Puede aparecer `random` porque contiene la palabra `dom`; lo importante es que aparezca `dom`.
+
+Luego ejecutar nuevamente:
+
+    composer install
+
+O, si se quiere usar el Composer local del proyecto:
+
+    php composer.phar install
+
+
+### Posible error al subir imágenes en Linux
+
+En Linux puede pasar que el backend no pueda guardar imágenes si la carpeta `uploads` no tiene permisos de escritura.
+
+Para desarrollo local con XAMPP, se puede dar permisos a la carpeta con:
+
+    sudo chmod -R 777 /opt/lampp/htdocs/sistema-reservas-barberia/ProyectoBarberiaBackend/public/uploads
+
+Esto permite que el sistema pueda crear y guardar archivos dentro de `uploads`.
+
+Aclaración: `777` da todos los permisos a todos los usuarios. Para desarrollo en `localhost` es una solución práctica y rápida, pero no es lo recomendado para producción. Con `775` se tiene más control, aunque requiere configurar correctamente el usuario y grupo que usa Apache/XAMPP.
+
 ## Frontend Angular
 
 Entrar a la carpeta del frontend:

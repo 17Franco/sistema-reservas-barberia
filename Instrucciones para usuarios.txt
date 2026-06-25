@@ -1,1 +1,4 @@
-Para cargar imagenes hay que dar permisos a la carpeta uploads, en desarrollo uso "sudo chmod -R 777 /opt/lampp/htdocs/sistema-reservas-barberia/ProyectoBarberiaBackend/public/uploads" pero 777 es peligroso porque da todos los permisos a todos los usuarios, con 775 se tiene más control pero es más laborioso, para producción es la opción adecuada
+Para cargar imagenes hay que dar permisos a la carpeta uploads, en desarrollo uso con:
+"sudo chmod -R 777 /opt/lampp/htdocs/sistema-reservas-barberia/ProyectoBarberiaBackend/public/uploads"      (sin las comillas "")
+
+Aclaración: 777 da todos los permisos a todos los usuarios, con 775 se tiene más control pero es más laborioso, para desarrollo en LOCALHOST es la opción adecuada
