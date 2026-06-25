@@ -28,7 +28,7 @@ export class ListaGestionReserva {
   refresh = signal(0);
 constructor() {
   effect(() => {
-    this.refresh();
+    //this.refresh();
     this.paginaDias=1;//por cada effecvuelvo a pagina 1 
     const filtros = this.filtrosService.filtros();
 
@@ -37,7 +37,6 @@ constructor() {
   });
 }
 
-
   cargarReservas(filtros:any){
       this.authService.filtrarReservas(filtros).subscribe({
         next:(res)=>{
@@ -45,19 +44,34 @@ constructor() {
               console.log(res);
               this.filtrosService.totalReservas.set(res.totalReservas);
               this.reservaPorFecha.set(res.data);
-              this.reservaPorFecha().forEach(dia => {
-                this.paginasPorFecha[dia.fecha] = 1;
-              });
+                this.reservaPorFecha().forEach(dia => {
+                  if (this.paginasPorFecha[dia.fecha] === undefined ) {
+                    this.paginasPorFecha[dia.fecha] = 1;
+                  }
+                });
+              
             }
         },
         error:(err)=>{
           console.log(err);
         }
-      })
-
-        
+      })      
   }
 
+  
+  avanzarPaginaReservaPorFecha(){
+    this.paginaDias = this.paginaDias + 1;
+    this.reservaPorFecha().forEach(dia => {
+        this.paginasPorFecha[dia.fecha] = 1;
+    });
+  }
+
+  retrocederPaginaReservaPorFecha(){
+    this.paginaDias = this.paginaDias - 1;
+     this.reservaPorFecha().forEach(dia => {
+        this.paginasPorFecha[dia.fecha] = 1;
+    });
+  }
   obtenerReservasPagina(dia: ReservasPorFecha): Reserva[] {
     const paginaActual = this.paginasPorFecha[dia.fecha];
     

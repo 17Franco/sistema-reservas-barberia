@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core'; //
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServiciosService, Servicio } from '../../../services/servicios/servicio';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-servicios',
@@ -111,12 +112,24 @@ export class GestionServicios implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  eliminarServicio(servicio: Servicio) {
+  async eliminarServicio(servicio: Servicio) {
     if (!servicio.idServicio) return;
 
-    const confirmar = confirm(`¿Seguro que querés eliminar "${servicio.nombre}"?`);
+    const ok = await Swal.fire({
+            title: `¿Seguro que quieres eliminar "${servicio.nombre}"?`,
+            text: 'Esta acción no se puede revertir.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, Actualizar',
+            cancelButtonText: 'Volver',
+        });
+    
+    if (!ok.isConfirmed) return;
+    //const confirmar = confirm(`¿Seguro que querés eliminar "${servicio.nombre}"?`);
 
-    if (!confirmar) return;
+    //if (!confirmar) return;
 
     this.serviciosService.eliminarServicio(servicio.idServicio).subscribe({
       next: () => {
