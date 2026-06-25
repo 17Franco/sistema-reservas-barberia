@@ -41,8 +41,12 @@
 
 
     <div class="d-flex align-items-center gap-2">
-
-      <a class="profile-summary" routerLink="/MiPerfil" (click)="cambiarModo('MiProfile')">
+      <!--Si es empleado al tocar su foto o nombre va al perfil empleado si es usuario al de usuario-->
+      <a
+        class="profile-summary"
+        [routerLink]="empleado ? '/perfilBarbero' : '/MiPerfil'"
+        (click)="cambiarModo(empleado ? 'Home' : 'MiProfile')"
+      >
         <span class="profile-avatar">
           @if(fotoPerfilUrl; as fotoUrl){
             <img [src]="fotoUrl" (error)="usarIniciales()" alt="Foto de perfil">
