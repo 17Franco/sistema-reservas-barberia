@@ -1,7 +1,7 @@
-<div class="container-fluid bg-white p-4 rounded-4">
+<div class="container-fluid bg-white p-4 rounded-4" >
     <!--bloque de reserva por fecha-->
     @for (dia of reservasVisibles; track dia.fecha) {
-    <div class="mb-4 bg-light p-3 rounded-3">
+    <div class="mb-4 bg-light p-3 rounded-3" style="min-height: 620px;">
         <div class="d-flex justify-content-between align-items-center gap-3 mt-3 mb-2">
             <h5 class="fw-bold ">
                 <i class="bi bi-calendar-event me-2"></i>
@@ -35,7 +35,7 @@
         <!--bloque de info de cada reserva-->
         
         @for(reserva of obtenerReservasPagina(dia); track reserva.idReserva){
-            <div class="card shadow-sm mb-3 ">
+            <div class="card shadow-sm mb-3 animate__animated animate__fadeIn animate__fast">
                 <div class="card-body row align-items-center ">
                     <div class="col-2 d-flex align-items-center gap-3 ">
                         <div class="iconos">
@@ -135,7 +135,7 @@
               class="btn btn-outline-primary btn-sm"
               type="button"
               [disabled]="paginaDias === 1"
-              (click)="paginaDias = paginaDias - 1">
+              (click)="retrocederPaginaReservaPorFecha()">
               Anterior
             </button>
 
@@ -147,7 +147,7 @@
               class="btn btn-outline-primary btn-sm"
               type="button"
               [disabled]="paginaDias === totalPaginasDias"
-              (click)="paginaDias = paginaDias + 1">
+              (click)="avanzarPaginaReservaPorFecha()">
               Siguiente
             </button>
           </div>
