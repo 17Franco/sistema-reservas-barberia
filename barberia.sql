@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-06-2026 a las 03:18:45
+-- Tiempo de generación: 26-06-2026 a las 00:17:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -132,6 +132,28 @@ INSERT INTO `horario_empleado` (`idHorario`, `idEmpleado`, `horaIni`, `horaFin`,
 (6, 4, '11:00:00', '19:00:00', '14:30:00', '15:00:00'),
 (7, 5, '13:00:00', '21:00:00', '16:30:00', '17:00:00'),
 (8, 35, '09:00:00', '17:00:00', '00:00:00', '00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `resenas`
+--
+
+CREATE TABLE `resenas` (
+  `idResena` int(11) NOT NULL,
+  `idCliente` int(11) NOT NULL,
+  `idEmpleado` int(11) NOT NULL,
+  `puntuacion` int(11) NOT NULL,
+  `comentario` varchar(255) DEFAULT NULL,
+  `fechaCreacion` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `resenas`
+--
+
+INSERT INTO `resenas` (`idResena`, `idCliente`, `idEmpleado`, `puntuacion`, `comentario`, `fechaCreacion`) VALUES
+(1, 32, 5, 2, 'malardo', '2026-06-25 19:02:45');
 
 -- --------------------------------------------------------
 
@@ -357,12 +379,21 @@ ALTER TABLE `horario_empleado`
   ADD KEY `fk_horario_empleado` (`idEmpleado`);
 
 --
+-- Indices de la tabla `resenas`
+--
+ALTER TABLE `resenas`
+  ADD PRIMARY KEY (`idResena`),
+  ADD KEY `fk_Cliente` (`idCliente`),
+  ADD KEY `fk_Empleado` (`idEmpleado`);
+
+--
 -- Indices de la tabla `reservas`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`idReserva`),
   ADD KEY `idCliente` (`idCliente`),
-  ADD KEY `idServicio` (`idServicio`);
+  ADD KEY `idServicio` (`idServicio`),
+  ADD KEY `reservas_ibfk_2` (`idEmpleado`);
 
 --
 -- Indices de la tabla `servicios`
@@ -393,6 +424,12 @@ ALTER TABLE `verificacion_usuario`
 --
 ALTER TABLE `horario_empleado`
   MODIFY `idHorario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `resenas`
+--
+ALTER TABLE `resenas`
+  MODIFY `idResena` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas`
@@ -443,6 +480,13 @@ ALTER TABLE `horario_empleado`
   ADD CONSTRAINT `fk_horario_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`id_usuario`);
 
 --
+-- Filtros para la tabla `resenas`
+--
+ALTER TABLE `resenas`
+  ADD CONSTRAINT `fk_Cliente` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`id_Usuario`),
+  ADD CONSTRAINT `fk_Empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`id_usuario`);
+
+--
 -- Filtros para la tabla `reservas`
 --
 ALTER TABLE `reservas`
@@ -455,23 +499,6 @@ ALTER TABLE `reservas`
 --
 ALTER TABLE `verificacion_usuario`
   ADD CONSTRAINT `verificacion_usuario_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`id`);
-
-
--- 
--- Implementacion de resenas 
---
-DROP TABLE IF EXISTS resenas;
-
-CREATE TABLE resenas (
-  idResena INT NOT NULL AUTO_INCREMENT,
-  idCliente INT NOT NULL,
-  idEmpleado INT NOT NULL,
-  puntuacion INT NOT NULL,
-  comentario VARCHAR(255) DEFAULT NULL,
-  fechaCreacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (idResena)
-);
-
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
