@@ -81,6 +81,14 @@ Esto permite que el sistema pueda crear y guardar archivos dentro de `uploads`.
 
 Aclaración: `777` da todos los permisos a todos los usuarios. Para desarrollo en `localhost` es una solución práctica y rápida, pero no es lo recomendado para producción. Con `775` se tiene más control, aunque requiere configurar correctamente el usuario y grupo que usa Apache/XAMPP.
 
+## Archivo `htaccess` para el servidor
+
+El proyecto incluye un archivo llamado `htaccess`, utilizado para la configuración del servidor en el hosting.
+
+Al desplegar el proyecto en el servidor, este archivo también debe subirse junto con los archivos del sitio. En el servidor puede ser necesario que quede con el nombre `.htaccess`, dependiendo de cómo lo maneje el administrador de archivos del hosting.
+
+Para más información sobre este punto, revisar la documentación de despliegue del servidor, donde se incluye una guía de cómo desplegar el proyecto en InfinityFree, que fue el servidor elegido para publicar el sistema.
+
 ## Frontend Angular
 
 Entrar a la carpeta del frontend:
