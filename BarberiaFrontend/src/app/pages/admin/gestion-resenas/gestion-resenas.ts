@@ -49,12 +49,13 @@ export class GestionResenas implements OnInit {
   barberoSeleccionado: Barbero | null = null;
   modalResenasAbierto = false;
   barberoResenasSeleccionado: Barbero | null = null;
-
+  tipoUsuarioActual = null;
   resenaForm: Resena = {
     idEmpleado: 0,
     puntuacion: 5,
     comentario: ''
   };
+
 
   ngOnInit() {
     this.cargarUsuarioActual();
@@ -66,7 +67,7 @@ cargarUsuarioActual() {
   this.auth.me().subscribe({
     next: (res: any) => {
       console.log('Usuario actual:', res);
-
+      this.tipoUsuarioActual=res.tipo;
       this.usuarioActualId = Number(
         res.id ||
         res.usuario_id ||
@@ -87,6 +88,9 @@ cargarUsuarioActual() {
   });
 }
 
+obtenerTipoUsuarioActual(){
+  
+}
 misResenas(): Resena[] {
   if (!this.usuarioActualId) {
     return [];
