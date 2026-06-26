@@ -58,7 +58,7 @@
                 $reservas = $this->repo->reservasPorFechaAEmpleado($dia, $empleado);
 
                 $servicio = $this->repo->obtenerServicioPorId($servicio);
-                 $duracionS = $servicio->getDuracion();
+                $duracionS = $servicio->getDuracion();
 
                 foreach ($horarios as $horario) {
                     //comiezo horario laboral empleado
@@ -150,7 +150,7 @@
              $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
              
                 foreach ($empleados as $empleado) {
-                    if ($this->disponibilidadEmpleadoDia($dia->getFecha(),$servicio->getDuracion(),(int)$empleado)) {
+                    if ($this->disponibilidadEmpleadoDia($dia->getFecha(),$servicio->getIdServicio(),(int)$empleado)) {
                         return true;
                     }
                 }  
@@ -201,7 +201,7 @@
                 $empleados = $this->repo->obtenerIdsEmpleadosPorServicio($servicio->getIdServicio());
                 $disponible = false;
                 foreach ($empleados as $empleado) {
-                    if ($this->disponibilidadEmpleadoDia($dia, $servicio->getDuracion(), (int)$empleado)) {
+                    if ($this->disponibilidadEmpleadoDia($dia, $servicio->getIdServicio(), (int)$empleado)) {
                         $disponible = true;
                         break;
                     }
