@@ -104,7 +104,7 @@ use mysqli;
         $sql = "SELECT u.*,e.estado,e.especialidad,s.nombre as nomEspecialidad FROM empleado_servicios es 
                 INNER JOIN empleado e ON e.id_usuario=es.idEmpleado 
                 INNER JOIN usuarios u on e.id_usuario=u.id 
-                INNER JOIN servicios s on e.especialidad=s.idServicio where es.idServicio= ?";
+                INNER JOIN servicios s on e.especialidad=s.idServicio where es.idServicio= ? AND e.estado = 'ACTIVO'";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i",$idServicio);  
