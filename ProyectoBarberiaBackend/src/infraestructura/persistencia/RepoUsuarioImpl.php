@@ -89,7 +89,7 @@ use mysqli;
         }
 
         public function existeEmpleado(int $id): bool{
-            $sql = "SELECT * FROM empleado WHERE id_usuario = ?";
+            $sql = "SELECT * FROM empleado WHERE id_usuario = ? ";
 
             $stmt = $this->conn->prepare($sql);
 
@@ -102,6 +102,22 @@ use mysqli;
             return $result->num_rows > 0;
 
         }
+
+           public function existeEmpleadoActivo(int $id): bool{
+            $sql = "SELECT * FROM empleado WHERE id_usuario = ? AND estado = 'ACTIVO'";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bind_param("i", $id);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+        }
+
+
         //comprueba correo
        public function emailUsado(string $email): bool{
             $sql = "SELECT * FROM usuarios WHERE email = ?";

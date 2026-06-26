@@ -79,13 +79,16 @@ export class ServiciosBarbero implements OnInit {
 
  get barberosFiltrados(): Barbero[] {
   const filtro = this.filtroBarbero.trim().toLowerCase();
-
+  
+  //agrego filtro solo dejo los activos
+  //si quiere modificar inactivos saca el filter deja la asignacion nomas
+  //y sacar consicion de click   (click)="barbero.estado !== 'INACTIVO' && seleccionarBarbero(barbero)"
   const activos = this.barberos.filter(
     barbero => barbero.estado === 'ACTIVO'
   );
 
   if (!filtro) return activos;
-
+  
   return activos.filter(barbero =>
     `${barbero.nombre} ${barbero.apellido} ${barbero.email}`
       .toLowerCase()

@@ -100,7 +100,8 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 throw new Exception("El Usuario cliente no existe", 404);
             }
 
-            if(!$this->repoUsuario->existeEmpleado($reserva->getIdEmpleado())){
+            //solo permito reservar a empleados activos y existentes
+            if(!$this->repoUsuario->existeEmpleadoActivo($reserva->getIdEmpleado())){
                 throw new Exception("El empleado no existe", 404);
             }
 

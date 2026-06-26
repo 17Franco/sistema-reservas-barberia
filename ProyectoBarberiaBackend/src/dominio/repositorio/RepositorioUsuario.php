@@ -14,6 +14,8 @@
 
         public function existeEmpleado(int $id): bool;
 
+        public function existeEmpleadoActivo(int $id): bool;
+
         public function emailUsado(string $email): bool;
 
         public function getEmailById(int $idUsuario):?string;
