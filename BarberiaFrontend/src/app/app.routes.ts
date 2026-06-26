@@ -48,7 +48,7 @@ export const routes: Routes = [
         component: PaginaPerfil,
         canActivate: [tipoUserGuard],
         data: {
-          roles: ['CLIENTE','EMPLEADO']
+          roles: ['CLIENTE']
         }
       },
       {
