@@ -30,7 +30,7 @@
             class="barber-card"
             [class.selected]="barbero.id === idBarberoSeleccionado"
             [class.inactive]="barbero.estado === 'INACTIVO'"
-            (click)="seleccionarBarbero(barbero)"
+            (click)="barbero.estado !== 'INACTIVO' && seleccionarBarbero(barbero)"
           >
             <img [src]="backendPublicUrl + (barbero.foto || '/uploads/PerfilPorDefecto.png')" [alt]="'Foto de ' + barbero.nombre">
             <span>

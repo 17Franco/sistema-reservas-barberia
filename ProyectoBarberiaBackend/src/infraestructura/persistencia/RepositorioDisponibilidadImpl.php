@@ -41,7 +41,7 @@ use mysqli;
         }
 
         public function obtenerIdsEmpleadosPorServicio(int $idServicio):array{
-            $sql ="SELECT idEmpleado FROM empleado_servicios es where es.idServicio= ?";
+            $sql ="SELECT es.idEmpleado FROM empleado_servicios es INNER JOIN empleado e on es.idEmpleado=e.id_usuario where es.idServicio= ? and e.estado!='INACTIVO'";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("i",$idServicio);
 

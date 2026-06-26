@@ -77,14 +77,21 @@ export class ServiciosBarbero implements OnInit {
     return this.barberos.find(barbero => barbero.id === this.idBarberoSeleccionado) || null;
   }
 
-  get barberosFiltrados(): Barbero[] {
-    const filtro = this.filtroBarbero.trim().toLowerCase();
-    if (!filtro) return this.barberos;
+ get barberosFiltrados(): Barbero[] {
+  const filtro = this.filtroBarbero.trim().toLowerCase();
 
-    return this.barberos.filter(barbero =>
-      `${barbero.nombre} ${barbero.apellido} ${barbero.email}`.toLowerCase().includes(filtro)
-    );
-  }
+  const activos = this.barberos.filter(
+    barbero => barbero.estado === 'ACTIVO'
+  );
+
+  if (!filtro) return activos;
+
+  return activos.filter(barbero =>
+    `${barbero.nombre} ${barbero.apellido} ${barbero.email}`
+      .toLowerCase()
+      .includes(filtro)
+  );
+}
 
   seleccionarBarbero(barbero: Barbero): void {
     this.idBarberoSeleccionado = barbero.id || null;
