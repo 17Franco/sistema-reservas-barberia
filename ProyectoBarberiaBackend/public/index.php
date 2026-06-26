@@ -1,6 +1,17 @@
 <?php
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigins = [
+    'http://localhost:4200',
+    'http://localhost',
+    'https://barbershop.site.je',
+    'http://barbershop.site.je',
+];
+
+if (in_array($origin, $allowedOrigins, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
+
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -17,6 +28,10 @@ use Barberia\Backend\interface\api\controllers\EmpleadoController;
 use Barberia\Backend\aplicacion\ServiciosServicios;
 use Barberia\Backend\interface\api\controllers\ReservaController;
 
+use Barberia\Backend\aplicacion\impl\ServicioResenaImpl;
+use Barberia\Backend\interface\api\controllers\ResenaController;
+
+
 date_default_timezone_set('America/Montevideo');
 
 try {
@@ -30,7 +45,7 @@ try {
 
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    $base = '/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+    $base = $_SERVER['SCRIPT_NAME'];
 
     $route = str_replace($base, '', $path);
 
@@ -43,6 +58,7 @@ try {
     $disponibilidadService = Fabrica::crearDisponinilidadServicios();
     $servicioServicios = new ServiciosServicios();// la fabrica de adorno
     $servicioReserva = Fabrica::crearReservaServicios();
+
     /*
     |--------------------------------------------------------------------------
     | USUARIOS / AUTH
@@ -96,6 +112,18 @@ try {
     if ($method === 'POST' && $route === '/empleados') {
         UsuarioController::registrarEmpleado($service);
         exit;
+    }
+
+    if (preg_match('#^/empleados/(\d+)/servicios$#', $route, $matches)) {
+        if ($method === 'GET') {
+            UsuarioController::listarServiciosEmpleado($service, (int)$matches[1]);
+            exit;
+        }
+
+        if ($method === 'PUT') {
+            UsuarioController::actualizarServiciosEmpleado($service, (int)$matches[1]);
+            exit;
+        }
     }
 
     if ($method === 'PUT' && preg_match('#^/empleados/(\d+)$#', $route, $matches)) {
@@ -200,6 +228,10 @@ try {
         ReservaController::reservar($servicioReserva);
         exit;
     }
+    if ($method === 'GET' && $route === '/reservas') {
+        ReservaController::obtenerReserva($servicioReserva);
+        exit;
+    }
     if ($method === 'POST' && preg_match('#^/reservas/(\d+)/enviar-comprobante$#', $route, $matches)) {
         $idReserva = (int)$matches[1];
         ReservaController::enviarComprobante($servicioReserva,$idReserva);
@@ -220,6 +252,58 @@ try {
         ReservaController::completar($servicioReserva, $idReserva);
         exit;
     }
+
+    /*
+|--------------------------------------------------------------------------
+| RESEÑAS
+|--------------------------------------------------------------------------
+*/
+
+if ($method === 'GET' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::listarResenas($servicioResenas);
+    exit;
+}
+
+if ($method === 'POST' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::crearResena($servicioResenas);
+    exit;
+}
+
+if (preg_match('#^/resenas/(\d+)$#', $route, $matches)) {
+    $idResena = (int)$matches[1];
+
+    if ($method === 'DELETE') {
+        $servicioResenas = new ServicioResenaImpl();
+        ResenaController::eliminarResena($servicioResenas, $idResena);
+        exit;
+    }
+}
+
+
+if ($method === 'GET' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::listarResenas($servicioResenas);
+    exit;
+}
+
+if ($method === 'POST' && $route === '/resenas') {
+    $servicioResenas = new ServicioResenaImpl();
+    ResenaController::crearResena($servicioResenas);
+    exit;
+}
+
+if (preg_match('#^/resenas/(\d+)$#', $route, $matches)) {
+    $idResena = (int)$matches[1];
+
+    if ($method === 'DELETE') {
+        $servicioResenas = new ServicioResenaImpl();
+        ResenaController::eliminarResena($servicioResenas, $idResena);
+        exit;
+    }
+}
+
 
     /*
     |--------------------------------------------------------------------------

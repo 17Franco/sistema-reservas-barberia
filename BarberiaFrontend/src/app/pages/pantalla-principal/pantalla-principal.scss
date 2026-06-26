@@ -160,7 +160,7 @@
   background-repeat: no-repeat;//no repite la img
   background-position: center;
   background-size: cover; //cubra todo el espacio
-
+  
 }
 .barra{
   width: 4%; 
@@ -176,12 +176,6 @@
   background-color: #1c1c1c;
 }
 
-
-
-
-.contenedor-steps {
-  
-}
 .step{
   display: flex;
   flex-direction: column;
@@ -190,9 +184,7 @@
   z-index: 2;//queda por arriba de la linea
   
 }
-.ultimo{
-  //es para que la linea que conecta los icono en la ultima no se vea
-}
+
 .contenedor-steps::before {
   content: "";
   position: absolute;
@@ -202,4 +194,60 @@
   height: 2px;
   background-color: #0D6EFD; 
   z-index: 1;
+}
+
+//Implementación de Carrusel
+.servicios-carousel {
+  width: 100%;
+  overflow: hidden;
+}
+
+.servicios-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  // Cambia este valor para ajustar la velocidad: mas segundos = mas lento.
+  animation: moverServicios 30s linear infinite;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.service-slide {
+  flex: 0 0 clamp(340px, 32vw, 390px);
+  min-height: 150px;
+  margin-bottom: 0 !important;
+
+  .rounded-circle {
+    flex: 0 0 50px;
+  }
+
+  .flex-grow-1 {
+    min-width: 0;
+  }
+
+  h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+  }
+}
+
+@keyframes moverServicios {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - .5rem));
+  }
 }

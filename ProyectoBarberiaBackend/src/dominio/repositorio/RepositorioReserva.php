@@ -8,8 +8,9 @@ use Barberia\Backend\dominio\Reserva;
         public function existeReserva(int $IdEmpleado, string $fecha, string $horaIni, string $horaFin):bool;
         public function estaEnHorarioLaboralEmpleado(int $idEmpleado,string $horaInicio,string $horaFin):bool;
         public function obtenerReserva(int $idReserva):?Reserva;
-        public function cancelar(int $idReserva, int $idUsuario, bool $esEmpleado): bool;
-        public function confirmar(int $idReserva, int $idUsuario, bool $esEmpleado): bool;
-        public function completar(int $idReserva, int $idUsuario, bool $esAdmin): bool;
-        }
+        public function cancelar(int $idReserva, ?int $idUsuario, string $tipoUsuario): bool;
+        public function confirmar(int $idReserva, ?int $idUsuario, bool $esAdmin): bool;
+        public function completar(int $idReserva, ?int $idUsuario, bool $esAdmin): bool;
+        public function buscarConFiltros(array $filtros):array;
+    }
 ?>

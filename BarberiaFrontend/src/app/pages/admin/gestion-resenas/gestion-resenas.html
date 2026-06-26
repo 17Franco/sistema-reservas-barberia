@@ -1,0 +1,256 @@
+<div class="container">
+
+  <section class="encabezado-resenas">
+    <div>
+      <span class="badge-seccion">Opiniones de clientes</span>
+      <h2>Reseñas de barberos</h2>
+      <p>
+        Mirá la puntuación general de cada barbero, leé opiniones de otros clientes y dejá tu reseña.
+      </p>
+    </div>
+  </section>
+
+  <p class="mensaje" *ngIf="mensaje">{{ mensaje }}</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <section class="bloque-barberos">
+    <div class="titulo-bloque">
+      <div>
+        <h3>Barberos disponibles</h3>
+        <p>Puntuación calculada según las reseñas de todos los clientes.</p>
+      </div>
+    </div>
+
+    <p class="cargando" *ngIf="barberos.length === 0">
+      Cargando barberos...
+    </p>
+
+    <div class="grid-barberos">
+
+      <article
+        class="barbero-card"
+        *ngFor="let barbero of barberos"
+      >
+
+        <div class="avatar">
+          {{ barbero.nombre.charAt(0) }}{{ barbero.apellido.charAt(0) }}
+        </div>
+
+        <h3>{{ barbero.nombre }} {{ barbero.apellido }}</h3>
+
+        <p class="especialidad">
+          {{ barbero.especialidad || 'Barbero' }}
+        </p>
+
+        <div class="estrellas">
+          {{ estrellasPromedio(barbero) }}
+        </div>
+
+        <div class="datos-rating">
+          <span class="promedio">
+            {{ promedioTexto(barbero) }}
+          </span>
+
+          <span class="separador">•</span>
+
+          <span class="cantidad">
+            {{ cantidadResenas(barbero) }} reseña{{ cantidadResenas(barbero) === 1 ? '' : 's' }}
+          </span>
+        </div>
+
+        <div class="hover-opcion">
+          <button
+            type="button"
+            class="btn-hover principal"
+            (click)="abrirModalResena(barbero, $event)"
+          >
+            Dejar reseña
+          </button>
+
+          <button
+            type="button"
+            class="btn-hover secundario"
+            (click)="abrirModalVerResenas(barbero, $event)"
+          >
+            Ver reseñas
+          </button>
+        </div>
+
+      </article>
+
+    </div>
+  </section>
+
+  <section class="resenas-listado">
+    <div class="titulo-bloque">
+      <div>
+        <h3>Mis reseñas</h3>
+        <p>Estas son las reseñas que dejaste vos.</p>
+      </div>
+    </div>
+
+    <p class="cargando" *ngIf="cargando">
+      Cargando reseñas...
+    </p>
+
+    <div class="mis-resenas-grid">
+
+      <div class="resena-card" *ngFor="let resena of misResenas()">
+
+        <div class="resena-top">
+          <div>
+            <h4>{{ resena.barberoNombre }} {{ resena.barberoApellido }}</h4>
+            <p>Tu reseña</p>
+          </div>
+
+          <span class="resena-estrellas">
+            {{ '⭐'.repeat(resena.puntuacion) }}
+          </span>
+        </div>
+
+        <p class="comentario">
+          {{ resena.comentario || 'Sin comentario' }}
+        </p>
+
+        <div class="resena-footer">
+          <small>{{ resena.fechaCreacion }}</small>
+
+          <button
+            type="button"
+            class="btn-eliminar"
+            (click)="eliminarResena(resena)"
+          >
+            Eliminar
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="sin-resenas" *ngIf="!cargando && misResenas().length === 0">
+      <h4>Todavía no dejaste reseñas</h4>
+      <p>Elegí un barbero de arriba y dejá tu opinión.</p>
+    </div>
+  </section>
+
+  <!-- MODAL PARA DEJAR RESEÑA -->
+  <div class="modal-fondo" *ngIf="modalAbierto">
+
+    <div class="modal-resena">
+
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarModal()"
+      >
+        ×
+      </button>
+
+      <span class="badge-modal">Nueva reseña</span>
+
+      <h2>Dejar reseña</h2>
+
+      <p class="modal-subtitulo" *ngIf="barberoSeleccionado">
+        Para {{ barberoSeleccionado.nombre }} {{ barberoSeleccionado.apellido }}
+      </p>
+
+      <form (ngSubmit)="crearResena()">
+
+        <div class="campo">
+          <label>Puntuación</label>
+
+          <select
+            name="puntuacion"
+            [(ngModel)]="resenaForm.puntuacion"
+          >
+            <option [ngValue]="5">⭐⭐⭐⭐⭐ Excelente</option>
+            <option [ngValue]="4">⭐⭐⭐⭐ Muy bueno</option>
+            <option [ngValue]="3">⭐⭐⭐ Bueno</option>
+            <option [ngValue]="2">⭐⭐ Regular</option>
+            <option [ngValue]="1">⭐ Malo</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label>Comentario</label>
+
+          <textarea
+            name="comentario"
+            rows="4"
+            placeholder="Escribí tu opinión..."
+            [(ngModel)]="resenaForm.comentario"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn-publicar">
+          Publicar reseña
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL PARA VER RESEÑAS DEL BARBERO -->
+  <div class="modal-fondo" *ngIf="modalResenasAbierto">
+
+    <div class="modal-resena modal-ver-resenas">
+
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarModalVerResenas()"
+      >
+        ×
+      </button>
+
+      <span class="badge-modal">Reseñas del barbero</span>
+
+      <h2 *ngIf="barberoResenasSeleccionado">
+        {{ barberoResenasSeleccionado.nombre }} {{ barberoResenasSeleccionado.apellido }}
+      </h2>
+
+      <p class="modal-subtitulo">
+        Opiniones registradas por los clientes.
+      </p>
+
+      <div
+        class="resena-modal-card"
+        *ngFor="let resena of resenasDelBarberoSeleccionado()"
+      >
+        <div class="resena-modal-top">
+          <div>
+            <h4>
+              {{ resena.clienteNombre }} {{ resena.clienteApellido }}
+            </h4>
+
+            <small>
+              {{ resena.fechaCreacion }}
+            </small>
+          </div>
+
+          <span class="resena-modal-estrellas">
+            {{ '⭐'.repeat(resena.puntuacion) }}
+          </span>
+        </div>
+
+        <p>
+          {{ resena.comentario || 'Sin comentario' }}
+        </p>
+      </div>
+
+      <div
+        class="sin-resenas-modal"
+        *ngIf="resenasDelBarberoSeleccionado().length === 0"
+      >
+        <h4>Este barbero todavía no tiene reseñas</h4>
+        <p>Sé el primero en dejar una opinión.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

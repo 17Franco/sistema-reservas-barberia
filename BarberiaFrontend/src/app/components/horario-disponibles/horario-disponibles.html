@@ -1,24 +1,33 @@
 <div class="row">
     <div class="col-12 fs-5 text fw-bold"><i class="bi bi-clock me-2"></i>Horario disponible</div>
     <div class="col-12 d-flex align-items-center gap-2">
+        @if (loadingHorario()) {
+            <div class="d-flex justify-content-center w-100 py-4">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        } @else if (horarioVisbles().length === 0) {
+            <!-- Se muestra si ya cargó pero no hay datos -->
+            <div class="text-muted small">
+                No hay horarios disponibles
+            </div>
+        }@else {
         <!--for que replica otro contenedor con -->
         @for (item of horarioVisbles(); track item.inicio){
             <div class="card text-center p-2 horario" style="width: 100px;" [class.selected]="item.inicio === HorarioSeleccionado"  (click)="seleccionarHorario(item)">
                 <span class="fs-6">{{item.inicio}}</span>
                 
             </div>
-        }@empty {
-            <div class="text-muted small">A ocurrio un error vuelva a intentar en otra vida</div>
         }
         
-        <div class="d-flex flex-column gap-2">
-            <button class="btn border btnHover ms-2" (click)="next()">
+        <div class="d-flex flex-column align-items-center gap-2">
+            <button class="btn border btnHover ms-2" [disabled]="paginaActual() === totalPaginas()" (click)="next()">
                 <i class="bi bi-chevron-right text-primary fs-4"></i>
             </button>
-            <button class="btn border btnHover ms-2 " (click)="prev()">
+            <span class="page-indicator">{{ paginaActual() }}/{{ totalPaginas() }}</span>
+            <button class="btn border btnHover ms-2 " [disabled]="paginaActual() === 1" (click)="prev()">
                 <i class="bi bi-chevron-left text-primary fs-4"></i>
             </button>
         </div>
-        
+    }  
     </div>
 </div>

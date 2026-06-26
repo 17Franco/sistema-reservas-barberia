@@ -10,5 +10,6 @@
       public function cancelarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void;
       public function confirmarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void;
       public function completarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void;
+      public function obtenerReservas(array $filtros):array;
    }
 ?>

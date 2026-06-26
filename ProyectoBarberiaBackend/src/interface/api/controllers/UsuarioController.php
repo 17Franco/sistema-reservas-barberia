@@ -165,11 +165,33 @@ class UsuarioController {
         echo json_encode(['success' => $servicio->actualizarEmpleado($id, self::datosEmpleado(false))]);
     }
 
+    public static function listarServiciosEmpleado(ServiciosUsuarios $servicio, int $id): void {
+        echo json_encode([
+            'success' => true,
+            'servicios' => $servicio->listarServiciosEmpleado($id)
+        ]);
+    }
+
+    public static function actualizarServiciosEmpleado(ServiciosUsuarios $servicio, int $id): void {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        if (!isset($data['servicios']) || !is_array($data['servicios'])) {
+            throw new Exception("Falta la lista de servicios", 400);
+        }
+
+        echo json_encode([
+            'success' => $servicio->actualizarServiciosEmpleado($id, $data['servicios'])
+        ]);
+    }
+
     private static function datosEmpleado(bool $alta): array {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
-        $requeridos = $alta
-            ? ['ci','nombre','apellido','fechaNac','password','email','celular','idEspecialidad']
-            : ['nombre','apellido','email','celular','idEspecialidad'];
+
+        if ($alta) {
+            $requeridos = ['ci','nombre','apellido','fechaNac','password','email','celular','idEspecialidad','horaIni','horaFin'];
+        } else {
+            $requeridos = ['nombre','apellido','email','celular','idEspecialidad'];
+        }
+
         foreach ($requeridos as $campo) {
             if (empty($data[$campo])) throw new Exception("Falta el campo $campo", 400);
         }

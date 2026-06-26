@@ -1,0 +1,6 @@
+.disabled-step {
+  opacity: 0.6;
+  filter: saturate(0.6);
+  pointer-events: none;
+  transition: 0.2s;
+}

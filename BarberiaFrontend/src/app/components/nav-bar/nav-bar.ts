@@ -3,6 +3,7 @@ import { RouterLink } from "@angular/router";
 import { NgClass } from '@angular/common';
 import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 interface UsuarioSesion {
   logueado: boolean;
@@ -20,7 +21,7 @@ interface UsuarioSesion {
   styleUrl: './nav-bar.scss',
 })
 export class NavBar implements OnInit {
-  private readonly backendPublicUrl = 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public';
+  private readonly backendPublicUrl = environment.backendPublicUrl;
 
   authService = inject(Auth);
   router = inject(Router);
@@ -44,6 +45,7 @@ export class NavBar implements OnInit {
         this.cd.markForCheck();
       },
     });
+    
   }
 
   get usuarioActual(): UsuarioSesion | null {

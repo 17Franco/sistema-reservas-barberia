@@ -24,6 +24,12 @@
 
         }
 
+         @if(modo === "resenas"){
+
+          <img src="logos/LogoReseña.png" class="logoHome" alt="">
+
+        }
+
       </a>
 
     </div>
@@ -34,15 +40,21 @@
 
       <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('Home')" [routerLink]="empleado ? '/perfilBarbero' : '/'" [ngClass]="modo=== 'Home' ? 'text-primary' : 'text-secondary'" >INICIO</a>
 
-      <a class="link fw-bold" [class.d-none]="admin" (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
+      <a class="link fw-bold" [class.d-none]="admin || empleado"  (click)="cambiarModo('MiProfile')" routerLink="/MiPerfil" [ngClass]="modo=== 'MiProfile' ? 'text-primary' : 'text-secondary'">MI PERFIL</a>
+
+      <a class="link fw-bold" [class.d-none]="admin || empleado"  (click)="cambiarModo('resenas')" routerLink="/resenas" [ngClass]="modo=== 'resenas' ? 'text-primary' : 'text-secondary'">RESEÑAS</a>
 
     </div>
 
 
 
     <div class="d-flex align-items-center gap-2">
-
-      <a class="profile-summary" routerLink="/MiPerfil" (click)="cambiarModo('MiProfile')">
+      <!--Si es empleado al tocar su foto o nombre va al perfil empleado si es usuario al de usuario-->
+      <a
+        class="profile-summary"
+        [routerLink]="empleado ? '/perfilBarbero' : '/MiPerfil'"
+        (click)="cambiarModo(empleado ? 'Home' : 'MiProfile')"
+      >
         <span class="profile-avatar">
           @if(fotoPerfilUrl; as fotoUrl){
             <img [src]="fotoUrl" (error)="usarIniciales()" alt="Foto de perfil">

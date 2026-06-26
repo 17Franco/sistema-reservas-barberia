@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { RegistroUsuario } from '../interfaces/registro-usuario';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+import { ResponseReservas } from '../interfaces/filtro-reservas';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +13,7 @@ export class Auth {
   usuario:any=null;       //uso esta para comunicar nav-bar con pagina-perfil
   
 
-  private apiUrl='http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  private apiUrl = environment.apiUrl;
 
   me(){
     return this.http.get(
@@ -101,6 +103,14 @@ export class Auth {
     return this.http.put<any>(`${this.apiUrl}/empleados/estado`, { ci, estado }, { withCredentials: true });
   }
 
+  getServiciosBarbero(id: number){
+    return this.http.get<any>(`${this.apiUrl}/empleados/${id}/servicios`, { withCredentials: true });
+  }
+
+  actualizarServiciosBarbero(id: number, servicios: number[]){
+    return this.http.put<any>(`${this.apiUrl}/empleados/${id}/servicios`, { servicios }, { withCredentials: true });
+  }
+
 
   editarPerfilUsuario(datos: FormData){
     return this.http.post<any>(
@@ -150,5 +160,34 @@ export class Auth {
       }
     );
   }
+
+  filtrarReservas(filtro: any): Observable<ResponseReservas>{
+    let params = new HttpParams();
+
+    if (filtro.servicio) {
+      params = params.set('servicio', filtro.servicio);
+    }
+
+    if (filtro.estado) {
+      params = params.set('estado', filtro.estado);
+    }
+
+    if (filtro.empleado) {
+      params = params.set('empleado', filtro.empleado);
+    }
+
+    if (filtro.fechaDesde) {
+      params = params.set('fechaDesde', filtro.fechaDesde);
+    }
+
+    if (filtro.fechaHasta) {
+      params = params.set('fechaHasta', filtro.fechaHasta);
+    }
+
+    return this.http.get<ResponseReservas>(`${this.apiUrl}/reservas`, { params });
+
+  }
+
+  
 
 }

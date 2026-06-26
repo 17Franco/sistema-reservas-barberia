@@ -16,9 +16,9 @@ import { HorarioDisponibles } from "../../components/horario-disponibles/horario
 })
 export class Reserva {
   //variables para saber que ya los componente por lo menos tiene algo cargado
-  reservaIniciada = false;
-  servicioInicido=false;
-  HorarioInicido=false;
+  hasOpenedServicio = false;
+  hasOpenedEmpleado = false;
+  hasOpenedHorario = false;
 
   //variables / objetos que mando desde el padre a los otros componentes
   diaSeleccionado: Dia | null = null;
@@ -30,8 +30,17 @@ export class Reserva {
   horarioSeleccionado: Horario | null = null;
 
   reset = false;
-
+  
+  pasoActivo: 'dia' | 'servicio' | 'empleado' | 'horario' = 'dia';
+  
   resetPantalla() {
+    
+
+    this.diaSeleccionado = null;
+    this.ServicioSeleccionado = null;
+    this.EmpleadoSeleccionado = null;
+    this.horarioSeleccionado = null;
+    this.pasoActivo = 'dia';
     this.reset = !this.reset;
   }
 
@@ -39,23 +48,31 @@ export class Reserva {
   
   onDia(dia:Dia) {
     this.diaSeleccionado = dia;
-    this.reservaIniciada = true;
+    this.hasOpenedServicio = true;
+
     this.ServicioSeleccionado = null;
     this.EmpleadoSeleccionado = null;
     this.horarioSeleccionado = null;
+
+     this.pasoActivo = 'servicio';
+   
   }
 
   onServicio(servicio:Servicio) {
-    this.servicioInicido=true;
     this.ServicioSeleccionado = servicio;
+    this.hasOpenedEmpleado = true;
     this.EmpleadoSeleccionado = null;
     this.horarioSeleccionado = null;
+
+     this.pasoActivo = 'empleado';
+   
   }
 
   onEmpleado(empleado:EmpleadoD) {
-    this.HorarioInicido=true;
     this.EmpleadoSeleccionado = empleado;
+    this.hasOpenedHorario = true;
     this.horarioSeleccionado = null;
+     this.pasoActivo = 'horario';
   }
   onHorario(horario:Horario){
     this.horarioSeleccionado = horario;

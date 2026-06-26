@@ -11,7 +11,7 @@ import { ServiciosService } from '../../services/servicios/servicio';
   templateUrl: './pantalla-principal.html',
   styleUrl: './pantalla-principal.scss',
 })
-export class PantallaPrincipal {
+export class PantallaPrincipal{
   authService = inject(Auth);
   ServiciosService = inject(ServiciosService);
   router = inject(Router);
@@ -19,6 +19,9 @@ export class PantallaPrincipal {
   serviciosDestacados: any[] = [];
   cargando = true;
   error: string | null = null;
+  //Para el carrusel de servicios
+  serviciosPorPagina = 6;
+
 
   constructor() {
     this.loadServicios();
@@ -33,7 +36,7 @@ export class PantallaPrincipal {
       next: (res: any) => {
         console.log('PantallaPrincipal.getServicios.next', res);
         const servicios = res.servicios || [];
-        this.serviciosDestacados = servicios.slice(0, 3);
+        this.serviciosDestacados = servicios.slice(0, this.serviciosPorPagina);
         this.cargando = false;
         console.log('PantallaPrincipal.serviciosDestacados', this.serviciosDestacados, 'cargando=', this.cargando);
         this.cd.detectChanges();
@@ -46,4 +49,5 @@ export class PantallaPrincipal {
       },
     });
   }
+
 }

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { Auth } from '../../services/auth';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 interface UsuarioSesion {
   logueado: boolean;
@@ -48,8 +49,8 @@ interface FormularioPerfil {
 })
 export class PerfilBarbero implements OnInit{
   // Dependencias y configuración
-  private readonly backendPublicUrl =
-    'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public';
+  
+  private readonly backendPublicUrl = environment.backendPublicUrl; 
   private readonly cd = inject(ChangeDetectorRef);
   private readonly auth = inject(Auth);
 

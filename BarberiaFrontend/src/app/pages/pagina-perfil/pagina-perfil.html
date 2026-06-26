@@ -1,5 +1,5 @@
-<div class="profile-page">
-<div class="container profile-content">
+<div class="profile-page ">
+<div class="container profile-content animate__animated animate__fadeIn animate__fast">
 
   @if(cargando){
     <div class="alert alert-info">Cargando perfil...</div>
@@ -10,7 +10,7 @@
   }
 
   @if(usuarioActual && !cargando){
-    <header class="profile-hero">
+    <header class="profile-hero animate__animated animate__fadeIn ">
       <div>
         <span class="eyebrow">Panel de usuario</span>
         <h1>Administración de Usuario</h1>
@@ -19,7 +19,7 @@
     </header>
 
     <!--SECCION DE USUARIO-->
-    <section class="profile-card seccion-destacada seccion-datos">
+    <section class="profile-card seccion-destacada seccion-datos animate__animated animate__fadeIn animate__fast">
       <div class="profile-info">
         <div class="avatar">
           @if(fotoPerfilUrl){
@@ -29,7 +29,7 @@
           }
         </div>
         <!--FORMULARIO EDICION-->
-        <div class="profile-main">
+        <div class="profile-main ">
           @if(editandoPerfil){
             <form class="profile-edit-form" (ngSubmit)="guardarEdicion()">
               <div class="row g-2">
@@ -123,7 +123,7 @@
   }
 
   <!-------SECCION DE RESERVAS ------>
-  <section class="card border-0 profile-section seccion-destacada seccion-reservas">
+  <section class="card border-0 profile-section seccion-destacada seccion-reservas ">
     <div class="card-body">
 
       <h5 class="mb-3">Mis Reservas</h5>
@@ -139,7 +139,7 @@
       </div>
 
       @if(reservasAsociadas.length > 0){
-        <ul class="list-group lista-reservas-fija"> <!--Para que siempre tenga el tamaño que determino en el ts en reservasPorPagina-->
+        <ul class="list-group lista-reservas-fija animate__animated animate__fadeIn animate__fast"> <!--Para que siempre tenga el tamaño que determino en el ts en reservasPorPagina-->
          @for(reserva of reservasVisibles; track reserva.idReserva) {
             <li class="list-group-item reserva-row">
 
@@ -147,9 +147,9 @@
                 <img class="reserva-barbero-foto" [src]="fotoEmpleadoUrl(reserva)" alt="Foto del barbero">
               }
 
-              <div class="reserva-info">
+              <div class="reserva-info animate__animated animate__fadeIn animate__fast">
                 <strong>{{ fechaReserva(reserva) }}</strong>
-                <div class="text-muted small fw-semibold">
+                <div class="text-muted small fw-semibold ">
                   {{ reserva.nombreServicio || 'Servicio sin nombre' }}
                 </div>
                 <div class="text-muted small">
@@ -200,7 +200,7 @@
         </ul>
         <!--Movimiento-->
         @if(totalPaginasReservas > 1){
-          <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+          <div class="d-flex justify-content-center align-items-center gap-3 mt-3 animate__animated animate__fadeIn animate__fast">
             <button
               class="btn btn-outline-primary btn-sm"
               type="button"
@@ -270,7 +270,7 @@
   </section>
 
   <!------- SECCION DE HISTORIAL ------>
-  <section class="card border-0 profile-section seccion-destacada seccion-historial">
+  <section class="card border-0 profile-section seccion-destacada seccion-historial animate__animated animate__fadeIn animate__fast">
     <div class="card-body">
 
       <h5 class="mb-3">Historial de reservas</h5>

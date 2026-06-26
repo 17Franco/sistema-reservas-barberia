@@ -9,6 +9,11 @@ use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
 use Barberia\Backend\dominio\Reserva;
 use Barberia\Backend\infraestructura\persistencia\ServicioRepositorioImpl;
 use Barberia\Backend\dominio\EstadoReserva;
+use Barberia\Backend\interface\api\dto\ClienteDTO;
+use Barberia\Backend\interface\api\dto\EmpleadoDTO;
+use Barberia\Backend\interface\api\dto\ReservaDTO;
+use Barberia\Backend\interface\api\dto\ReservasPorFechaDTO;
+use Barberia\Backend\interface\api\dto\ServicioDTO;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -173,22 +178,19 @@ class ServiciosReservaImpl implements ServiciosReserva {
         }
 
 
-
-
-
         public function cancelarReserva(int $idReserva, int $idUsuario, string $tipoUsuario): void{
             $reserva = $this->repoReserva->obtenerReserva($idReserva);
 
             if ($reserva === null) {
                 throw new Exception("La reserva no existe", 404);
             }
-
+            $esAdmin = $tipoUsuario === 'ADMIN';    
             $esEmpleado = $tipoUsuario === 'EMPLEADO';
             $esPropietario = $esEmpleado
                 ? $reserva->getIdEmpleado() === $idUsuario
                 : $tipoUsuario === 'CLIENTE' && $reserva->getIdCliente() === $idUsuario;
 
-            if (!$esPropietario) {
+            if (!$esAdmin && !$esPropietario) {
                 throw new Exception("No tienes permiso para cancelar esta reserva", 403);
             }
 
@@ -199,7 +201,7 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 );
             }
 
-            if (!$this->repoReserva->cancelar($idReserva, $idUsuario, $esEmpleado)) {
+            if (!$this->repoReserva->cancelar($idReserva, $idUsuario, $tipoUsuario)) {
                 throw new Exception("No se pudo cancelar la reserva", 500);
             }
         }
@@ -212,13 +214,13 @@ class ServiciosReservaImpl implements ServiciosReserva {
             if ($reserva === null) {
                 throw new Exception("La reserva no existe", 404);
             }
-
+            $esAdmin = $tipoUsuario === 'ADMIN'; 
             $esEmpleado = $tipoUsuario === 'EMPLEADO';
             $esPropietario = $esEmpleado
                 ? $reserva->getIdEmpleado() === $idUsuario
                 : $tipoUsuario === 'CLIENTE' && $reserva->getIdCliente() === $idUsuario;
 
-            if (!$esPropietario) {
+            if (!$esAdmin && !$esPropietario) {
                 throw new Exception(
                     "No tienes permiso para confirmar esta reserva",
                     403
@@ -232,7 +234,7 @@ class ServiciosReservaImpl implements ServiciosReserva {
                 );
             }
 
-            if (!$this->repoReserva->confirmar($idReserva, $idUsuario, $esEmpleado)) {
+            if (!$this->repoReserva->confirmar($idReserva, $idUsuario, $esAdmin)) {
                 throw new Exception("No se pudo confirmar la reserva", 500);
             }
         }
@@ -261,8 +263,76 @@ class ServiciosReservaImpl implements ServiciosReserva {
             }
         }
 
+        public function obtenerReservas(array $filtros):array{
+            $reservasDTO = [];
+            $reservas = $this->repoReserva->buscarConFiltros($filtros);
 
+            $total = count($reservas);//total de todas la reservas traidas
+            foreach ($reservas as $fila) {
+                $cliente = new ClienteDTO(
+                    $fila['cliente_id'],
+                    $fila['cliente_nombre'],
+                    $fila['cliente_celular'],
+                    $fila['cliente_email'],
+                    $fila['cliente_foto']
+                );
 
+                $empleado = new EmpleadoDTO(
+                    $fila['empleado_id'],
+                    $fila['empleado_nombre']
+                );
 
-     }
+                $servicio = new ServicioDTO(
+                    $fila['servicio_id'],
+                    $fila['servicio_nombre'],
+                    
+                );
+
+                $reservaDTO = new ReservaDTO(
+                    $fila['idReserva'],
+                    $cliente,
+                    $empleado,
+                    $servicio,
+                    $fila['fecha'],
+                    $fila['horaInicio'],
+                    $fila['horaFin'],
+                    $fila['servicio_duracion'],
+                    $fila['estado'] 
+                );
+
+                $reservasDTO[] = $reservaDTO;
+            }
+
+           $agrupadas = [];
+            //creo un array que tendra la fechas y las reservas de esas fechas
+           foreach ($reservasDTO as $reserva) {
+                $fecha = $reserva->fecha;
+
+                if (!isset($agrupadas[$fecha])) {
+                    $agrupadas[$fecha] = [
+                        "fecha" => $fecha,
+                        "reservas" => []
+                    ];
+                }
+
+                $agrupadas[$fecha]["reservas"][] = $reserva;
+            }
+
+            $resultado = [];
+
+            foreach ($agrupadas as $dia) {
+                $resultado[] = new ReservasPorFechaDTO(
+                    $dia["fecha"],
+                    count($dia["reservas"]),
+                    $dia["reservas"]
+                );
+            }
+
+            return [
+                "totalReservas" => $total,
+                "data" => $resultado
+            ];
+
+        }
+    }
 ?>

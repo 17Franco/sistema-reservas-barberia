@@ -1,0 +1,7 @@
+RewriteEngine On
+# Si el archivo o carpeta solicitado existe físicamente, se usa normalmente
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Si no existe, redirige todo al index.html de Angular
+RewriteRule ^ index.html 

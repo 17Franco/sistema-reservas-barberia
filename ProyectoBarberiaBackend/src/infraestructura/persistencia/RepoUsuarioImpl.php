@@ -197,6 +197,17 @@ use mysqli;
                 $stmt->bind_param("ii", $id, $d['idEspecialidad']);
                 $stmt->execute();
 
+                $descansoIni = $d['horaDescansoIni'] ?? '00:00';
+                $descansoFin = $d['horaDescansoFin'] ?? '00:00';
+
+                $stmt = $this->conn->prepare("
+                    INSERT INTO horario_empleado
+                    (idEmpleado, horaIni, horaFin, horaDescansoIni, horaDescansoFin)
+                    VALUES (?, ?, ?, ?, ?)
+                ");
+                $stmt->bind_param("issss", $id, $d['horaIni'], $d['horaFin'], $descansoIni, $descansoFin);
+                $stmt->execute();
+
                 $stmt = $this->conn->prepare("INSERT INTO empleado_servicios (idEmpleado,idServicio) VALUES (?,?)");
                 $stmt->bind_param("ii", $id, $d['idEspecialidad']);
                 $stmt->execute();
@@ -225,6 +236,45 @@ use mysqli;
                 $stmt = $this->conn->prepare("INSERT INTO empleado_servicios (idEmpleado,idServicio) VALUES (?,?)");
                 $stmt->bind_param("ii", $id, $d['idEspecialidad']);
                 $stmt->execute();
+                $this->conn->commit();
+                return true;
+            } catch (\Throwable $e) {
+                $this->conn->rollback();
+                throw $e;
+            }
+        }
+
+        public function listarServiciosEmpleado(int $idEmpleado): array {
+            $stmt = $this->conn->prepare("SELECT idServicio FROM empleado_servicios WHERE idEmpleado=? ORDER BY idServicio");
+            $stmt->bind_param("i", $idEmpleado);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+            $servicios = [];
+            while ($row = $result->fetch_assoc()) {
+                $servicios[] = (int)$row['idServicio'];
+            }
+
+            return $servicios;
+        }
+
+        public function actualizarServiciosEmpleado(int $idEmpleado, array $servicios): bool {
+            $this->conn->begin_transaction();
+            try {
+                $stmt = $this->conn->prepare("DELETE FROM empleado_servicios WHERE idEmpleado=?");
+                $stmt->bind_param("i", $idEmpleado);
+                $stmt->execute();
+
+                $servicios = array_values(array_unique(array_map('intval', $servicios)));
+                if (count($servicios) > 0) {
+                    $stmt = $this->conn->prepare("INSERT INTO empleado_servicios (idEmpleado,idServicio) VALUES (?,?)");
+
+                    foreach ($servicios as $idServicio) {
+                        $stmt->bind_param("ii", $idEmpleado, $idServicio);
+                        $stmt->execute();
+                    }
+                }
+
                 $this->conn->commit();
                 return true;
             } catch (\Throwable $e) {
