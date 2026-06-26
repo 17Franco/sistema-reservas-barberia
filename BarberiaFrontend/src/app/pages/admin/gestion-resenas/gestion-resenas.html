@@ -57,8 +57,9 @@
             {{ cantidadResenas(barbero) }} reseña{{ cantidadResenas(barbero) === 1 ? '' : 's' }}
           </span>
         </div>
-
-        <div class="hover-opcion">
+        
+        <div class="hover-opcion" >
+          @if(tipoUsuarioActual !='ADMIN'){ 
           <button
             type="button"
             class="btn-hover principal"
@@ -66,7 +67,7 @@
           >
             Dejar reseña
           </button>
-
+        }
           <button
             type="button"
             class="btn-hover secundario"
