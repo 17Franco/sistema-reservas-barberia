@@ -51,10 +51,14 @@
         }
         //anda saber si funca esta poronga
         public function disponibilidadEmpleadoDia(string $dia, int $servicio, int $empleado): bool{
+
                 //me traigo horario empleado
                 $horarios = $this->repo->horarioEmpleado($empleado);
                 //me traigo las reservas del epleado de tal dia
                 $reservas = $this->repo->reservasPorFechaAEmpleado($dia, $empleado);
+
+                $servicio = $this->repo->obtenerServicioPorId($servicio);
+                 $duracionS = $servicio->getDuracion();
 
                 foreach ($horarios as $horario) {
                     //comiezo horario laboral empleado
@@ -118,7 +122,7 @@
                         // Calcular los minutos libres desde el cursor hasta el próximo bloqueo
                         $minutos = ($bloqueo['inicio']->getTimestamp() - $clonInicio->getTimestamp()) / 60;
 
-                        if ($minutos >= $servicio) {
+                        if ($minutos >= $duracionS) {
                             return true; // Encontró un hueco válido dentro del turno
                         }
                         // muevo inicio hasta el fin del bloqueo 
@@ -129,7 +133,7 @@
                     //Verificar el último hueco 
                     //debo verificar la ultima reserva talves no supera el final del turno
                     $minutosFinal = ($fin->getTimestamp() - $clonInicio->getTimestamp()) / 60;
-                    if ($minutosFinal >= $servicio) {
+                    if ($minutosFinal >= $duracionS) {
                         return true;
                     }
                 }
