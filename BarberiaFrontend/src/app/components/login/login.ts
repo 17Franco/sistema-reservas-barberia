@@ -69,6 +69,14 @@ export class Login {
               this.mensajeError = '';
               this.cd.detectChanges();
             },3000);
+          }else if (err.status === 403) {
+            this.mensajeError = "Tu cuenta de empleado está inactiva. Contactá con un administrador.";
+             this.cd.detectChanges();
+            //console.log(this.mensajeError)
+            setTimeout(()=>{
+              this.mensajeError = '';
+              this.cd.detectChanges();
+            },3000);
           }
       }
         

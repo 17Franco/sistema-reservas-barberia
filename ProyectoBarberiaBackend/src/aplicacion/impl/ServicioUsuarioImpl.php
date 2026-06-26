@@ -10,7 +10,7 @@ use Barberia\Backend\dominio\repositorio\Repositorio;
 use Barberia\Backend\dominio\repositorio\RepositorioUsuario;
 use DateTime;
 use Exception;
-
+use Sabberworm\CSS\Value\Value;
 
     class ServicioUsuarioImpl implements ServiciosUsuarios {
 
@@ -135,10 +135,17 @@ use Exception;
     }
     
         public function verificoCredenciales(string $ci,string $pass): ?Cliente{
+
             $usuario = $this->repo->verificar($ci,$pass);
             if($usuario === null){
                 throw new Exception("Usuario o contraseña incorrecta",401);
             }
+            //var_dump($usuario->getTipo());
+            //var_dump(!$this->repo->existeEmpleadoActivo($usuario->getId()));
+            if ($usuario->getTipo()->name === 'EMPLEADO' && !$this->repo->existeEmpleadoActivo($usuario->getId())) {
+                throw new Exception("El empleado se encuentra inactivo", 403);
+            }
+            
             return $usuario ;
         }
 
