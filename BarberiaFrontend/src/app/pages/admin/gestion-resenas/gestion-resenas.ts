@@ -3,6 +3,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ResenasService, Resena } from '../../../services/resenas.service';
+import { environment } from '../../../../environments/environment';
 
 import { Auth } from '../../../services/auth';
 
@@ -35,7 +36,7 @@ export class GestionResenas implements OnInit {
 
   usuarioActualId: number | null = null;
 
-  apiUrl = 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  apiUrl = environment.apiUrl;
 
   barberos: Barbero[] = [];
   resenas: Resena[] = [];

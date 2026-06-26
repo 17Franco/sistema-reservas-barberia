@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 export interface Resena {
   idResena?: number;
@@ -22,7 +23,7 @@ export class ResenasService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  private apiUrl = environment.apiUrl;
 
 listarResenas() {
   return this.http.get<any>(

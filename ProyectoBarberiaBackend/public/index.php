@@ -6,6 +6,8 @@ $allowedOrigins = [
     'http://localhost',
     'https://barbershop.site.je',
     'http://barbershop.site.je',
+    'https://barbershop-backup.site.je',
+    'http://barbershop-backup.site.je',
 ];
 
 if (in_array($origin, $allowedOrigins, true)) {
