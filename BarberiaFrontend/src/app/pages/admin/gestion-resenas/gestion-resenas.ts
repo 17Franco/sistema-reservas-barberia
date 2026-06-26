@@ -3,6 +3,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ResenasService, Resena } from '../../../services/resenas.service';
+import { environment } from '../../../../environments/environment';
 
 import { Auth } from '../../../services/auth';
 
@@ -35,7 +36,7 @@ export class GestionResenas implements OnInit {
 
   usuarioActualId: number | null = null;
 
-  apiUrl = 'http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php';
+  apiUrl = environment.apiUrl;
 
   barberos: Barbero[] = [];
   resenas: Resena[] = [];
@@ -48,12 +49,13 @@ export class GestionResenas implements OnInit {
   barberoSeleccionado: Barbero | null = null;
   modalResenasAbierto = false;
   barberoResenasSeleccionado: Barbero | null = null;
-
+  tipoUsuarioActual = null;
   resenaForm: Resena = {
     idEmpleado: 0,
     puntuacion: 5,
     comentario: ''
   };
+
 
   ngOnInit() {
     this.cargarUsuarioActual();
@@ -65,7 +67,7 @@ cargarUsuarioActual() {
   this.auth.me().subscribe({
     next: (res: any) => {
       console.log('Usuario actual:', res);
-
+      this.tipoUsuarioActual=res.tipo;
       this.usuarioActualId = Number(
         res.id ||
         res.usuario_id ||
@@ -86,6 +88,9 @@ cargarUsuarioActual() {
   });
 }
 
+obtenerTipoUsuarioActual(){
+  
+}
 misResenas(): Resena[] {
   if (!this.usuarioActualId) {
     return [];
