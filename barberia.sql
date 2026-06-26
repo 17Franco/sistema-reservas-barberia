@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 26-06-2026 a las 07:28:09
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: sql309.infinityfree.com
+-- Tiempo de generación: 26-06-2026 a las 19:14:53
+-- Versión del servidor: 11.4.12-MariaDB
+-- Versión de PHP: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `barberia`
+-- Base de datos: `if0_42255858_barberia`
 --
 
 -- --------------------------------------------------------
@@ -114,32 +115,32 @@ CREATE TABLE `empleado_servicios` (
 
 INSERT INTO `empleado_servicios` (`idEmpleado`, `idServicio`) VALUES
 (2, 1),
-(2, 2),
-(2, 4),
-(2, 6),
-(3, 2),
-(3, 4),
-(3, 9),
 (4, 1),
-(4, 2),
-(4, 3),
-(4, 4),
-(4, 6),
 (5, 1),
-(5, 4),
-(5, 6),
 (6, 1),
-(6, 5),
-(6, 7),
 (7, 1),
-(7, 2),
-(7, 3),
-(7, 4),
-(7, 6),
-(7, 10),
 (8, 1),
+(2, 2),
+(3, 2),
+(4, 2),
+(7, 2),
+(4, 3),
+(7, 3),
+(2, 4),
+(3, 4),
+(4, 4),
+(5, 4),
+(7, 4),
 (8, 4),
-(8, 8);
+(6, 5),
+(2, 6),
+(4, 6),
+(5, 6),
+(7, 6),
+(6, 7),
+(8, 8),
+(3, 9),
+(7, 10);
 
 -- --------------------------------------------------------
 
@@ -488,7 +489,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `ci`, `nombre`, `apellido`, `fechaNac`, `password_hash`, `email`, `foto`, `celular`, `tipoUsuario`, `fechaCreacion`, `direccion`) VALUES
-(1, '12345678', 'Franco', 'Fornari', '1990-01-01', 'admin', 'admin@barberia.com', '/uploads/PerfilPorDefecto.png', '099123456', 'ADMIN', '2026-06-19', NULL),
+(1, '12345678', 'Admin', 'Admin', '1990-01-01', 'admin', 'admin@barberia.com', '/uploads/Admin.png', '099123456', 'ADMIN', '2026-06-19', NULL),
 (2, '40000001', 'Carlos', 'Gómez', '1990-05-12', '1234', 'carlos@barberia.com', '/uploads/PerfilPorDefecto.png', '099000002', 'EMPLEADO', '2026-06-14', NULL),
 (3, '40000002', 'María', 'Rodríguez', '1995-08-22', '1234', 'maria@barberia.com', '/uploads/PerfilPorDefecto.png', '099000003', 'EMPLEADO', '2026-06-14', NULL),
 (4, '40000003', 'Juan', 'Pérez', '1988-01-30', '1234', 'juan@barberia.com', '/uploads/PerfilPorDefecto.png', '099000004', 'EMPLEADO', '2026-06-14', NULL),
