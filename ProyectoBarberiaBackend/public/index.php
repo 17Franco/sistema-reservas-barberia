@@ -283,7 +283,7 @@ if (preg_match('#^/resenas/(\d+)$#', $route, $matches)) {
     }
 }
 
-
+/*
 if ($method === 'GET' && $route === '/resenas') {
     $servicioResenas = new ServicioResenaImpl();
     ResenaController::listarResenas($servicioResenas);
@@ -304,7 +304,7 @@ if (preg_match('#^/resenas/(\d+)$#', $route, $matches)) {
         ResenaController::eliminarResena($servicioResenas, $idResena);
         exit;
     }
-}
+}*/
 
 
     /*
