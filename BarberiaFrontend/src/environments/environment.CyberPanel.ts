@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://sitio.tec.cuatro/ProyectoBarberiaBackend/public/index.php',
-  backendPublicUrl: 'https://sitio.tec.cuatro/ProyectoBarberiaBackend/public'
+  apiUrl: 'http://sitio.tec.cuatro/ProyectoBarberiaBackend/public/index.php',
+  backendPublicUrl: 'http://sitio.tec.cuatro/ProyectoBarberiaBackend/public'
 };

@@ -8,6 +8,7 @@ $allowedOrigins = [
     'http://barbershop.site.je',
     'https://barbershop-backup.site.je',
     'http://barbershop-backup.site.je',
+    'http://sitio.tec.cuatro',
 ];
 
 if (in_array($origin, $allowedOrigins, true)) {
