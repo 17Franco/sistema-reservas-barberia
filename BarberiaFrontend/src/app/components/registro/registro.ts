@@ -128,7 +128,7 @@ export class Registro {
             Swal.fire({
               title: 'Cliente No Registrado',
               text: 'No se pudo Crear la cuenta Intente de nuevo',
-              icon: 'success'
+              icon: 'error'
             })
           }
       });
