@@ -1,154 +1,298 @@
-## Instalación y ejecución del proyecto
+# 💈 Sistema de Reservas para Barbería
 
-Este proyecto contiene un frontend desarrollado en Angular y un backend desarrollado en PHP.
+Sistema web desarrollado para gestionar reservas de una barbería.
 
-Estructura del proyecto:
+La aplicación permite que los clientes puedan registrarse, reservar turnos, administrar sus reservas y dejar reseñas. Además, cuenta con un panel administrativo para gestionar barberos, servicios, reservas y usuarios.
 
-    sistema-reservas-barberia/
-    ├── BarberiaFrontend/
-    └── ProyectoBarberiaBackend/
+---
 
-## Lugar donde clonar
+# 📌 Características
 
-Clonar o descargar el proyecto en:
+## Cliente
 
-- Windows (XAMPP):
+- Registro e inicio de sesión
+- Reserva de turnos
+- Selección de servicio
+- Selección de barbero
+- Selección de fecha y horario
+- Visualización de reservas
+- Cancelación de reservas
+- Edición de perfil
+- Sistema de reseñas
 
-        C:\xampp\htdocs\
-  
-- Linux (Apache):
+## Administrador
 
-        /var/www/html/
+- Gestión de barberos
+- Gestión de servicios
+- Gestión de reservas
+- Gestión de reseñas
+- Asignación de servicios a barberos
+- Cambio de estado de reservas
 
-## Backend PHP
+---
 
-Entrar a la carpeta del backend:   
+# 🛠 Tecnologías
 
-cd ProyectoBarberiaBackend
+## Frontend
 
-    composer install
-    
-Este comando instala las dependencias definidas en composer.json y genera la carpeta vendor/, la cual no se sube al repositorio.
+- Angular
+- TypeScript
+- HTML
+- SCSS
+- Bootstrap 5
+- Bootstrap Icons
+- SweetAlert2
+- RxJS
 
-Luego configurar los datos de conexión a la base de datos si corresponde.
+## Backend
 
-### Posible error al ejecutar `composer install` por primera vez
+- PHP
+- MariaDB
+- Composer
+- PHPMailer
 
-Si al ejecutar:
+---
 
-    composer install
+# 🏗 Arquitectura
 
-aparece un error similar a:
+El backend fue desarrollado utilizando una arquitectura por capas.
 
-    requires ext-dom * -> it is missing from your system
+```
+public/
+src/
+ ├── aplicacion/
+ ├── dominio/
+ ├── infraestructura/
+ └── interface/
+```
 
-significa que falta instalar o habilitar la extensión XML/DOM de PHP.
+Las principales responsabilidades de cada capa son:
 
-En Linux, para PHP 8.3, se puede solucionar instalando:
+- **Aplicación:** lógica de negocio.
+- **Dominio:** entidades y contratos.
+- **Infraestructura:** base de datos, configuración y persistencia.
+- **Interface/API:** controladores y DTOs.
 
-    sudo apt update
-    sudo apt install php8.3-xml
+---
 
-Después verificar que la extensión `dom` esté activa:
+# 🚀 Instalación
 
-    php -m | grep dom
+## Clonar el repositorio
 
-Si devuelve algo como:
+```bash
+git clone https://github.com/17Franco/sistema-reservas-barberia.git
+```
 
-    dom
-    random
+---
 
-está correcto. Puede aparecer `random` porque contiene la palabra `dom`; lo importante es que aparezca `dom`.
+## Backend
 
-Luego ejecutar nuevamente:
+Instalar dependencias
 
-    composer install
+```bash
+composer install
+```
 
-O, si se quiere usar el Composer local del proyecto:
+Crear la base de datos
 
-    php composer.phar install
+```
+barberia
+```
 
+Importar
 
-### Posible error al subir imágenes en Linux
+```
+barberia.sql
+```
 
-En Linux puede pasar que el backend no pueda guardar imágenes si la carpeta `uploads` no tiene permisos de escritura.
+Crear
 
-Para desarrollo local con XAMPP, se puede dar permisos a la carpeta con:
+```
+ParametrosConexion.php (Basandose en el archivo de ejemplo)
+```
 
-    sudo chmod -R 777 /opt/lampp/htdocs/sistema-reservas-barberia/ProyectoBarberiaBackend/public/uploads
+Configurar
+- Servidor (usar los del archivo de ejemplo)
+- Usuario
+- Contraseña
+- Base de datos 
+- Email (usar los del archivo de ejemplo)
+- Email pass (usar los del archivo de ejemplo)
 
-Esto permite que el sistema pueda crear y guardar archivos dentro de `uploads`.
+---
 
-Aclaración: `777` da todos los permisos a todos los usuarios. Para desarrollo en `localhost` es una solución práctica y rápida, pero no es lo recomendado para producción. Con `775` se tiene más control, aunque requiere configurar correctamente el usuario y grupo que usa Apache/XAMPP.
+## Frontend
 
-## Archivo `htaccess` para el servidor
+Instalar dependencias
 
-El proyecto incluye un archivo llamado `htaccess`, utilizado para la configuración del servidor en el hosting.
+```bash
+npm install
+```
 
-Al desplegar el proyecto en el servidor, este archivo también debe subirse junto con los archivos del sitio. En el servidor puede ser necesario que quede con el nombre `.htaccess`, dependiendo de cómo lo maneje el administrador de archivos del hosting.
+Ejecutar
 
-Para más información sobre este punto, revisar la documentación de despliegue del servidor, donde se incluye una guía de cómo desplegar el proyecto en InfinityFree, que fue el servidor elegido para publicar el sistema.
+```bash
+ng serve
+```
 
-## Frontend Angular
+Abrir
 
-Entrar a la carpeta del frontend:
+```
+http://localhost:4200
+```
 
-    npm install
-    
-Este comando instala las dependencias definidas en package.json y genera la carpeta node_modules/, la cual no se sube al repositorio.
+---
 
-Ejecutar el servidor de desarrollo:
+# 📡 API REST
 
-    ng serve -o
+## 👤 Usuarios / Autenticación
 
-## Entornos del frontend
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| POST | `/usuarios` | Registrar un nuevo cliente |
+| POST | `/login` | Iniciar sesión |
+| POST | `/logout` | Cerrar sesión |
+| GET | `/me` | Obtener el usuario autenticado |
+| POST | `/editarPerfil` | Editar información del perfil |
+| GET | `/usuarios/validar-email?email=` | Verificar disponibilidad de un correo |
+| GET | `/usuarios/validar-ci?ci=` | Verificar disponibilidad de una cédula |
 
-El frontend usa archivos de entorno distintos segun el comando que se ejecute.
+---
 
-Al trabajar localmente con:
+## 💈 Empleados
 
-    ng serve -o
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| GET | `/empleados` | Obtener todos los empleados |
+| POST | `/empleados` | Registrar un empleado |
+| GET | `/empleados/{id}/servicios` | Obtener servicios asignados a un empleado |
+| PUT | `/empleados/{id}/servicios` | Actualizar servicios asignados |
+| PUT | `/empleados/{id}` | Actualizar información de un empleado |
+| PUT | `/empleados/estado` | Cambiar el estado de un empleado |
 
-Angular usa:
+---
 
-    BarberiaFrontend/src/environments/environment.development.ts
+## ✂️ Servicios
 
-Ese archivo apunta al backend local de XAMPP/Apache:
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| GET | `/servicios` | Obtener todos los servicios |
+| POST | `/servicios` | Crear un servicio |
+| GET | `/servicios/{id}` | Obtener un servicio por ID |
+| PUT | `/servicios/{id}` | Actualizar un servicio |
+| DELETE | `/servicios/{id}` | Eliminar un servicio |
 
-    http://localhost/sistema-reservas-barberia/ProyectoBarberiaBackend/public/index.php
+---
 
-Al generar la version para subir al hosting con:
+## 📅 Disponibilidad
 
-    ng build
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| GET | `/disponibilidad` | Obtener disponibilidad de los próximos 30 días |
+| GET | `/servicio/disponibilidad?fecha=` | Consultar servicios disponibles para una fecha |
+| GET | `/empleado/disponibilidad?fecha={fecha}&id={servicio}` | Obtener barberos disponibles para un servicio |
+| GET | `/disponibilidadHorarios?fecha={fecha}&id={servicio}&idE={empleado}` | Obtener horarios disponibles |
 
-Angular usa:
+---
 
-    BarberiaFrontend/src/environments/environment.ts
+## 📖 Reservas
 
-Ese archivo apunta al backend publicado:
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| POST | `/reservas` | Crear una reserva |
+| GET | `/reservas` | Consultar reservas con filtros |
+| GET | `/reservas/ClienteAsociado/{id}` | Obtener reservas de un cliente |
+| GET | `/reservas/BarberoAsociado/{id}` | Obtener reservas de un barbero |
+| POST | `/reservas/{id}/enviar-comprobante` | Enviar comprobante por correo |
+| PUT | `/reservas/{id}/cancelar` | Cancelar una reserva |
+| PUT | `/reservas/{id}/confirmar` | Confirmar una reserva |
+| PUT | `/reservas/{id}/completar` | Marcar una reserva como completada |
 
-    https://barbershop.site.je/ProyectoBarberiaBackend/public/index.php
+---
 
-Al generar la version para subir al hosting backup con:
+## ⭐ Reseñas
 
-    ng build --configuration backup
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| GET | `/resenas` | Obtener todas las reseñas |
+| POST | `/resenas` | Registrar una reseña |
+| DELETE | `/resenas/{id}` | Eliminar una reseña |
 
-Angular usa:
+---
 
-    BarberiaFrontend/src/environments/environment.backup.ts
+# 📂 Estructura del proyecto
 
-Ese archivo apunta al backend publicado del backup:
+```
+Sistema-Reservas-Barberia
 
-    https://barbershop-backup.site.je/ProyectoBarberiaBackend/public/index.php
+│
+├── BarberiaFrontend
+│
+├── ProyectoBarberiaBackend
+│
+├── barberia.sql
+│
+└── README.md
+```
 
-Resumen:
+---
 
-    ng serve                         -> environment.development.ts -> backend local
-    ng build                         -> environment.ts             -> backend publicado principal
-    ng build --configuration backup  -> environment.backup.ts      -> backend publicado backup
+# 🎯 Funcionalidades principales
 
-Para publicar el frontend, subir al hosting el contenido de:
+- Gestión completa de reservas
+- Gestión de disponibilidad
+- Gestión de empleados
+- Gestión de servicios
+- Gestión de usuarios
+- Envío de comprobantes por correo
+- Panel administrativo
+- Sistema de autenticación
+- Protección de rutas
+- Gestión de sesiones
 
-    BarberiaFrontend/dist/BarberiaFrontend/browser/
+---
 
-Los archivos deben quedar directamente dentro de `htdocs`, no dentro de una carpeta `browser`.
+# 🔒 Roles
+
+## Cliente
+
+- Reservar turnos
+- Cancelar reservas
+- Ver historial
+- Dejar reseñas
+
+## Empleado
+
+- Confirmar reservas
+- Completar reservas
+- Consultar agenda
+
+## Administrador
+
+- Gestionar usuarios
+- Gestionar servicios
+- Gestionar empleados
+- Gestionar reservas
+- Gestionar reseñas
+
+---
+
+# 📈 Mejoras futuras
+
+- Recuperación de contraseña
+- Notificaciones por WhatsApp
+- Reasignación automática de reservas
+- Notificaciones automáticas de cambios de reserva
+
+---
+
+# 👥 Equipo
+
+- Franco Echaide
+- Juan Pablo Rodríguez
+- Santiago Santos
+- Juan Pablo Fontes
+- Santiago Guadalupe
+
+---
+
